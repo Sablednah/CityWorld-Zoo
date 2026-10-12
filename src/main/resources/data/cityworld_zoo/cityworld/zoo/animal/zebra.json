@@ -1,0 +1,10 @@
+{
+  "entity": "cityworld_zoo:zebra",
+  "name": "Zebras",
+  "weight": 2,
+  "count": { "min": 2, "max": 4 },
+  "baby_chance": 0.25,
+  "size": "small",
+  "habitat": "cityworld_zoo:savanna",
+  "requires_mod": "cityworld_zoo"
+}

@@ -1,0 +1,18 @@
+{
+  "ground": "minecraft:coarse_dirt",
+  "scatter": [
+    { "block": "minecraft:grass_block", "chance": 0.3 }
+  ],
+  "water": "pool",
+  "plants": [
+    { "block": "minecraft:dead_bush", "count": 4 }
+  ],
+  "trees": [
+    { "log": "minecraft:acacia_log", "leaves": "minecraft:acacia_leaves", "count": 1 }
+  ],
+  "rocks": [
+    { "block": "minecraft:stone", "count": 3 }
+  ],
+  "fence": "minecraft:acacia_fence",
+  "gate": "minecraft:acacia_fence_gate"
+}

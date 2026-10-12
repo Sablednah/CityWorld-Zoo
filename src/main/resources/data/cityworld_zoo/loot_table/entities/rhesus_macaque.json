@@ -1,0 +1,5 @@
+{
+  "type": "minecraft:entity",
+  "pools": [],
+  "random_sequence": "cityworld_zoo:entities/rhesus_macaque"
+}

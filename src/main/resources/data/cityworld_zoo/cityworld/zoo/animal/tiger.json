@@ -1,0 +1,10 @@
+{
+  "entity": "cityworld_zoo:tiger",
+  "name": "Tigers",
+  "weight": 2,
+  "count": { "min": 1, "max": 2 },
+  "baby_chance": 0.2,
+  "size": "small",
+  "habitat": "cityworld_zoo:canopy",
+  "requires_mod": "cityworld_zoo"
+}

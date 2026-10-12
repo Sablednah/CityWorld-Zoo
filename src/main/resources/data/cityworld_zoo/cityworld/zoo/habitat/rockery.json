@@ -1,0 +1,20 @@
+{
+  "ground": "minecraft:grass_block",
+  "scatter": [
+    { "block": "minecraft:stone", "chance": 0.15 },
+    { "block": "minecraft:gravel", "chance": 0.1 }
+  ],
+  "water": "pool",
+  "plants": [
+    { "block": "minecraft:fern", "count": 4 }
+  ],
+  "trees": [
+    { "log": "minecraft:spruce_log", "leaves": "minecraft:spruce_leaves", "count": 1 }
+  ],
+  "rocks": [
+    { "block": "minecraft:stone", "count": 4, "height": { "min": 1, "max": 2 } },
+    { "block": "minecraft:cobblestone", "count": 2 }
+  ],
+  "fence": "minecraft:spruce_fence",
+  "gate": "minecraft:spruce_fence_gate"
+}

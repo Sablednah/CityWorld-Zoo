@@ -1,0 +1,16 @@
+{
+  "ground": "minecraft:grass_block",
+  "scatter": [
+    { "block": "minecraft:podzol", "chance": 0.1 }
+  ],
+  "plants": [
+    { "block": "minecraft:fern", "count": 6 },
+    { "block": "minecraft:short_grass", "count": 6 }
+  ],
+  "trees": [
+    { "log": "minecraft:oak_log", "leaves": "minecraft:oak_leaves", "count": 1 },
+    { "log": "minecraft:spruce_log", "leaves": "minecraft:spruce_leaves", "count": 1 }
+  ],
+  "fence": "minecraft:spruce_fence",
+  "gate": "minecraft:spruce_fence_gate"
+}

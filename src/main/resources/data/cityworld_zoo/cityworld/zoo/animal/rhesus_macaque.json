@@ -1,0 +1,10 @@
+{
+  "entity": "cityworld_zoo:rhesus_macaque",
+  "name": "Rhesus Macaques",
+  "weight": 2,
+  "count": { "min": 3, "max": 6 },
+  "baby_chance": 0.3,
+  "size": "small",
+  "habitat": "cityworld_zoo:canopy",
+  "requires_mod": "cityworld_zoo"
+}

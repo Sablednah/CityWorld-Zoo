@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "cityworld_zoo:item/rhesus_macaque_spawn_egg"
+  }
+}

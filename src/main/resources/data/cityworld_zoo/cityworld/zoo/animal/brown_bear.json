@@ -1,0 +1,10 @@
+{
+  "entity": "cityworld_zoo:brown_bear",
+  "name": "Brown Bears",
+  "weight": 2,
+  "count": { "min": 1, "max": 2 },
+  "baby_chance": 0.3,
+  "size": "small",
+  "habitat": "cityworld_zoo:rockery",
+  "requires_mod": "cityworld_zoo"
+}

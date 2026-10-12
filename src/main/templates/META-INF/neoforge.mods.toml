@@ -1,0 +1,40 @@
+# CityWorld: Zoo — neoforge.mods.toml (values are expanded from gradle.properties at build time).
+# EDIT THIS TEMPLATE, never the generated copy under build/.
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+issueTrackerURL="https://github.com/Sablednah/CityWorld-Zoo/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''
+${mod_description}
+'''
+displayURL="https://sablecraft.co.uk/cityworld-zoo/"
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+# CityWorld reads this jar's data/cityworld_zoo/cityworld/zoo/{animal,habitat} as datapack registries
+# (CityWorld 6.3.0+, "Zoos are data"). Nothing here imports CityWorld's code, so the relation is
+# informational: without CityWorld the animals still exist, through spawn eggs.
+[[dependencies.${mod_id}]]
+    modId="cityworld"
+    type="optional"
+    versionRange="[1,)"
+    ordering="NONE"
+    side="BOTH"

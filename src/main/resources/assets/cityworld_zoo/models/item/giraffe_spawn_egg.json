@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "cityworld_zoo:item/giraffe_spawn_egg"
+  }
+}

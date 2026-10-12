@@ -1,0 +1,19 @@
+{
+  "ground": "minecraft:grass_block",
+  "scatter": [
+    { "block": "minecraft:coarse_dirt", "chance": 0.1 },
+    { "block": "minecraft:dirt_path", "chance": 0.05 }
+  ],
+  "plants": [
+    { "block": "minecraft:short_grass", "count": 8 },
+    { "block": "minecraft:dead_bush", "count": 3 }
+  ],
+  "trees": [
+    { "log": "minecraft:acacia_log", "leaves": "minecraft:acacia_leaves", "count": 1 }
+  ],
+  "rocks": [
+    { "block": "minecraft:stone", "count": 2 }
+  ],
+  "fence": "minecraft:acacia_fence",
+  "gate": "minecraft:acacia_fence_gate"
+}

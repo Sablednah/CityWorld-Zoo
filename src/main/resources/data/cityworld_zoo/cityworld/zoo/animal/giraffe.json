@@ -1,0 +1,10 @@
+{
+  "entity": "cityworld_zoo:giraffe",
+  "name": "Giraffes",
+  "weight": 2,
+  "count": { "min": 2, "max": 3 },
+  "baby_chance": 0.25,
+  "size": "tall",
+  "habitat": "cityworld_zoo:savanna",
+  "requires_mod": "cityworld_zoo"
+}

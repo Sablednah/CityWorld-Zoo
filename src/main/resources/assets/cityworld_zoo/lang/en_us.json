@@ -1,0 +1,18 @@
+{
+  "entity.cityworld_zoo.giraffe": "Giraffe",
+  "entity.cityworld_zoo.rhesus_macaque": "Rhesus Macaque",
+  "entity.cityworld_zoo.zebra": "Zebra",
+  "entity.cityworld_zoo.deer": "Deer",
+  "entity.cityworld_zoo.lion": "Lion",
+  "entity.cityworld_zoo.tiger": "Tiger",
+  "entity.cityworld_zoo.elephant": "Elephant",
+  "entity.cityworld_zoo.brown_bear": "Brown Bear",
+  "item.cityworld_zoo.giraffe_spawn_egg": "Giraffe Spawn Egg",
+  "item.cityworld_zoo.rhesus_macaque_spawn_egg": "Rhesus Macaque Spawn Egg",
+  "item.cityworld_zoo.zebra_spawn_egg": "Zebra Spawn Egg",
+  "item.cityworld_zoo.deer_spawn_egg": "Deer Spawn Egg",
+  "item.cityworld_zoo.lion_spawn_egg": "Lion Spawn Egg",
+  "item.cityworld_zoo.tiger_spawn_egg": "Tiger Spawn Egg",
+  "item.cityworld_zoo.elephant_spawn_egg": "Elephant Spawn Egg",
+  "item.cityworld_zoo.brown_bear_spawn_egg": "Brown Bear Spawn Egg"
+}

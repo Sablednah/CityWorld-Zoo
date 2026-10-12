@@ -1,0 +1,57 @@
+package com.sablednah.cityworldzoo.client.model;
+
+import java.util.Set;
+
+import net.minecraft.client.model.BabyModelTransform;
+import net.minecraft.client.model.QuadrupedModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.MeshTransformer;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+
+/**
+ * A brown bear: vanilla's polar bear mesh (texture 128x64, the polar bear layout) in brown, with the
+ * quadruped walk and no rearing. Baby: the same mesh, big-headed and half size, one texture.
+ */
+public class BrownBearModel extends QuadrupedModel<LivingEntityRenderState> {
+
+    public BrownBearModel(ModelPart root) {
+        super(root);
+    }
+
+    public static LayerDefinition createBodyLayer() {
+        return LayerDefinition.create(mesh(), 128, 64).apply(MeshTransformer.scaling(1.2F));
+    }
+
+    public static LayerDefinition createBabyLayer() {
+        return LayerDefinition.create(mesh(), 128, 64).apply(MeshTransformer.scaling(1.2F)).apply(new BabyModelTransform(Set.of("head")));
+    }
+
+    private static MeshDefinition mesh() {
+        MeshDefinition mesh = new MeshDefinition();
+        PartDefinition root = mesh.getRoot();
+        root.addOrReplaceChild("head",
+                CubeListBuilder.create()
+                        .texOffs(0, 0).addBox(-3.5F, -3.0F, -3.0F, 7.0F, 7.0F, 7.0F)
+                        .texOffs(0, 44).addBox("mouth", -2.5F, 1.0F, -6.0F, 5.0F, 3.0F, 3.0F)
+                        .texOffs(26, 0).addBox("right_ear", -4.5F, -4.0F, -1.0F, 2.0F, 2.0F, 1.0F)
+                        .texOffs(26, 0).mirror().addBox("left_ear", 2.5F, -4.0F, -1.0F, 2.0F, 2.0F, 1.0F),
+                PartPose.offset(0.0F, 10.0F, -16.0F));
+        root.addOrReplaceChild("body",
+                CubeListBuilder.create()
+                        .texOffs(0, 19).addBox(-5.0F, -13.0F, -7.0F, 14.0F, 14.0F, 11.0F)
+                        .texOffs(39, 0).addBox(-4.0F, -25.0F, -7.0F, 12.0F, 12.0F, 10.0F),
+                PartPose.offsetAndRotation(-2.0F, 9.0F, 12.0F, (float) (Math.PI / 2), 0.0F, 0.0F));
+        CubeListBuilder hindLeg = CubeListBuilder.create().texOffs(50, 22).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 10.0F, 8.0F);
+        root.addOrReplaceChild("right_hind_leg", hindLeg, PartPose.offset(-4.5F, 14.0F, 6.0F));
+        root.addOrReplaceChild("left_hind_leg", hindLeg, PartPose.offset(4.5F, 14.0F, 6.0F));
+        CubeListBuilder frontLeg = CubeListBuilder.create().texOffs(50, 40).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 10.0F, 6.0F);
+        root.addOrReplaceChild("right_front_leg", frontLeg, PartPose.offset(-3.5F, 14.0F, -8.0F));
+        root.addOrReplaceChild("left_front_leg", frontLeg, PartPose.offset(3.5F, 14.0F, -8.0F));
+        return mesh;
+    }
+}

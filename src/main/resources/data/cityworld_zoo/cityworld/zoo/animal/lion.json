@@ -1,0 +1,10 @@
+{
+  "entity": "cityworld_zoo:lion",
+  "name": "Lions",
+  "weight": 2,
+  "count": { "min": 1, "max": 3 },
+  "baby_chance": 0.2,
+  "size": "small",
+  "habitat": "cityworld_zoo:savanna",
+  "requires_mod": "cityworld_zoo"
+}
