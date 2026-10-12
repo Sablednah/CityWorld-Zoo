@@ -35,7 +35,8 @@ MOD_VERSION="$(sed -n 's/^mod_version=//p' "$ROOT/gradle.properties" | tr -d '\r
 JAR="$ROOT/build/libs/cityworld_zoo-${MOD_VERSION}+mc${MC_BUILD}.jar"
 [ -f "$JAR" ] || { echo "!! No $(basename "$JAR") in build/libs" >&2; exit 1; }
 JARNAME="$(basename "$JAR")"
-unzip -l "$JAR" | grep -q "META-INF/neoforge.mods.toml" || { echo "!! $JARNAME has no META-INF/neoforge.mods.toml" >&2; exit 1; }
+# unzip -p, not "unzip -l | grep -q": grep -q closes the pipe early and pipefail reads that as a failure.
+unzip -p "$JAR" META-INF/neoforge.mods.toml >/dev/null 2>&1 || { echo "!! $JARNAME has no META-INF/neoforge.mods.toml" >&2; exit 1; }
 
 MC_TAG=""
 [[ "$JARNAME" =~ \+mc([0-9.]+)\.jar$ ]] && MC_TAG="${BASH_REMATCH[1]}"
