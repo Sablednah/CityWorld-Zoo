@@ -67,12 +67,12 @@ SPECIES = {
     "giraffe": dict(size=(128, 128), base=(222, 184, 110), pattern=spots((150, 96, 40), 0.3, 3), boxes=[
         (0, 0, 5, 5, 7, "head"), (24, 0, 1, 3, 1, "ossicone"), (30, 0, 2, 2, 1, "ear"),
         (0, 16, 4, 22, 4, "neck"), (32, 16, 10, 22, 10, "body"), (72, 16, 1, 10, 1, "tail"),
-        (0, 48, 4, 24, 4, "front_leg"), (16, 48, 4, 24, 4, "hind_leg")],
+        (0, 48, 4, 26, 4, "front_leg"), (16, 48, 4, 22, 4, "hind_leg")],
         override={"ossicone": (90, 60, 30), "tail": (120, 80, 40)}, egg=((222, 184, 110), (150, 96, 40))),
     "deer": dict(size=(64, 64), base=(140, 96, 58), pattern=speckle((200, 170, 130), 0.06), boxes=[
-        (0, 0, 4, 5, 6, "head"), (20, 0, 2, 3, 1, "ear"), (26, 0, 2, 3, 1, "ear"), (32, 0, 1, 5, 1, "antler"), (36, 0, 1, 3, 1, "tine"),
-        (0, 12, 4, 8, 5, "neck"), (20, 12, 8, 18, 8, "body"), (52, 12, 2, 4, 1, "tail"),
-        (0, 26, 3, 12, 3, "front_leg"), (0, 42, 3, 12, 3, "hind_leg")],
+        (0, 0, 4, 4, 6, "head"), (20, 0, 2, 3, 1, "ear"), (26, 0, 2, 3, 1, "ear"), (32, 0, 1, 5, 1, "antler"), (36, 0, 1, 3, 1, "tine"),
+        (0, 12, 3, 8, 4, "neck"), (20, 12, 6, 16, 7, "body"), (52, 12, 2, 4, 1, "tail"),
+        (0, 26, 2, 12, 2, "front_leg"), (0, 42, 2, 12, 2, "hind_leg")],
         override={"antler": (110, 90, 70), "tine": (110, 90, 70), "tail": (230, 220, 200)}, egg=((140, 96, 58), (230, 220, 200))),
     "elephant": dict(size=(128, 64), base=(128, 126, 130), pattern=speckle((100, 98, 102), 0.05), boxes=[
         (0, 0, 10, 10, 10, "head"), (40, 0, 1, 10, 8, "ear"), (58, 0, 1, 10, 8, "ear"),
@@ -90,6 +90,12 @@ SPECIES = {
         (0, 32, 10, 10, 22, "body"), (0, 35, 4, 12, 7, "neck"), (0, 13, 6, 5, 7, "head"), (0, 25, 4, 5, 5, "upper_mouth"),
         (56, 36, 2, 16, 2, "mane"), (48, 21, 4, 11, 4, "leg"), (42, 36, 3, 14, 4, "tail"), (19, 16, 2, 3, 1, "ear")],
         override={"mane": (30, 30, 34), "upper_mouth": (60, 60, 64)}, egg=((240, 240, 236), (20, 20, 24))),
+    # The foal: vanilla's BabyHorseModel net (its own texture, like a vanilla foal's).
+    "zebra_baby": dict(size=(64, 64), base=(240, 240, 236), pattern=stripes((20, 20, 24)), boxes=[
+        (0, 13, 8, 7, 14, "body"), (24, 34, 3, 3, 8, "tail"), (12, 46, 3, 9, 3, "leg"), (0, 46, 3, 9, 3, "leg"),
+        (12, 34, 3, 9, 3, "leg"), (0, 34, 3, 9, 3, "leg"), (30, 0, 4, 8, 4, "neck"), (0, 0, 6, 4, 9, "head"),
+        (0, 4, 2, 3, 1, "ear"), (0, 0, 2, 3, 1, "ear")],
+        override={}, egg=None),
     # The feline net (AdultFelineModel), plus the lion's mane at (40, 12).
     "lion": dict(size=(64, 32), base=(200, 160, 90), pattern=None, boxes=[
         (0, 0, 5, 4, 5, "head"), (0, 24, 3, 2, 2, "nose"), (0, 10, 1, 1, 2, "ear"), (6, 10, 1, 1, 2, "ear"),
@@ -137,4 +143,5 @@ def paint_egg(name, base, spot):
 if __name__ == "__main__":
     for name, spec in SPECIES.items():
         print(paint_species(name, spec))
-        print(paint_egg(name, *spec["egg"]))
+        if spec["egg"]:
+            print(paint_egg(name, *spec["egg"]))

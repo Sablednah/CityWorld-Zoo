@@ -15,7 +15,8 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 
 /**
  * A brown bear: vanilla's polar bear mesh (texture 128x64, the polar bear layout) in brown, with the
- * quadruped walk and no rearing. Baby: the same mesh, big-headed and half size, one texture.
+ * quadruped walk and no rearing. Baby: the same mesh at half size, one texture (vanilla draws its cub from a
+ * separate mesh because this head's pivot is 16 units forward, and kept full size it floats clear of the body).
  */
 public class BrownBearModel extends QuadrupedModel<LivingEntityRenderState> {
 
@@ -28,7 +29,7 @@ public class BrownBearModel extends QuadrupedModel<LivingEntityRenderState> {
     }
 
     public static LayerDefinition createBabyLayer() {
-        return LayerDefinition.create(mesh(), 128, 64).apply(MeshTransformer.scaling(1.2F)).apply(new BabyModelTransform(Set.of("head")));
+        return LayerDefinition.create(mesh(), 128, 64).apply(MeshTransformer.scaling(1.2F)).apply(new BabyModelTransform(Set.of()));
     }
 
     private static MeshDefinition mesh() {

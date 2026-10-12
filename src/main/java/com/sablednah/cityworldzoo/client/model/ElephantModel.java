@@ -17,7 +17,8 @@ import net.minecraft.util.Mth;
 /**
  * An elephant: a barrel body on pillar legs, a big head with ears, tusks and a three-joint trunk that
  * swings as it walks. Texture 128x64, layout mirrored in {@code tools/textures/paint.py}; the whole
- * mesh is scaled 1.4. Baby: big-headed half size.
+ * mesh is scaled 1.4. Baby: the whole mesh at half size (a full-size head would float ahead of a half body:
+ * {@code BabyModelTransform} keeps a head part's pivot where it was, and this head's pivot is far out).
  */
 public class ElephantModel extends EntityModel<LivingEntityRenderState> {
 
@@ -54,7 +55,7 @@ public class ElephantModel extends EntityModel<LivingEntityRenderState> {
     }
 
     public static LayerDefinition createBabyLayer() {
-        return LayerDefinition.create(mesh(), 128, 64).apply(MeshTransformer.scaling(SCALE)).apply(new BabyModelTransform(Set.of("head")));
+        return LayerDefinition.create(mesh(), 128, 64).apply(MeshTransformer.scaling(SCALE)).apply(new BabyModelTransform(Set.of()));
     }
 
     private static MeshDefinition mesh() {
@@ -66,12 +67,14 @@ public class ElephantModel extends EntityModel<LivingEntityRenderState> {
         PartDefinition head = root.addOrReplaceChild("head",
                 CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -6.0F, -10.0F, 10.0F, 10.0F, 10.0F),
                 PartPose.offset(0.0F, -2.0F, -14.0F));
+        // Ears: pivot at the top-back corner of each side of the head, the panel hanging down and back from it,
+        // yawed so the back edge swings outward and rolled so the bottom edge flares out.
         head.addOrReplaceChild("left_ear",
-                CubeListBuilder.create().texOffs(40, 0).addBox(0.0F, -5.0F, 0.0F, 1.0F, 10.0F, 8.0F),
-                PartPose.offsetAndRotation(5.0F, -1.0F, -8.0F, 0.0F, -0.4F, 0.0F));
+                CubeListBuilder.create().texOffs(40, 0).addBox(0.0F, -1.0F, -1.0F, 1.0F, 10.0F, 8.0F),
+                PartPose.offsetAndRotation(5.0F, -4.0F, -7.0F, 0.0F, 0.5F, -0.25F));
         head.addOrReplaceChild("right_ear",
-                CubeListBuilder.create().texOffs(58, 0).addBox(-1.0F, -5.0F, 0.0F, 1.0F, 10.0F, 8.0F),
-                PartPose.offsetAndRotation(-5.0F, -1.0F, -8.0F, 0.0F, 0.4F, 0.0F));
+                CubeListBuilder.create().texOffs(58, 0).addBox(-1.0F, -1.0F, -1.0F, 1.0F, 10.0F, 8.0F),
+                PartPose.offsetAndRotation(-5.0F, -4.0F, -7.0F, 0.0F, -0.5F, 0.25F));
         PartDefinition trunk = head.addOrReplaceChild("trunk",
                 CubeListBuilder.create().texOffs(76, 0).addBox(-1.5F, 0.0F, -1.5F, 3.0F, 6.0F, 3.0F),
                 PartPose.offsetAndRotation(0.0F, 2.0F, -8.5F, 0.2F, 0.0F, 0.0F));
@@ -83,10 +86,10 @@ public class ElephantModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(0.0F, 6.0F, 0.0F));
         head.addOrReplaceChild("left_tusk",
                 CubeListBuilder.create().texOffs(76, 10).addBox(-0.5F, -0.5F, -6.0F, 1.0F, 1.0F, 6.0F),
-                PartPose.offsetAndRotation(2.5F, 1.5F, -9.0F, -0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(2.5F, 3.0F, -9.5F, -0.3F, 0.0F, 0.0F));
         head.addOrReplaceChild("right_tusk",
                 CubeListBuilder.create().texOffs(90, 10).addBox(-0.5F, -0.5F, -6.0F, 1.0F, 1.0F, 6.0F),
-                PartPose.offsetAndRotation(-2.5F, 1.5F, -9.0F, -0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(-2.5F, 3.0F, -9.5F, -0.3F, 0.0F, 0.0F));
         CubeListBuilder frontLeg = CubeListBuilder.create().texOffs(60, 20).addBox(-3.0F, 0.0F, -3.0F, 6.0F, 14.0F, 6.0F);
         CubeListBuilder hindLeg = CubeListBuilder.create().texOffs(84, 20).addBox(-3.0F, 0.0F, -3.0F, 6.0F, 14.0F, 6.0F);
         root.addOrReplaceChild("right_front_leg", frontLeg, PartPose.offset(-5.0F, 10.0F, -8.0F));
@@ -115,8 +118,8 @@ public class ElephantModel extends EntityModel<LivingEntityRenderState> {
         this.trunk2.xRot = sway * 0.6F;
         this.trunk3.xRot = sway * 0.4F;
         float flap = Mth.cos(state.ageInTicks * 0.12F) * 0.15F;
-        this.leftEar.yRot = -0.4F - flap;
-        this.rightEar.yRot = 0.4F + flap;
+        this.leftEar.yRot = 0.5F + flap;
+        this.rightEar.yRot = -0.5F - flap;
         this.tail.yRot = Mth.cos(state.ageInTicks * 0.15F) * 0.25F;
     }
 }

@@ -30,8 +30,9 @@ public class BigCatModel extends AdultFelineModel<FelineRenderState> {
     }
 
     public static LayerDefinition createBabyLayer(boolean mane) {
-        // A cub has no mane whatever its father looks like.
-        return LayerDefinition.create(mesh(false), 64, 32).apply(MeshTransformer.scaling(SCALE)).apply(new BabyModelTransform(Set.of("head")));
+        // A cub has no mane whatever its father looks like. Uniform half size: this head's pivot is 18 units
+        // out, so a kept-full-size head would sit clear of the body.
+        return LayerDefinition.create(mesh(false), 64, 32).apply(MeshTransformer.scaling(SCALE)).apply(new BabyModelTransform(Set.of()));
     }
 
     private static MeshDefinition mesh(boolean mane) {

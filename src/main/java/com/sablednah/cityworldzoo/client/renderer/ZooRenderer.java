@@ -15,25 +15,29 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Mob;
 
 /**
- * One renderer for every species: an adult model, a baby model, one texture. The baby is the adult mesh
- * through a {@code BabyModelTransform}, so one texture covers both (what vanilla's cow does since 26.1).
+ * One renderer for every species: an adult model, a baby model, a texture, and a baby texture only where the
+ * baby mesh lays its boxes out differently (the zebra foal). Everywhere else the baby is the adult mesh
+ * through a {@code BabyModelTransform}, so one texture covers both.
  */
 public class ZooRenderer<T extends Mob, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends MobRenderer<T, S, M> {
 
     private final AdultAndBabyModelPair<M> models;
     private final Identifier texture;
+    private final Identifier babyTexture;
     private final Supplier<S> states;
 
-    public ZooRenderer(EntityRendererProvider.Context context, M adult, M baby, float shadow, Identifier texture, Supplier<S> states) {
+    public ZooRenderer(EntityRendererProvider.Context context, M adult, M baby, float shadow, Identifier texture,
+            Identifier babyTexture, Supplier<S> states) {
         super(context, adult, shadow);
         this.models = new AdultAndBabyModelPair<>(adult, baby);
         this.texture = texture;
+        this.babyTexture = babyTexture;
         this.states = states;
     }
 
     @Override
     public Identifier getTextureLocation(S state) {
-        return texture;
+        return state.isBaby ? babyTexture : texture;
     }
 
     @Override

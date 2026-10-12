@@ -83,10 +83,15 @@ tools/textures/paint.py                 placeholder textures + spawn eggs from t
 ## Known traps
 
 - A model's box list lives twice: Java (`client/model`) and `tools/textures/paint.py`. Change one, change
-  the other, or the new box renders pink.
-- `BabyModelTransform` only transforms ROOT children: a head under a neck (giraffe, deer) cannot be
-  big-headed, so those babies are uniform half-size. Horse and bear babies use the vanilla baby meshes'
-  idea but the adult texture, so one PNG per species.
+  the other, or the new box renders pink. Sable's screenshots land in the CurseForge `26.2` instance's
+  `screenshots/` folder; read them before guessing what a report means.
+- `BabyModelTransform` keeps a "head part" at full size AND at its original pivot, so a head whose pivot
+  is far from the body (elephant 14 units out, bear 16, cats 18 after scaling) floats clear of the half
+  body -- seen in play on the first client look (2026-10-12). Only the macaque, whose head sits against
+  its body like a cow's, is big-headed; every other baby is the whole mesh at half size. The zebra foal
+  is vanilla's `BabyHorseModel` mesh, which lays its boxes out differently, so it has its own
+  `zebra_baby.png` (vanilla foals do too). Vanilla's other babies with far-out heads (polar bear, cats)
+  each have a hand-made baby mesh; that is the road if a big-headed cub is ever wanted.
 - 26.2 names: `EntityTypes.X`, `Identifier`, models under `client/model/animal/<name>/`, renderers
   `submit(...)` with `SubmitNodeCollector`, `Item.Properties.spawnEgg(type)` (a per-mob egg texture, no
   tints). Vanilla sources: `../Threadwork/build/moddev/artifacts/minecraft-patched-26.2.0.72-sources.jar`.

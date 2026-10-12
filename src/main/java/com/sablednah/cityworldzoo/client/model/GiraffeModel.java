@@ -20,6 +20,8 @@ import net.minecraft.util.Mth;
 public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
 
     private static final float NECK_LEAN = 0.35F;
+    /** The back slopes down from the withers: 4 units over the body's 22, matched by 26-unit front legs and 22-unit hind legs. */
+    private static final float BODY_SLOPE = 0.18F;
     private final ModelPart neck;
     private final ModelPart head;
     private final ModelPart rightHindLeg;
@@ -52,10 +54,10 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
         PartDefinition root = mesh.getRoot();
         root.addOrReplaceChild("body",
                 CubeListBuilder.create().texOffs(32, 16).addBox(-5.0F, -11.0F, -7.0F, 10.0F, 22.0F, 10.0F),
-                PartPose.offsetAndRotation(0.0F, -7.0F, 2.0F, (float) (Math.PI / 2), 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -7.0F, 2.0F, (float) (Math.PI / 2) - BODY_SLOPE, 0.0F, 0.0F));
         PartDefinition neck = root.addOrReplaceChild("neck",
                 CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, -22.0F, -2.0F, 4.0F, 22.0F, 4.0F),
-                PartPose.offsetAndRotation(0.0F, -8.0F, -6.0F, NECK_LEAN, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -10.0F, -6.0F, NECK_LEAN, 0.0F, 0.0F));
         neck.addOrReplaceChild("head",
                 CubeListBuilder.create()
                         .texOffs(0, 0).addBox(-2.5F, -3.0F, -7.0F, 5.0F, 5.0F, 7.0F)
@@ -64,15 +66,15 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
                         .texOffs(30, 0).addBox("right_ear", -4.5F, -2.0F, -2.0F, 2.0F, 2.0F, 1.0F)
                         .texOffs(30, 0).mirror().addBox("left_ear", 2.5F, -2.0F, -2.0F, 2.0F, 2.0F, 1.0F),
                 PartPose.offsetAndRotation(0.0F, -22.0F, 0.0F, -NECK_LEAN, 0.0F, 0.0F));
-        CubeListBuilder frontLeg = CubeListBuilder.create().texOffs(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 24.0F, 4.0F);
-        CubeListBuilder hindLeg = CubeListBuilder.create().texOffs(16, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 24.0F, 4.0F);
-        root.addOrReplaceChild("right_front_leg", frontLeg, PartPose.offset(-3.0F, 0.0F, -6.0F));
-        root.addOrReplaceChild("left_front_leg", frontLeg, PartPose.offset(3.0F, 0.0F, -6.0F));
-        root.addOrReplaceChild("right_hind_leg", hindLeg, PartPose.offset(-3.0F, 0.0F, 10.0F));
-        root.addOrReplaceChild("left_hind_leg", hindLeg, PartPose.offset(3.0F, 0.0F, 10.0F));
+        CubeListBuilder frontLeg = CubeListBuilder.create().texOffs(0, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 26.0F, 4.0F);
+        CubeListBuilder hindLeg = CubeListBuilder.create().texOffs(16, 48).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 22.0F, 4.0F);
+        root.addOrReplaceChild("right_front_leg", frontLeg, PartPose.offset(-3.0F, -2.0F, -6.0F));
+        root.addOrReplaceChild("left_front_leg", frontLeg, PartPose.offset(3.0F, -2.0F, -6.0F));
+        root.addOrReplaceChild("right_hind_leg", hindLeg, PartPose.offset(-3.0F, 2.0F, 10.0F));
+        root.addOrReplaceChild("left_hind_leg", hindLeg, PartPose.offset(3.0F, 2.0F, 10.0F));
         root.addOrReplaceChild("tail",
                 CubeListBuilder.create().texOffs(72, 16).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 10.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, -9.0F, 13.0F, 0.3F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -7.0F, 13.0F, 0.3F, 0.0F, 0.0F));
         return mesh;
     }
 
