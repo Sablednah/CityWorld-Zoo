@@ -142,7 +142,7 @@ def paint_egg(name, base, spot):
 
 # Species whose texture comes from elsewhere: real art (art/<name>/, through bbmodel_to_java.py) or a spec
 # (tools/blockbench/spec_to_model.py paints its own placeholder). Never overpainted here.
-HANDMADE = {"giraffe", "elephant", "deer"}
+HANDMADE = {"giraffe", "elephant", "deer", "rhesus_macaque"}
 
 if __name__ == "__main__":
     for name, spec in SPECIES.items():
