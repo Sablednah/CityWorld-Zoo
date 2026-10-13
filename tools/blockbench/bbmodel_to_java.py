@@ -18,6 +18,7 @@ cell takes Blockbench's "up" face turned 180 degrees and the bottom cell its "do
 horizontally, which is how Blockbench's own box-UV template lays them out.
 
     python3 tools/blockbench/bbmodel_to_java.py giraffe <model.bbmodel> [texture.png]   # else the embedded one
+    python3 tools/blockbench/bbmodel_to_java.py zebra <same model> zebra_bite.png --texture-as=zebra_bite   # a skin
 """
 import base64, io, json, math, os, sys, uuid
 from PIL import Image
@@ -185,8 +186,8 @@ def split_element(e, y_cut):
     return upper, lower
 
 # --- the work ----------------------------------------------------------------------------------------------
-def convert(rig_name, bb_path, tex_path):
-    rig = RIGS[rig_name]
+def convert(rig_name, bb_path, tex_path, texture_as=None):
+    rig = RIGS.get(rig_name, {})
     d = json.load(open(bb_path))
     if tex_path:
         tex = Image.open(tex_path).convert("RGBA")
@@ -217,9 +218,24 @@ def convert(rig_name, bb_path, tex_path):
                 groups[gi].remove(e)
                 groups[gi].extend(split_element(e, y_cut))
 
-    # Assign elements to parts.
+    # Assign elements to parts: from the rig table, or, when the file's groups are named (a model that went
+    # out through spec_to_model.py and came back), straight from the groups: each group is a part with its
+    # origin, rotation and nesting, holding its direct elements.
     parts = {}
     order = []
+    if "parts" not in rig:
+        def from_group(node, parent):
+            name = node["name"]
+            parts[name] = {"parent": parent, "pivot": node.get("origin", [0, 0, 0]), "rotation": tuple(node.get("rotation") or [0, 0, 0]),
+                           "elements": [elements[c] for c in node.get("children", []) if isinstance(c, str)]}
+            order.append(name)
+            for c in node.get("children", []):
+                if isinstance(c, dict):
+                    from_group(c, name)
+        for node in d["outliner"]:
+            if isinstance(node, dict) and node.get("name"):
+                from_group(node, None)
+        rig = dict(rig, parts=[])
     for name, parent, pivot, members in rig["parts"]:
         found = []
         for m in members:
@@ -334,8 +350,11 @@ def convert(rig_name, bb_path, tex_path):
         place(face_image(e, "west"), u + dep + w, v + dep, dep, h)
         place(face_image(e, "south"), u + 2 * dep + w, v + dep, w, h)
 
-    tex_out = os.path.join(ROOT, "src", "main", "resources", "assets", "cityworld_zoo", "textures", "entity", rig_name + ".png")
+    tex_out = os.path.join(ROOT, "src", "main", "resources", "assets", "cityworld_zoo", "textures", "entity", (texture_as or rig_name) + ".png")
     out.save(tex_out)
+    if texture_as:
+        print(f"{texture_as}: texture only, {out.width}x{out.height} on the {rig_name} packing; wrote {tex_out}")
+        return
 
     # Java mesh body.
     lines = []
@@ -406,4 +425,6 @@ def convert(rig_name, bb_path, tex_path):
     print("wrote", tex_out); print("wrote", mesh_out); print("wrote", bb_out)
 
 if __name__ == "__main__":
-    convert(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    texture_as = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--texture-as=")), None)
+    convert(args[0], args[1], args[2] if len(args) > 2 else None, texture_as)

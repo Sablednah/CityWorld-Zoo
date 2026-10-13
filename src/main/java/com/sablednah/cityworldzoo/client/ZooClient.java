@@ -11,16 +11,15 @@ import com.sablednah.cityworldzoo.client.model.GiraffeModel;
 import com.sablednah.cityworldzoo.client.model.MacaqueModel;
 import com.sablednah.cityworldzoo.client.model.ZebraModel;
 import com.sablednah.cityworldzoo.client.renderer.ElephantRenderer;
+import com.sablednah.cityworldzoo.client.renderer.ZebraRenderer;
 import com.sablednah.cityworldzoo.client.renderer.ZooRenderer;
 import com.sablednah.cityworldzoo.entity.ZooAnimal;
 
 import java.util.function.Function;
 
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.animal.equine.BabyHorseModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.entity.state.EquineRenderState;
 import net.minecraft.client.renderer.entity.state.FelineRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
@@ -64,9 +63,9 @@ public final class ZooClient {
         event.registerEntityRenderer(ZooEntities.ELEPHANT.entityType(), ctx -> new ElephantRenderer(ctx,
                 new ElephantModel(ctx.bakeLayer(ZooModelLayers.ELEPHANT)), new ElephantModel(ctx.bakeLayer(ZooModelLayers.ELEPHANT_BABY)), 1.2F, texture("elephant")));
         plain(event, ZooEntities.BROWN_BEAR, BrownBearModel::new, ZooModelLayers.BROWN_BEAR, ZooModelLayers.BROWN_BEAR_BABY, 0.9F);
-        // The foal is vanilla's baby horse mesh with its own box layout, hence its own texture.
-        register(event, ZooEntities.ZEBRA, ZebraModel::new, BabyHorseModel::new, ZooModelLayers.ZEBRA, ZooModelLayers.ZEBRA_BABY, 0.75F,
-                texture("zebra"), texture("zebra_baby"), EquineRenderState::new);
+        event.registerEntityRenderer(ZooEntities.ZEBRA.entityType(), ctx -> new ZebraRenderer(ctx,
+                new ZebraModel(ctx.bakeLayer(ZooModelLayers.ZEBRA)), new ZebraModel(ctx.bakeLayer(ZooModelLayers.ZEBRA_BABY)), 0.75F,
+                texture("zebra"), texture("zebra_bite")));
         register(event, ZooEntities.LION, BigCatModel::new, BigCatModel::new, ZooModelLayers.LION, ZooModelLayers.LION_BABY, 0.8F,
                 texture("lion"), texture("lion"), FelineRenderState::new);
         register(event, ZooEntities.TIGER, BigCatModel::new, BigCatModel::new, ZooModelLayers.TIGER, ZooModelLayers.TIGER_BABY, 0.8F,

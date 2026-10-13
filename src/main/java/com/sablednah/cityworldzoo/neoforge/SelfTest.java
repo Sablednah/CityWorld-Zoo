@@ -83,6 +83,25 @@ public final class SelfTest {
             }
         }
 
+        // Zebras: the bitten skin is one in a hundred and survives a save.
+        {
+            var e = ZooEntities.ZEBRA.entityType().create(level, EntitySpawnReason.COMMAND);
+            if (e instanceof com.sablednah.cityworldzoo.entity.Zebra z) {
+                z.setBitten(true);
+                var out = net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess());
+                z.saveWithoutId(out);
+                var copy = ZooEntities.ZEBRA.entityType().create(level, EntitySpawnReason.COMMAND);
+                if (copy instanceof com.sablednah.cityworldzoo.entity.Zebra z2) {
+                    z2.setBitten(false);
+                    z2.load(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), out.buildResult()));
+                    check("zebra: Bitten survives a save and reload", z2.isBitten());
+                    z2.discard();
+                }
+                z.discard();
+                check("zebra: the bitten skin has a texture", resource("/assets/cityworld_zoo/textures/entity/zebra_bite.png"));
+            }
+        }
+
         // The worldgen-thread rule, as a guard: no species and not the base may override finalizeSpawn.
         List<Class<?>> classes = new ArrayList<>();
         classes.add(ZooAnimal.class);
