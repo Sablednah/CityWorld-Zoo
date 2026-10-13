@@ -23,10 +23,23 @@ public final class ZooSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> RHESUS_MACAQUE_AMBIENT = sound("entity.rhesus_macaque.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> RHESUS_MACAQUE_HURT = sound("entity.rhesus_macaque.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> RHESUS_MACAQUE_DEATH = sound("entity.rhesus_macaque.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LION_AMBIENT = sound("entity.lion.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LION_ANGRY = sound("entity.lion.angry");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LION_HURT = sound("entity.lion.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> LION_DEATH = sound("entity.lion.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TIGER_AMBIENT = sound("entity.tiger.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TIGER_ANGRY = sound("entity.tiger.angry");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TIGER_HURT = sound("entity.tiger.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TIGER_DEATH = sound("entity.tiger.death");
+    public static final DeferredHolder<SoundEvent, SoundEvent> BROWN_BEAR_AMBIENT = sound("entity.brown_bear.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GIRAFFE_AMBIENT = sound("entity.giraffe.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GIRAFFE_EAT = sound("entity.giraffe.eat");
 
     /** Every event, for the self-test to check against sounds.json. */
     public static java.util.List<DeferredHolder<SoundEvent, SoundEvent>> all() {
-        return java.util.List.of(ZEBRA_AMBIENT, ZEBRA_HURT, ZEBRA_DEATH, ZEBRA_ANGRY, RHESUS_MACAQUE_AMBIENT, RHESUS_MACAQUE_HURT, RHESUS_MACAQUE_DEATH);
+        return java.util.List.of(ZEBRA_AMBIENT, ZEBRA_HURT, ZEBRA_DEATH, ZEBRA_ANGRY, RHESUS_MACAQUE_AMBIENT, RHESUS_MACAQUE_HURT, RHESUS_MACAQUE_DEATH,
+                LION_AMBIENT, LION_ANGRY, LION_HURT, LION_DEATH, TIGER_AMBIENT, TIGER_ANGRY, TIGER_HURT, TIGER_DEATH,
+                BROWN_BEAR_AMBIENT, GIRAFFE_AMBIENT, GIRAFFE_EAT);
     }
 
     private static DeferredHolder<SoundEvent, SoundEvent> sound(String id) {

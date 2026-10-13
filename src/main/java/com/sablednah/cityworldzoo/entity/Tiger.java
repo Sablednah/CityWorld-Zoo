@@ -1,7 +1,8 @@
 package com.sablednah.cityworldzoo.entity;
 
+import com.sablednah.cityworldzoo.ZooSounds;
+
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -36,22 +37,22 @@ public class Tiger extends ZooAnimal {
     }
 
     @Override
-    public float getVoicePitch() {
-        return super.getVoicePitch() * 0.5F;
+    protected SoundEvent getAmbientSound() {
+        return ZooSounds.TIGER_AMBIENT.get();
     }
 
     @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.OCELOT_AMBIENT;
+    protected SoundEvent getAngrySound() {
+        return ZooSounds.TIGER_ANGRY.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.OCELOT_HURT;
+        return ZooSounds.TIGER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.OCELOT_DEATH;
+        return ZooSounds.TIGER_DEATH.get();
     }
 }

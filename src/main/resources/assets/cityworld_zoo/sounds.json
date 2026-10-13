@@ -60,5 +60,126 @@
       "cityworld_zoo:rhesus_macaque/death1",
       "cityworld_zoo:rhesus_macaque/death2"
     ]
+  },
+  "entity.lion.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.lion.ambient",
+    "sounds": [
+      {
+        "name": "cityworld_zoo:lion/ambient1",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:lion/ambient2",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:lion/ambient3",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:lion/ambient4",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:lion/roar1",
+        "weight": 1
+      }
+    ]
+  },
+  "entity.lion.angry": {
+    "subtitle": "subtitles.cityworld_zoo.lion.angry",
+    "sounds": [
+      "cityworld_zoo:lion/angry1",
+      "cityworld_zoo:lion/angry2"
+    ]
+  },
+  "entity.lion.hurt": {
+    "subtitle": "subtitles.cityworld_zoo.lion.hurt",
+    "sounds": [
+      "cityworld_zoo:lion/hurt1",
+      "cityworld_zoo:lion/hurt2"
+    ]
+  },
+  "entity.lion.death": {
+    "subtitle": "subtitles.cityworld_zoo.lion.death",
+    "sounds": [
+      "cityworld_zoo:lion/death1",
+      "cityworld_zoo:lion/death2"
+    ]
+  },
+  "entity.tiger.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.tiger.ambient",
+    "sounds": [
+      {
+        "name": "cityworld_zoo:tiger/ambient1",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:tiger/ambient2",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:tiger/ambient3",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:tiger/ambient4",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:tiger/roar1",
+        "weight": 1
+      }
+    ]
+  },
+  "entity.tiger.angry": {
+    "subtitle": "subtitles.cityworld_zoo.tiger.angry",
+    "sounds": [
+      "cityworld_zoo:tiger/angry1",
+      "cityworld_zoo:tiger/angry2",
+      "cityworld_zoo:tiger/angry3"
+    ]
+  },
+  "entity.tiger.hurt": {
+    "subtitle": "subtitles.cityworld_zoo.tiger.hurt",
+    "sounds": [
+      "cityworld_zoo:tiger/hurt1",
+      "cityworld_zoo:tiger/hurt2",
+      "cityworld_zoo:tiger/hurt3"
+    ]
+  },
+  "entity.tiger.death": {
+    "subtitle": "subtitles.cityworld_zoo.tiger.death",
+    "sounds": [
+      "cityworld_zoo:tiger/death1",
+      "cityworld_zoo:tiger/death2"
+    ]
+  },
+  "entity.brown_bear.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.brown_bear.ambient",
+    "sounds": [
+      {
+        "name": "cityworld_zoo:brown_bear/ambient1",
+        "weight": 2
+      },
+      {
+        "name": "minecraft:entity.polar_bear.ambient",
+        "type": "event"
+      }
+    ]
+  },
+  "entity.giraffe.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.giraffe.ambient",
+    "sounds": [
+      "cityworld_zoo:giraffe/ambient1",
+      "cityworld_zoo:giraffe/ambient2",
+      "cityworld_zoo:giraffe/ambient3"
+    ]
+  },
+  "entity.giraffe.eat": {
+    "subtitle": "subtitles.cityworld_zoo.giraffe.eat",
+    "sounds": [
+      "cityworld_zoo:giraffe/eat1"
+    ]
   }
 }

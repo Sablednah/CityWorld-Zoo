@@ -15,6 +15,10 @@ this mod's jar is within the licence; publishing the raw files as a sound pack w
 | `rhesus_macaque/ambient3.ogg`, `hurt1-2.ogg` | chatter; two sharp falling cries | Pixabay; raw `art/rhesus_macaque/sounds/monkey.mp3` | Pixabay Content License |
 | `rhesus_macaque/death1.ogg` | a long screech | Pixabay; raw `art/rhesus_macaque/sounds/monkey-noise-no-copyright.mp3` | Pixabay Content License |
 | `rhesus_macaque/death2.ogg` | a long rising screech | Pixabay; raw `art/rhesus_macaque/sounds/monkey-sound.mp3` | Pixabay Content License |
+| `lion/*.ogg` | growls, rumbles and roars | Pixabay (pwlpl, gargamel10, dragon-studio x2, magiazzz, mightuser); raw `art/lion/sounds/` | Pixabay Content License |
+| `tiger/*.ogg` | chuffs, growls and roars | Pixabay (mollyroselee, susan-lu4esm, sherimfal, jerryblessed, freesound_community); raw `art/tiger/sounds/` | Pixabay Content License |
+| `brown_bear/ambient1.ogg` | a growl | Pixabay (universfield); raw `art/brown_bear/sounds/` | Pixabay Content License |
+| `giraffe/*.ogg` | snorts, and chewing leaves for the eating sound | Pixabay (jerryblessed); raw `art/giraffe/sounds/` | Pixabay Content License |
 
 Everything else the animals say is a vanilla sound event referenced from `sounds.json` (`"type": "event"`):
 the zebra's other ambient take, hurt, death and angry calls are the donkey's. Those need no credit.

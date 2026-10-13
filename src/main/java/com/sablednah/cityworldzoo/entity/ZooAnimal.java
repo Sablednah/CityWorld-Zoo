@@ -1,6 +1,9 @@
 package com.sablednah.cityworldzoo.entity;
 
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
+import org.jspecify.annotations.Nullable;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -37,6 +40,19 @@ public abstract class ZooAnimal extends Animal {
     /** Whether this animal fights back when hurt (a melee goal and a hurt-by target) or runs. */
     protected boolean fightsBack() {
         return false;
+    }
+
+    /** The call when it turns on something (played once, as the target is first taken); null for none. */
+    protected @Nullable SoundEvent getAngrySound() {
+        return null;
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        boolean had = this.getTarget() != null;
+        super.setTarget(target);
+        SoundEvent angry = getAngrySound();
+        if (target != null && !had && angry != null && !this.level().isClientSide()) this.playSound(angry, this.getSoundVolume(), this.getVoicePitch());
     }
 
     /** Walking speed modifier for the stroll, follow and tempt goals. */

@@ -1,5 +1,7 @@
 package com.sablednah.cityworldzoo.entity;
 
+import com.sablednah.cityworldzoo.ZooSounds;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -40,7 +42,12 @@ public class BrownBear extends ZooAnimal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return this.isBaby() ? SoundEvents.POLAR_BEAR_AMBIENT_BABY : SoundEvents.POLAR_BEAR_AMBIENT;
+        return this.isBaby() ? SoundEvents.POLAR_BEAR_AMBIENT_BABY : ZooSounds.BROWN_BEAR_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getAngrySound() {
+        return SoundEvents.POLAR_BEAR_WARNING;
     }
 
     @Override

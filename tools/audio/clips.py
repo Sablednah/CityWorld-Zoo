@@ -31,6 +31,53 @@ CUTS = {
         ("monkey-noise-no-copyright.mp3", 0.12, 2.08, "death1", -1.0),
         ("monkey-sound.mp3", 0.04, 2.60, "death2", -1.0),
     ],
+    "lion": [
+        # rumbles and growls, and now and then a real roar, for the ambient event
+        ("gargamel10-lion-growl-sound-effect-380314.mp3", 0.46, 2.60, "ambient1", -8.0),
+        ("magiazzz-lion-552065.mp3", 0.08, 1.30, "ambient2", -8.0),
+        ("magiazzz-lion-552065.mp3", 2.30, 3.50, "ambient3", -8.0),
+        ("magiazzz-lion-552065.mp3", 4.20, 5.09, "ambient4", -8.0),
+        ("dragon-studio-lion-roar-sound-effect-324751.mp3", 1.70, 3.10, "roar1", -4.0),
+        # the warning when it turns on you
+        ("dragon-studio-monster-growl-376892.mp3", 0.08, 2.30, "angry1", -2.0),
+        ("dragon-studio-lion-roar-sound-effect-324751.mp3", 1.70, 3.10, "angry2", -2.0),
+        # short sharp bites of roar: hurt
+        ("pwlpl-powerful-lion-roar-sound-effect-high-quality-sfx-444190.mp3", 1.58, 2.00, "hurt1", -3.0),
+        ("mightuser-sound-effect-of-lion-roar-ambience-hd-263684.mp3", 4.06, 4.90, "hurt2", -3.0),
+        # the big roars: death
+        ("mightuser-sound-effect-of-lion-roar-ambience-hd-263684.mp3", 0.02, 3.00, "death1", -1.0),
+        ("pwlpl-powerful-lion-roar-sound-effect-high-quality-sfx-444190.mp3", 0.02, 1.40, "death2", -1.0),
+    ],
+    "tiger": [
+        # chuffs and low rumbles for ambient, with a light roar now and then
+        ("mollyroselee-tiger-chuffing-ai-generated-431319.mp3", 0.02, 1.60, "ambient1", -8.0),
+        ("mollyroselee-tiger-chuffing-ai-generated-431319.mp3", 3.10, 3.80, "ambient2", -8.0),
+        ("mollyroselee-tiger-chuffing-ai-generated-431319.mp3", 5.08, 6.60, "ambient3", -8.0),
+        ("jerryblessed-deep-aggressive-tiger-growl-and-rumble-540365.mp3", 0.00, 0.84, "ambient4", -8.0),
+        ("sherimfal-tiger-light-roar-t-293716.mp3", 1.40, 3.40, "roar1", -5.0),
+        # the warning when it turns on you
+        ("jerryblessed-deep-aggressive-tiger-growl-and-rumble-540365.mp3", 1.78, 4.90, "angry1", -2.0),
+        ("freesound_community-tiger-roar-104166.mp3", 1.00, 2.30, "angry2", -2.0),
+        ("jerryblessed-deep-aggressive-tiger-growl-and-rumble-540365.mp3", 10.20, 11.40, "angry3", -2.0),
+        # short loud calls: hurt
+        ("susan-lu4esm-tiger-439141.mp3", 1.86, 2.50, "hurt1", -3.0),
+        ("susan-lu4esm-tiger-439141.mp3", 3.42, 4.24, "hurt2", -3.0),
+        ("jerryblessed-deep-aggressive-tiger-growl-and-rumble-540365.mp3", 5.06, 5.54, "hurt3", -3.0),
+        # long roars: death
+        ("sherimfal-tiger-light-roar-t-293716.mp3", 3.76, 6.30, "death1", -1.0),
+        ("susan-lu4esm-tiger-439141.mp3", 0.06, 1.16, "death2", -1.0),
+    ],
+    "brown_bear": [
+        ("universfield-bear-growl-191995.mp3", 0.06, 1.06, "ambient1", -8.0),
+    ],
+    "giraffe": [
+        # snorts; a giraffe says almost nothing a person can hear, so these play rarely
+        ("jerryblessed-giraffe-snorting-and-chewing-leaves-540358.mp3", 1.60, 3.20, "ambient1", -10.0),
+        ("jerryblessed-giraffe-snorting-and-chewing-leaves-540358.mp3", 3.26, 3.76, "ambient2", -10.0),
+        ("jerryblessed-giraffe-snorting-and-chewing-leaves-540358.mp3", 6.26, 7.06, "ambient3", -10.0),
+        # chewing leaves: the eating sound
+        ("jerryblessed-giraffe-snorting-and-chewing-leaves-540358.mp3", 3.90, 6.06, "eat1", -10.0),
+    ],
 }
 
 def cut(raw, start, end, peak_db, fade_in=0.01, fade_out=0.06):

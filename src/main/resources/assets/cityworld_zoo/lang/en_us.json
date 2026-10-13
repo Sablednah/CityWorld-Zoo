@@ -21,5 +21,16 @@
   "subtitles.cityworld_zoo.zebra.angry": "Zebra neighs",
   "subtitles.cityworld_zoo.rhesus_macaque.ambient": "Macaque chatters",
   "subtitles.cityworld_zoo.rhesus_macaque.hurt": "Macaque hurts",
-  "subtitles.cityworld_zoo.rhesus_macaque.death": "Macaque dies"
+  "subtitles.cityworld_zoo.rhesus_macaque.death": "Macaque dies",
+  "subtitles.cityworld_zoo.lion.ambient": "Lion growls",
+  "subtitles.cityworld_zoo.lion.angry": "Lion roars",
+  "subtitles.cityworld_zoo.lion.hurt": "Lion hurts",
+  "subtitles.cityworld_zoo.lion.death": "Lion dies",
+  "subtitles.cityworld_zoo.tiger.ambient": "Tiger chuffs",
+  "subtitles.cityworld_zoo.tiger.angry": "Tiger roars",
+  "subtitles.cityworld_zoo.tiger.hurt": "Tiger hurts",
+  "subtitles.cityworld_zoo.tiger.death": "Tiger dies",
+  "subtitles.cityworld_zoo.brown_bear.ambient": "Bear growls",
+  "subtitles.cityworld_zoo.giraffe.ambient": "Giraffe snorts",
+  "subtitles.cityworld_zoo.giraffe.eat": "Giraffe chews"
 }

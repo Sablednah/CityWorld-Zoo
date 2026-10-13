@@ -1,5 +1,7 @@
 package com.sablednah.cityworldzoo.entity;
 
+import com.sablednah.cityworldzoo.ZooSounds;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -34,9 +36,21 @@ public class Giraffe extends ZooAnimal {
         return stack.is(Items.WHEAT);
     }
 
+    /** A snort, rarely: a giraffe says almost nothing a person can hear. */
     @Override
     protected SoundEvent getAmbientSound() {
-        return null; // giraffes hum, rarely; nothing vanilla stands in for it
+        return ZooSounds.GIRAFFE_AMBIENT.get();
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        return 600;
+    }
+
+    /** Chewing leaves, when fed (vanilla's {@code playEatingSound} is the hook on 26.2). */
+    @Override
+    protected void playEatingSound() {
+        this.makeSound(ZooSounds.GIRAFFE_EAT.get());
     }
 
     @Override
