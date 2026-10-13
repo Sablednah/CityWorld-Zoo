@@ -61,6 +61,9 @@ RIGS = {
         # Sable's pillar legs are one 19-unit element each; split at y=9 into a 10-unit upper and a 9-unit
         # lower so the knee can bend, each half reading its own rows of the painted leg.
         "split_y": {(1, "Pillar leg"): 9, (2, "Pillar leg"): 9, (3, "Pillar leg"): 9, (4, "Pillar leg"): 9},
+        # The legs' outer faces lie exactly on the body's side and front planes where they overlap it, and
+        # two faces on one plane flicker (z-fighting). A tenth of a unit in on x and z is invisible and ends it.
+        "inset_xz": {(1, "Pillar leg"): 0.1, (2, "Pillar leg"): 0.1, (3, "Pillar leg"): 0.1, (4, "Pillar leg"): 0.1},
         "parts": [
             ("body", None, (0, 24, 0), [(0, "Deep rectangular torso")]),
             ("head", "body", (0, 27, -11), [(5, "Sloped forehead"), (5, "Cheeks")]),
@@ -178,6 +181,11 @@ def convert(rig_name, bb_path, tex_path):
             groups.append([elements[c] for c in node.get("children", []) if isinstance(c, str)])
         else:
             groups.append([elements[node]])
+    for (gi, ename), inset in rig.get("inset_xz", {}).items():
+        for e in groups[gi]:
+            if e["name"] == ename:
+                e["from"] = [e["from"][0] + inset, e["from"][1], e["from"][2] + inset]
+                e["to"] = [e["to"][0] - inset, e["to"][1], e["to"][2] - inset]
     for (gi, ename), y_cut in rig.get("split_y", {}).items():
         for e in list(groups[gi]):
             if e["name"] == ename:
