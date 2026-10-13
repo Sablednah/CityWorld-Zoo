@@ -69,6 +69,12 @@ standing in (horse for the zebra, polar bear for the bear, ocelot pitched down f
 match the 26.1+ vanilla style: the zebra IS the horse mesh, the cats the ocelot mesh at 2x, the bear the
 polar bear mesh; giraffe, deer, elephant and macaque are ours.
 
+**Leg swing is maths, not taste.** `client/model/Gait`: vanilla advances the walk position 4 units per
+block and models use `cos(0.6662 * position)`, so one leg cycle is 2.36 blocks at any speed, and a planted
+foot must sweep half of it: `sin(A) = 9.43 / hip height in rendered units`. Multiply the angle by the walk
+speed (vanilla's quadrupeds do) and a slow heavy animal glides, which Sable saw on the giraffe and elephant
+(2026-10-13). Use `Gait.swing(hipUnits * state.scale) * Gait.ramp(speed)`.
+
 ## Layout
 
 ```
