@@ -52,6 +52,17 @@ CityWorld; the self-test reads its catalog by reflection when the jar is in `run
 is skipped quietly when its entity, habitat or `requires_mod` is missing. Change the schema with the
 CityWorld session, never by guessing.
 
+**Art comes from Blockbench, and the converter is the bridge.** Sable models and paints in Blockbench's
+free format (per-face UVs on a big texture) and hands over the `.bbmodel` and PNG; they go in
+`art/<animal>/` as the source of truth. `tools/blockbench/bbmodel_to_java.py <animal> <bbmodel> <png>`
+repacks every element into a vanilla box net at the artist's pixels-per-unit, writes the entity texture, the
+Java `mesh()` body (`blockbench/generated/`, pasted into the model class between the GENERATED markers) and
+a box-UV `.bbmodel` in `blockbench/`. The rig (part names, pivots for animation, which elements belong to
+which part) is the `RIGS` table in the converter; the animation is hand-written in the model class. The
+coordinate and face rules are in the converter's docstring; the giraffe (2026-10-13) was the first through.
+Self-contained `.java` model files for Blockbench to open were tried first and opened blank; do not go back
+to that. `tools/textures/paint.py` skips any species in its `HANDMADE` set.
+
 **Art and sound are original or licensed.** The textures today are `tools/textures/paint.py`'s
 placeholders, painted on each model's box net; Sable is revamping them. Sounds are vanilla sound events
 standing in (horse for the zebra, polar bear for the bear, ocelot pitched down for the cats ...). Models

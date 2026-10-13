@@ -140,8 +140,13 @@ def paint_egg(name, base, spot):
     im.save(path)
     return path
 
+# Species with real art (art/<name>/, converted by tools/blockbench/bbmodel_to_java.py): never overpainted.
+HANDMADE = {"giraffe"}
+
 if __name__ == "__main__":
     for name, spec in SPECIES.items():
+        if name in HANDMADE:
+            continue
         print(paint_species(name, spec))
         if spec["egg"]:
             print(paint_egg(name, *spec["egg"]))
