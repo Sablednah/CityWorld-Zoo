@@ -20,6 +20,14 @@ public final class ZooSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> ZEBRA_HURT = sound("entity.zebra.hurt");
     public static final DeferredHolder<SoundEvent, SoundEvent> ZEBRA_DEATH = sound("entity.zebra.death");
     public static final DeferredHolder<SoundEvent, SoundEvent> ZEBRA_ANGRY = sound("entity.zebra.angry");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RHESUS_MACAQUE_AMBIENT = sound("entity.rhesus_macaque.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RHESUS_MACAQUE_HURT = sound("entity.rhesus_macaque.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> RHESUS_MACAQUE_DEATH = sound("entity.rhesus_macaque.death");
+
+    /** Every event, for the self-test to check against sounds.json. */
+    public static java.util.List<DeferredHolder<SoundEvent, SoundEvent>> all() {
+        return java.util.List.of(ZEBRA_AMBIENT, ZEBRA_HURT, ZEBRA_DEATH, ZEBRA_ANGRY, RHESUS_MACAQUE_AMBIENT, RHESUS_MACAQUE_HURT, RHESUS_MACAQUE_DEATH);
+    }
 
     private static DeferredHolder<SoundEvent, SoundEvent> sound(String id) {
         return SOUNDS.register(id, () -> SoundEvent.createVariableRangeEvent(ZooEntities.id(id)));

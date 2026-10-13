@@ -2,20 +2,63 @@
   "entity.zebra.ambient": {
     "subtitle": "subtitles.cityworld_zoo.zebra.ambient",
     "sounds": [
-      { "name": "cityworld_zoo:zebra/whinny", "weight": 2 },
-      { "name": "minecraft:entity.donkey.ambient", "type": "event" }
+      {
+        "name": "cityworld_zoo:zebra/whinny",
+        "weight": 2
+      },
+      {
+        "name": "minecraft:entity.donkey.ambient",
+        "type": "event"
+      }
     ]
   },
   "entity.zebra.hurt": {
     "subtitle": "subtitles.cityworld_zoo.zebra.hurt",
-    "sounds": [ { "name": "minecraft:entity.donkey.hurt", "type": "event" } ]
+    "sounds": [
+      {
+        "name": "minecraft:entity.donkey.hurt",
+        "type": "event"
+      }
+    ]
   },
   "entity.zebra.death": {
     "subtitle": "subtitles.cityworld_zoo.zebra.death",
-    "sounds": [ { "name": "minecraft:entity.donkey.death", "type": "event" } ]
+    "sounds": [
+      {
+        "name": "minecraft:entity.donkey.death",
+        "type": "event"
+      }
+    ]
   },
   "entity.zebra.angry": {
     "subtitle": "subtitles.cityworld_zoo.zebra.angry",
-    "sounds": [ { "name": "minecraft:entity.donkey.angry", "type": "event" } ]
+    "sounds": [
+      {
+        "name": "minecraft:entity.donkey.angry",
+        "type": "event"
+      }
+    ]
+  },
+  "entity.rhesus_macaque.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.rhesus_macaque.ambient",
+    "sounds": [
+      "cityworld_zoo:rhesus_macaque/ambient1",
+      "cityworld_zoo:rhesus_macaque/ambient2",
+      "cityworld_zoo:rhesus_macaque/ambient3"
+    ]
+  },
+  "entity.rhesus_macaque.hurt": {
+    "subtitle": "subtitles.cityworld_zoo.rhesus_macaque.hurt",
+    "sounds": [
+      "cityworld_zoo:rhesus_macaque/hurt1",
+      "cityworld_zoo:rhesus_macaque/hurt2"
+    ]
+  },
+  "entity.rhesus_macaque.death": {
+    "subtitle": "subtitles.cityworld_zoo.rhesus_macaque.death",
+    "sounds": [
+      "cityworld_zoo:rhesus_macaque/death1",
+      "cityworld_zoo:rhesus_macaque/death2"
+    ]
   }
 }

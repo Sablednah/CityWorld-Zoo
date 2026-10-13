@@ -107,17 +107,16 @@ public final class SelfTest {
         {
             JsonObject sounds = json("/assets/cityworld_zoo/sounds.json");
             check("sounds.json parses", sounds != null);
-            for (var holder : java.util.List.of(com.sablednah.cityworldzoo.ZooSounds.ZEBRA_AMBIENT, com.sablednah.cityworldzoo.ZooSounds.ZEBRA_HURT,
-                    com.sablednah.cityworldzoo.ZooSounds.ZEBRA_DEATH, com.sablednah.cityworldzoo.ZooSounds.ZEBRA_ANGRY)) {
+            for (var holder : com.sablednah.cityworldzoo.ZooSounds.all()) {
                 String path = holder.getId().getPath();
                 check("sound " + path + " is registered", BuiltInRegistries.SOUND_EVENT.containsKey(holder.getId()));
                 check("sound " + path + " is defined in sounds.json", sounds != null && sounds.has(path));
                 check("sound " + path + " has a subtitle", lang("subtitles.cityworld_zoo." + path.substring("entity.".length())));
                 if (sounds != null && sounds.has(path)) {
                     for (var take : sounds.getAsJsonObject(path).getAsJsonArray("sounds")) {
-                        JsonObject t = take.getAsJsonObject();
-                        String name = t.get("name").getAsString();
-                        if (t.has("type") && "event".equals(t.get("type").getAsString())) {
+                        JsonObject t = take.isJsonObject() ? take.getAsJsonObject() : null;   // a bare string is a file
+                        String name = t != null ? t.get("name").getAsString() : take.getAsString();
+                        if (t != null && t.has("type") && "event".equals(t.get("type").getAsString())) {
                             check("sound " + path + " borrows a real vanilla event: " + name, BuiltInRegistries.SOUND_EVENT.containsKey(Identifier.parse(name)));
                         } else {
                             check("sound " + path + " take exists in the jar: " + name, resource("/assets/cityworld_zoo/sounds/" + name.substring(name.indexOf(':') + 1) + ".ogg"));

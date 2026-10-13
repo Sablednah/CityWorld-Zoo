@@ -18,5 +18,8 @@
   "subtitles.cityworld_zoo.zebra.ambient": "Zebra brays",
   "subtitles.cityworld_zoo.zebra.hurt": "Zebra hurts",
   "subtitles.cityworld_zoo.zebra.death": "Zebra dies",
-  "subtitles.cityworld_zoo.zebra.angry": "Zebra neighs"
+  "subtitles.cityworld_zoo.zebra.angry": "Zebra neighs",
+  "subtitles.cityworld_zoo.rhesus_macaque.ambient": "Macaque chatters",
+  "subtitles.cityworld_zoo.rhesus_macaque.hurt": "Macaque hurts",
+  "subtitles.cityworld_zoo.rhesus_macaque.death": "Macaque dies"
 }

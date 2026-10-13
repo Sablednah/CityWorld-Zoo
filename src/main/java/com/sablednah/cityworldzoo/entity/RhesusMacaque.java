@@ -1,7 +1,8 @@
 package com.sablednah.cityworldzoo.entity;
 
+import com.sablednah.cityworldzoo.ZooSounds;
+
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -11,7 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
-/** The Last of Us: the lab monkeys at the University of Eastern Colorado, infected but never turned. Small, quick, fond of fruit. */
+/**
+ * The Last of Us: the lab monkeys at the University of Eastern Colorado, infected but never turned. Small,
+ * quick, fond of fruit. Its calls are cut from recordings Sable found (art/rhesus_macaque/sounds, through
+ * tools/audio/clips.py): chatter for ambient, a sharp falling cry for hurt, the long screeches for death.
+ * A baby's voice is pitched up by vanilla ({@code getVoicePitch}).
+ */
 public class RhesusMacaque extends ZooAnimal {
 
     public RhesusMacaque(EntityType<? extends RhesusMacaque> type, Level level) {
@@ -37,22 +43,17 @@ public class RhesusMacaque extends ZooAnimal {
     }
 
     @Override
-    public float getVoicePitch() {
-        return super.getVoicePitch() * 1.4F;
-    }
-
-    @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.OCELOT_AMBIENT;
+        return ZooSounds.RHESUS_MACAQUE_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.OCELOT_HURT;
+        return ZooSounds.RHESUS_MACAQUE_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.OCELOT_DEATH;
+        return ZooSounds.RHESUS_MACAQUE_DEATH.get();
     }
 }
