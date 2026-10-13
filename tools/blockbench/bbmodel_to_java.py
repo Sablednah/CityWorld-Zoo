@@ -57,6 +57,26 @@ RIGS = {
         # about a point far below them, so for wiggling they pivot where they meet the head instead.
         "pivot_override": {"left_ear": "nearest:0,58,-9", "right_ear": "nearest:0,58,-9"},
     },
+    # Sable's deer (2026-10-13), reshaped from the spec_to_model export: upright neck, two-box head, legs with
+    # the knee pivot set in Blockbench. Elements are picked by name within their top-level group; the two
+    # "Head" boxes are the skull and the muzzle.
+    "deer": {
+        "parts": [
+            ("body", None, (0, 16, 1), [(0, "Body")]),
+            ("neck", None, (0, 16, -5), [(1, "Neck")]),
+            ("head", "neck", (0, 26, -4), [(1, "Head", 0), (1, "Head", 1), (1, "Left antler"), (1, "Right antler"),
+                                           (1, "Left ear"), (1, "Right ear"), (1, "Left tine"), (1, "Right tine")]),
+            ("left_front_leg", None, (-2, 12, -5), [(2, "Left front upper")]),
+            ("left_front_lower", "left_front_leg", (-2, 7, -5), [(2, "Left front lower")]),
+            ("right_front_leg", None, (2, 12, -5), [(3, "Right front upper")]),
+            ("right_front_lower", "right_front_leg", (2, 7, -5), [(3, "Right front lower")]),
+            ("left_hind_leg", None, (-2, 12, 7), [(4, "Left hind upper")]),
+            ("left_hind_lower", "left_hind_leg", (-2, 7, 7), [(4, "Left hind lower")]),
+            ("right_hind_leg", None, (2, 12, 7), [(5, "Right hind upper")]),
+            ("right_hind_lower", "right_hind_leg", (2, 7, 7), [(5, "Right hind lower")]),
+            ("tail", None, (0, 17, 9), [(6, "Tail")]),
+        ],
+    },
     "elephant": {
         # Sable's pillar legs are one 19-unit element each; split at y=9 into a 10-unit upper and a 9-unit
         # lower so the knee can bend, each half reading its own rows of the painted leg.
@@ -175,12 +195,17 @@ def convert(rig_name, bb_path, tex_path):
         tex = Image.open(io.BytesIO(base64.b64decode(src.split(",", 1)[1]))).convert("RGBA")
     scale = rig.get("texture_scale") or measure_scale(d, tex)
     elements = {e["uuid"]: e for e in d["elements"]}
-    groups = []  # top-level groups as lists of element dicts, in order
-    for node in d["outliner"]:
+    groups = []  # top-level groups as lists of element dicts, in order, nested groups flattened into them
+    def collect(node, into):
         if isinstance(node, dict):
-            groups.append([elements[c] for c in node.get("children", []) if isinstance(c, str)])
+            for c in node.get("children", []):
+                collect(c, into)
         else:
-            groups.append([elements[node]])
+            into.append(elements[node])
+    for node in d["outliner"]:
+        found = []
+        collect(node, found)
+        groups.append(found)
     for (gi, ename), inset in rig.get("inset_xz", {}).items():
         for e in groups[gi]:
             if e["name"] == ename:
@@ -260,7 +285,10 @@ def convert(rig_name, bb_path, tex_path):
         nets.append({"part": part, "e": e, "lf": lf, "lt": lt, "w": w, "h": h, "d": dep,
                      "nw": math.ceil(2 * (w + dep)), "nh": math.ceil(dep + h)})
     nets.sort(key=lambda n: -n["nh"])
-    width_units = 256
+    # A texture roughly square: the pack width is the power of two nearest the root of the nets' area (with
+    # room for the gaps), never narrower than the widest net.
+    area = sum((n["nw"] + 1) * (n["nh"] + 1) for n in nets)
+    width_units = max(1 << max(4, round(math.log2(math.sqrt(area * 1.3)))), max(n["nw"] for n in nets))
     x = y = row_h = 0
     for n in nets:
         if x + n["nw"] > width_units:
@@ -270,7 +298,7 @@ def convert(rig_name, bb_path, tex_path):
         row_h = max(row_h, n["nh"] + 1)
     height_units = y + row_h
     # declared texture size for LayerDefinition (units); the image is scale x that
-    tex_units = (width_units, 1 << max(1, (height_units - 1).bit_length()))
+    tex_units = (1 << (width_units - 1).bit_length(), 1 << max(1, (height_units - 1).bit_length()))
     out = Image.new("RGBA", (tex_units[0] * scale, tex_units[1] * scale), (0, 0, 0, 0))
 
     def face_image(e, face):
