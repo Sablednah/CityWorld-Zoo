@@ -182,6 +182,12 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
             this.hoof[i].xRot += -fold * 0.5F;
         }
 
+        // Grazing: standing a while, the neck swings down and the head follows, back up before it walks off.
+        float graze = Idle.window(age, 0.006F, 1.0F, 0.4F, 0.15F) * (1.0F - Gait.ramp(speed));
+        this.neck.xRot += 1.25F * graze;
+        this.head.xRot -= 0.45F * graze;
+        this.head.yRot += Mth.sin(age * 0.09F) * 0.15F * graze;   // nosing about
+
         // Idle: ears twitch on their own clocks, the tail swishes side to side and lifts a little as it walks.
         this.leftEar.zRot += Mth.sin(age * 0.11F) * 0.12F + flick(age, 0.0F);
         this.rightEar.zRot -= Mth.sin(age * 0.13F + 1.7F) * 0.12F + flick(age, 2.9F);

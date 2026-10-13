@@ -111,6 +111,10 @@ public class ZebraModel extends EntityModel<LivingEntityRenderState> {
             this.legs[i].xRot += Mth.cos(phase) * amp;
         }
 
+        // Grazing: the neck swings down as a horse's does to eat.
+        float graze = Idle.window(age, 0.0075F, 3.0F, 0.35F, 0.15F) * (1.0F - walking);
+        this.headParts.xRot += 1.2F * graze;
+
         // The tail lifts as it moves and swishes now and then.
         this.tail.xRot += 0.5F * walking;
         this.tail.yRot = Mth.cos(age * 0.12F) * (Mth.sin(age * 0.017F) > 0.8F ? 0.5F : 0.1F);

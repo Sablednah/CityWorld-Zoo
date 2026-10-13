@@ -186,6 +186,11 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
         this.trunk.yRot = Mth.sin(age * 0.05F) * 0.1F;
         this.trunkTip.xRot += sway * 0.8F + Mth.cos(age * 0.07F + 0.8F) * 0.12F;
 
+        // Now and then the trunk curls up to the mouth, joint by joint.
+        float curl = Idle.window(age, 0.011F, 2.0F, 0.8F, 0.1F) * (1.0F - walking);
+        this.trunk.xRot -= 0.9F * curl;
+        this.trunkTip.xRot -= 1.6F * curl;
+
         // Ears: a small fan while walking; standing still, the big slow flap an elephant cools itself with,
         // each ear slightly out of step with the other. Blended by the walk ramp so neither pops in.
         float fan = Mth.sin(age * 0.09F) * 0.22F;

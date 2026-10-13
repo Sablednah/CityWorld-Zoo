@@ -24,6 +24,7 @@ import net.minecraft.util.Mth;
  */
 public class LionModel extends EntityModel<LivingEntityRenderState> {
 
+    private final ModelPart body;
     private final ModelPart head;
     private final ModelPart tail;
     private final ModelPart[] upper;
@@ -31,6 +32,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
 
     public LionModel(ModelPart root) {
         super(root);
+        this.body = root.getChild("body");
         this.head = root.getChild("head");
         this.tail = root.getChild("tail");
         String[] legs = {"left_front", "right_hind", "right_front", "left_hind"}; // diagonal pairs: 0 with 1, 2 with 3
@@ -129,6 +131,21 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
             this.upper[i].xRot += Mth.cos(phase) * amp;
             this.lower[i].xRot += Math.max(0.0F, Mth.sin(phase)) * amp * 0.8F;
         }
+
+        // Sitting: body pitched up and lowered onto the haunches, hind legs folded, front legs straight and the
+        // head carried up with the raised chest.
+        float sit = Idle.window(age, 0.007F, 2.0F, 0.35F, 0.15F) * (1.0F - walking);
+        this.body.xRot -= 0.45F * sit;
+        this.body.y += 3.0F * sit;
+        for (int i : new int[] {1, 3}) {   // the hind legs
+            this.upper[i].xRot -= 1.2F * sit;
+            this.upper[i].y += 6.0F * sit;
+            this.upper[i].z += 2.0F * sit;
+            this.lower[i].xRot += 1.6F * sit;
+        }
+        for (int i : new int[] {0, 2}) this.upper[i].y -= 1.8F * sit;   // the front legs hang from the raised chest
+        this.head.y -= 1.8F * sit;
+        this.head.xRot -= 0.1F * sit;
 
         // The tail hangs low, sways with the stride and flicks on its own now and then.
         this.tail.xRot = 0.15F + Mth.cos(pos * 0.3331F) * 0.1F * walking;

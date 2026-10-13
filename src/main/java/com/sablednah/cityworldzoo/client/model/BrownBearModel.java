@@ -88,6 +88,10 @@ public class BrownBearModel extends EntityModel<LivingEntityRenderState> {
         float walking = Gait.ramp(state.walkAnimationSpeed);
         this.head.yRot = state.yRot * rad + Mth.cos(pos * 0.3331F) * 0.08F * walking;
         this.head.xRot = state.xRot * rad;
+        // Standing, the head sways slowly side to side and dips to sniff the ground now and then.
+        float idle = 1.0F - walking;
+        this.head.yRot += Mth.sin(state.ageInTicks * 0.04F) * 0.3F * idle;
+        this.head.xRot += 0.45F * Idle.window(state.ageInTicks, 0.015F, 0.7F, 0.8F, 0.1F) * idle;
         float amp = Gait.swing(10.0F * SCALE * state.scale) * walking;
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);

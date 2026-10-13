@@ -25,6 +25,7 @@ import net.minecraft.util.Mth;
  */
 public class TigerModel extends EntityModel<LivingEntityRenderState> {
 
+    private final ModelPart body;
     private final ModelPart head;
     private final ModelPart tail;
     private final ModelPart tailTip;
@@ -36,6 +37,7 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
 
     public TigerModel(ModelPart root) {
         super(root);
+        this.body = root.getChild("body");
         this.head = root.getChild("head");
         this.tail = root.getChild("tail");
         this.tailTip = tail.getChild("tail_tip");
@@ -161,7 +163,8 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
         // whiskers twitch fast; the rest of the time the whiskers only twitch now and then.
         float idle = 1.0F - walking;
         float sniffClock = Mth.sin(age * 0.017F);
-        float sniff = Mth.clamp((sniffClock - 0.75F) / 0.1F, 0.0F, 1.0F) * idle;   // eases in and out of a window
+        float sniff = Mth.clamp((sniffClock - 0.75F) / 0.1F, 0.0F, 1.0F) * idle
+                * (1.0F - Idle.window(age, 0.007F, 2.0F, 0.35F, 0.15F));   // eases in and out of a window; never mid-sit
         this.head.xRot += 0.5F * sniff;
         this.muzzle.xRot += Mth.sin(age * 1.1F) * 0.08F * sniff;
         float twitch = Mth.sin(age * 1.6F) * 0.2F * sniff + (Mth.sin(age * 0.031F + 1.0F) > 0.93F ? Mth.sin(age * 1.3F) * 0.12F : 0.0F);
@@ -177,6 +180,21 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
             this.upper[i].xRot += Mth.cos(phase) * amp;
             this.lower[i].xRot += Math.max(0.0F, Mth.sin(phase)) * amp * 0.8F;
         }
+
+        // Sitting: body pitched up and lowered onto the haunches, hind legs folded, front legs straight and the
+        // head carried up with the raised chest.
+        float sit = Idle.window(age, 0.007F, 2.0F, 0.35F, 0.15F) * (1.0F - walking);
+        this.body.xRot -= 0.45F * sit;
+        this.body.y += 3.0F * sit;
+        for (int i : new int[] {1, 3}) {   // the hind legs
+            this.upper[i].xRot -= 1.2F * sit;
+            this.upper[i].y += 6.0F * sit;
+            this.upper[i].z += 2.0F * sit;
+            this.lower[i].xRot += 1.6F * sit;
+        }
+        for (int i : new int[] {0, 2}) this.upper[i].y -= 1.8F * sit;   // the front legs hang from the raised chest
+        this.head.y -= 1.8F * sit;
+        this.head.xRot -= 0.1F * sit;
 
         // The tail sways with the stride; its tip curls and twitches on its own.
         this.tail.zRot = Mth.sin(age * 0.08F) * 0.12F + Mth.cos(pos * 0.3331F) * 0.15F * walking;

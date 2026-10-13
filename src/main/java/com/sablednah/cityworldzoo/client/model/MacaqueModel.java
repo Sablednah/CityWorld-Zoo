@@ -22,6 +22,7 @@ import net.minecraft.util.Mth;
  */
 public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
 
+    private final ModelPart body;
     private final ModelPart head;
     private final ModelPart tail;
     private final ModelPart tail2;
@@ -30,6 +31,7 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
 
     public MacaqueModel(ModelPart root) {
         super(root);
+        this.body = root.getChild("body");
         this.head = root.getChild("head");
         this.tail = root.getChild("tail");
         this.tail2 = tail.getChild("tail2");
@@ -126,5 +128,20 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
         }
         this.tail.zRot = Mth.cos(age * 0.2F) * 0.15F;
         this.tail2.xRot += Mth.cos(age * 0.2F) * 0.2F;
+
+        // Sitting: standing still for a while, it sits up on its haunches -- body pitched up and dropped onto
+        // the ground, hind legs folded forward, head up -- and scratches with a front hand now and then.
+        float sit = Idle.window(age, 0.008F, 0.0F, 0.3F, 0.15F) * (1.0F - walking);
+        this.body.xRot -= 0.9F * sit;
+        this.body.y += 3.4F * sit;
+        for (int i : new int[] {1, 3}) {   // the hind legs (diagonal order: 1 = right hind, 3 = left hind)
+            this.upper[i].xRot -= 1.3F * sit;
+            this.upper[i].y += 4.0F * sit;
+            this.lower[i].xRot += 1.6F * sit;
+        }
+        this.head.xRot += 0.25F * sit;
+        float scratch = Idle.window(age, 0.05F, 1.0F, 0.8F, 0.1F) * sit;
+        this.upper[2].xRot += (-0.6F + Mth.sin(age * 1.5F) * 0.3F) * scratch;
+        this.lower[2].xRot += 0.9F * scratch;
     }
 }

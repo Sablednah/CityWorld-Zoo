@@ -139,6 +139,12 @@ public class DeerModel extends EntityModel<LivingEntityRenderState> {
             this.lower[i].xRot += Math.max(0.0F, Mth.sin(phase)) * amp * 0.9F;
         }
 
+        // Grazing: the neck goes down and the head follows; now and then the head snaps up to look around.
+        float graze = Idle.window(age, 0.009F, 0.5F, 0.3F, 0.12F) * (1.0F - walking);
+        float lookUp = Idle.window(age, 0.06F, 0.0F, 0.9F, 0.05F);
+        this.neck.xRot += 1.0F * graze * (1.0F - lookUp);
+        this.head.xRot -= 0.35F * graze * (1.0F - lookUp);
+
         // The tail flicks now and then, and lifts when moving.
         this.tail.zRot = Mth.sin(age * 0.35F) * (Mth.sin(age * 0.021F) > 0.9F ? 0.4F : 0.0F);
         this.tail.xRot = -0.3F - 0.5F * walking;
