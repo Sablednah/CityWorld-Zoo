@@ -18,8 +18,9 @@ import net.minecraft.util.Mth;
  * the mesh below and the repacked texture (512x256 for a declared 256x128, two pixels per unit) are
  * GENERATED -- re-run the converter after a Blockbench edit rather than editing numbers here. The rig is the
  * converter's: three-part legs (shoulder, knee, fetlock), neck with the head on it, ears on the head, tail.
- * The animation is hand-written: a diagonal walk with the knees folding, ears that twitch, a tail that
- * swishes, the head following the look. Baby: the whole mesh at half size.
+ * The animation is hand-written: a diagonal walk whose swing is sized to the ground going by ({@link Gait}),
+ * knees folding on the forward swing, ears that twitch, a tail that swishes, the head following the look.
+ * Baby: the whole mesh at half size.
  */
 public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
 
@@ -165,17 +166,18 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
 
         // Looking: the neck takes half the turn, the head the rest and all of the pitch; the neck nods with the stride.
         this.neck.yRot = state.yRot * rad * 0.5F;
-        this.neck.xRot += Mth.cos(pos * 0.6662F) * 0.04F * speed;
+        this.neck.xRot += Mth.cos(pos * 0.6662F) * 0.04F * Gait.ramp(speed);
         this.head.yRot = state.yRot * rad * 0.5F;
         this.head.xRot = state.xRot * rad;
 
-        // Walking: diagonal pairs swing from the shoulder; the knee folds as the leg swings forward and the
-        // hoof trails it, so the leg reads as three joints rather than a stiff post.
+        // Walking: diagonal pairs swing from the shoulder by the angle that keeps a planted hoof still on the
+        // ground (the hip is 30 units up, times the entity's scale); the knee folds as the leg swings forward
+        // and the hoof trails it, so the leg reads as three joints rather than a stiff post.
+        float amp = Gait.swing(30.0F * state.scale) * Gait.ramp(speed);
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
-            float swing = Mth.cos(phase);
-            this.upper[i].xRot += swing * 0.55F * speed;
-            float fold = Math.max(0.0F, Mth.sin(phase)) * 0.7F * speed;
+            this.upper[i].xRot += Mth.cos(phase) * amp;
+            float fold = Math.max(0.0F, Mth.sin(phase)) * amp * 1.3F;
             this.lower[i].xRot += fold;
             this.hoof[i].xRot += -fold * 0.5F;
         }
@@ -184,7 +186,7 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
         this.leftEar.zRot += Mth.sin(age * 0.11F) * 0.12F + flick(age, 0.0F);
         this.rightEar.zRot -= Mth.sin(age * 0.13F + 1.7F) * 0.12F + flick(age, 2.9F);
         this.tail.zRot = Mth.sin(age * 0.1F) * 0.3F;
-        this.tail.xRot = 0.1F + speed * 0.3F;
+        this.tail.xRot = 0.1F + Gait.ramp(speed) * 0.3F;
     }
 
     /** A quick ear flick now and then: a short burst riding a slow clock, so the two ears rarely flick together. */

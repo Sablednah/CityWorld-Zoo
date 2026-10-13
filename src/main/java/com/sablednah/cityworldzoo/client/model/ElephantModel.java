@@ -19,9 +19,10 @@ import net.minecraft.util.Mth;
  * the mesh below and the repacked texture (512x256 for a declared 256x128, two pixels per unit) are
  * GENERATED -- re-run the converter after a Blockbench edit rather than editing numbers here. The converter
  * split each 19-unit pillar leg at y=9 into a hip-pivoted upper and a knee-pivoted lower, each reading its
- * own rows of the painted leg. The animation is hand-written: a slow diagonal walk with the knee folding,
- * a trunk that swings with the stride and sways at rest, ears that fan, a tail that swishes, the head
- * following the look. The mesh is scaled so a cow stands 3 blocks; a bull's extra size is the entity's
+ * own rows of the painted leg. The animation is hand-written: a slow diagonal walk whose swing is sized to
+ * the ground going by ({@link Gait}) with the knee folding, a trunk that swings with the stride and sways at
+ * rest, ears that fan as it walks and flap wide to cool off when it stands still, a tail that swishes, the
+ * head following the look. The mesh is scaled so a cow stands 3 blocks; a bull's extra size is the entity's
  * scale attribute, and its tusks are the only difference drawn (hidden on cows and calves). Baby: the whole
  * mesh at half size.
  */
@@ -168,23 +169,31 @@ public class ElephantModel extends EntityModel<ElephantRenderState> {
         this.head.yRot = state.yRot * rad * 0.6F;
         this.head.xRot = state.xRot * rad * 0.6F;
 
-        // A heavy, slow walk: diagonal pairs from the hip, the knee folding as the leg comes forward.
+        // A heavy, slow walk: diagonal pairs from the hip by the angle that keeps a planted foot still on the
+        // ground (the hip is 19 model units up, drawn at SCALE times the entity's scale), the knee folding as
+        // the leg comes forward.
+        float walking = Gait.ramp(speed);
+        float amp = Gait.swing(19.0F * SCALE * state.scale) * walking;
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
-            this.upper[i].xRot += Mth.cos(phase) * 0.4F * speed;
-            this.lower[i].xRot += Math.max(0.0F, Mth.sin(phase)) * 0.5F * speed;
+            this.upper[i].xRot += Mth.cos(phase) * amp;
+            this.lower[i].xRot += Math.max(0.0F, Mth.sin(phase)) * amp * 1.2F;
         }
 
         // The trunk swings with the stride and sways at rest; the tip lags behind the upper joint.
-        float sway = Mth.cos(age * 0.07F) * 0.08F + Mth.cos(pos * 0.6662F) * 0.25F * speed;
+        float sway = Mth.cos(age * 0.07F) * 0.08F + Mth.cos(pos * 0.6662F) * 0.25F * walking;
         this.trunk.xRot += sway;
         this.trunk.yRot = Mth.sin(age * 0.05F) * 0.1F;
         this.trunkTip.xRot += sway * 0.8F + Mth.cos(age * 0.07F + 0.8F) * 0.12F;
 
-        // Ears fan forward and back on their own slow clocks; the tail swishes.
+        // Ears: a small fan while walking; standing still, the big slow flap an elephant cools itself with,
+        // each ear slightly out of step with the other. Blended by the walk ramp so neither pops in.
         float fan = Mth.sin(age * 0.09F) * 0.22F;
-        this.leftEar.yRot += fan + 0.1F;
-        this.rightEar.yRot -= fan + 0.1F;
+        float idle = 1.0F - walking;
+        float flapL = Mth.sin(age * 0.16F) * 0.55F;
+        float flapR = Mth.sin(age * 0.16F + 0.6F) * 0.55F;
+        this.leftEar.yRot += 0.1F + fan * walking + (0.25F + flapL) * idle;
+        this.rightEar.yRot -= 0.1F + fan * walking + (0.25F + flapR) * idle;
         this.tail.zRot = Mth.sin(age * 0.12F + 1.0F) * 0.3F;
     }
 }
