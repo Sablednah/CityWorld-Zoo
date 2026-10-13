@@ -141,7 +141,7 @@ def paint_egg(name, base, spot):
     return path
 
 # Species with real art (art/<name>/, converted by tools/blockbench/bbmodel_to_java.py): never overpainted.
-HANDMADE = {"giraffe"}
+HANDMADE = {"giraffe", "elephant"}
 
 if __name__ == "__main__":
     for name, spec in SPECIES.items():

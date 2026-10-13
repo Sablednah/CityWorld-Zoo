@@ -17,7 +17,7 @@ face unchanged (java WEST is the model's -x side, which is Blockbench's +x "east
 cell takes Blockbench's "up" face turned 180 degrees and the bottom cell its "down" face flipped
 horizontally, which is how Blockbench's own box-UV template lays them out.
 
-    python3 tools/blockbench/bbmodel_to_java.py giraffe <model.bbmodel> <texture.png>
+    python3 tools/blockbench/bbmodel_to_java.py giraffe <model.bbmodel> [texture.png]   # else the embedded one
 """
 import base64, io, json, math, os, sys, uuid
 from PIL import Image
@@ -57,6 +57,30 @@ RIGS = {
         # about a point far below them, so for wiggling they pivot where they meet the head instead.
         "pivot_override": {"left_ear": "nearest:0,58,-9", "right_ear": "nearest:0,58,-9"},
     },
+    "elephant": {
+        # Sable's pillar legs are one 19-unit element each; split at y=9 into a 10-unit upper and a 9-unit
+        # lower so the knee can bend, each half reading its own rows of the painted leg.
+        "split_y": {(1, "Pillar leg"): 9, (2, "Pillar leg"): 9, (3, "Pillar leg"): 9, (4, "Pillar leg"): 9},
+        "parts": [
+            ("body", None, (0, 24, 0), [(0, "Deep rectangular torso")]),
+            ("head", "body", (0, 27, -11), [(5, "Sloped forehead"), (5, "Cheeks")]),
+            ("left_ear", "head", (-5.1, 28.5, -11.5), [(6, "Broad ear")]),
+            ("right_ear", "head", (5.1, 28.5, -11.5), [(7, "Broad ear")]),
+            ("trunk", "head", (0, 23, -18), [(8, "Upper trunk")]),
+            ("trunk_tip", "trunk", (0, 13.5, -18.5), [(9, "Bent trunk tip")]),
+            ("left_tusk", "head", (-5.1, 20, -17), [(10, "Tusk root"), (10, "Forward tusk")]),
+            ("right_tusk", "head", (5.1, 20, -17), [(11, "Tusk root"), (11, "Forward tusk")]),
+            ("left_front_leg", None, (-4, 19, -7.5), [(1, "Pillar leg upper")]),
+            ("left_front_lower", "left_front_leg", (-4, 9, -7.5), [(1, "Pillar leg lower")]),
+            ("left_hind_leg", None, (-4, 19, 11.5), [(2, "Pillar leg upper")]),
+            ("left_hind_lower", "left_hind_leg", (-4, 9, 11.5), [(2, "Pillar leg lower")]),
+            ("right_front_leg", None, (4, 19, -7.5), [(3, "Pillar leg upper")]),
+            ("right_front_lower", "right_front_leg", (4, 9, -7.5), [(3, "Pillar leg lower")]),
+            ("right_hind_leg", None, (4, 19, 11.5), [(4, "Pillar leg upper")]),
+            ("right_hind_lower", "right_hind_leg", (4, 9, 11.5), [(4, "Pillar leg lower")]),
+            ("tail", "body", (0, 31, 12), [(12, "Short tail"), (12, "Tail tip")]),
+        ],
+    },
 }
 
 # --- maths ---------------------------------------------------------------------------------------------
@@ -93,12 +117,60 @@ def fmt(f):
     if "." not in s: s += ".0"
     return s + "F"
 
+def measure_scale(d, tex):
+    """Texture pixels per model unit, the median over every painted side face."""
+    ratios = []
+    px_per_uv = tex.width / d["resolution"]["width"]
+    for e in d["elements"]:
+        w, h, dep = [e["to"][i] - e["from"][i] for i in range(3)]
+        for face, fw, fh in (("north", w, h), ("south", w, h), ("east", dep, h), ("west", dep, h)):
+            f = e["faces"].get(face)
+            if f and fw > 0 and fh > 0:
+                x1, y1, x2, y2 = f["uv"]
+                ratios.append(abs(x2 - x1) * px_per_uv / fw)
+                ratios.append(abs(y2 - y1) * px_per_uv / fh)
+    ratios.sort()
+    r = ratios[len(ratios) // 2] if ratios else 1.0
+    return max(1, int(round(r)))
+
+def split_element(e, y_cut):
+    """Two elements from one, cut horizontally at y_cut: the upper keeps the up face, the lower the down face,
+    the side faces are sliced by height, and the two new inside faces borrow the rows beside the cut."""
+    y0, y1 = e["from"][1], e["to"][1]
+    f_up = (y1 - y_cut) / (y1 - y0)   # share of the height above the cut
+    upper = json.loads(json.dumps(e)); lower = json.loads(json.dumps(e))
+    upper["name"] += " upper"; lower["name"] += " lower"; upper["uuid"] += "-upper"; lower["uuid"] += "-lower"
+    upper["from"] = [e["from"][0], y_cut, e["from"][2]]
+    lower["to"] = [e["to"][0], y_cut, e["to"][2]]
+    for face in ("north", "south", "east", "west"):
+        f = e["faces"].get(face)
+        if not f:
+            continue
+        x1, v1, x2, v2 = f["uv"]       # uv[1] is the face's top edge, uv[3] its bottom, whichever is larger
+        vc = v1 + (v2 - v1) * f_up
+        upper["faces"][face] = dict(f, uv=[x1, v1, x2, vc])
+        lower["faces"][face] = dict(f, uv=[x1, vc, x2, v2])
+    n = e["faces"].get("north")
+    if n:
+        x1, v1, x2, v2 = n["uv"]
+        vc = v1 + (v2 - v1) * f_up
+        dep_share = (e["to"][2] - e["from"][2]) / (y1 - y0) * (v2 - v1)
+        upper["faces"]["down"] = dict(n, uv=[x1, vc - dep_share, x2, vc])
+        lower["faces"]["up"] = dict(n, uv=[x1, vc, x2, vc + dep_share])
+    else:
+        upper["faces"].pop("down", None); lower["faces"].pop("up", None)
+    return upper, lower
+
 # --- the work ----------------------------------------------------------------------------------------------
 def convert(rig_name, bb_path, tex_path):
     rig = RIGS[rig_name]
-    scale = rig["texture_scale"]
     d = json.load(open(bb_path))
-    tex = Image.open(tex_path).convert("RGBA")
+    if tex_path:
+        tex = Image.open(tex_path).convert("RGBA")
+    else:
+        src = d["textures"][0]["source"]
+        tex = Image.open(io.BytesIO(base64.b64decode(src.split(",", 1)[1]))).convert("RGBA")
+    scale = rig.get("texture_scale") or measure_scale(d, tex)
     elements = {e["uuid"]: e for e in d["elements"]}
     groups = []  # top-level groups as lists of element dicts, in order
     for node in d["outliner"]:
@@ -106,6 +178,11 @@ def convert(rig_name, bb_path, tex_path):
             groups.append([elements[c] for c in node.get("children", []) if isinstance(c, str)])
         else:
             groups.append([elements[node]])
+    for (gi, ename), y_cut in rig.get("split_y", {}).items():
+        for e in list(groups[gi]):
+            if e["name"] == ename:
+                groups[gi].remove(e)
+                groups[gi].extend(split_element(e, y_cut))
 
     # Assign elements to parts.
     parts = {}
@@ -129,6 +206,14 @@ def convert(rig_name, bb_path, tex_path):
     boxes = []  # (part name, element, local from, local to)
     for name in list(order):
         p = parts[name]
+        rots = {(tuple(e.get("rotation") or [0, 0, 0]), tuple(e.get("origin") or [0, 0, 0])) for e in p["elements"]}
+        if len(rots) == 1 and any(next(iter(rots))[0]) and len(p["elements"]) > 1:
+            rot, origin = next(iter(rots))
+            p["rotation"], p["pivot"] = rot, list(origin)
+            R = rot_matrix(*rot)
+            for e in p["elements"]:
+                boxes.append((name, e, sub(e["from"], origin), sub(e["to"], origin)))
+            continue
         for e in p["elements"]:
             rot = e.get("rotation") or [0, 0, 0]
             if any(rot):
@@ -285,4 +370,4 @@ def convert(rig_name, bb_path, tex_path):
     print("wrote", tex_out); print("wrote", mesh_out); print("wrote", bb_out)
 
 if __name__ == "__main__":
-    convert(sys.argv[1], sys.argv[2], sys.argv[3])
+    convert(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
