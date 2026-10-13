@@ -20,13 +20,17 @@ import net.minecraft.util.Mth;
  * and made the tilted cheek ruffs, muzzle and whiskers parts under the head; the tail tip is a part on the
  * tail. The animation is hand-written: a prowling walk sized to the ground going by ({@link Gait}) with
  * the knee folding, the head following the look, a tail that sways with the stride and whose tip curls on
- * its own. Baby: the whole mesh at half size.
+ * its own, and, standing still, a sniff now and then: the head dips, the muzzle works and the whiskers
+ * twitch. Baby: the whole mesh at half size.
  */
 public class TigerModel extends EntityModel<LivingEntityRenderState> {
 
     private final ModelPart head;
     private final ModelPart tail;
     private final ModelPart tailTip;
+    private final ModelPart muzzle;
+    private final ModelPart leftWhiskers;
+    private final ModelPart rightWhiskers;
     private final ModelPart[] upper;
     private final ModelPart[] lower;
 
@@ -35,6 +39,9 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
         this.head = root.getChild("head");
         this.tail = root.getChild("tail");
         this.tailTip = tail.getChild("tail_tip");
+        this.muzzle = head.getChild("head_muzzle");
+        this.leftWhiskers = head.getChild("left_whiskers");
+        this.rightWhiskers = head.getChild("right_whiskers");
         String[] legs = {"left_front", "right_hind", "right_front", "left_hind"}; // diagonal pairs: 0 with 1, 2 with 3
         this.upper = new ModelPart[4];
         this.lower = new ModelPart[4];
@@ -65,10 +72,16 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
                 CubeListBuilder.create()
                         .texOffs(0, 55).addBox(-4.0F, -4.0F, -8.0F, 8.0F, 9.0F, 6.0F)
                         .texOffs(38, 111).addBox(1.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F)
-                        .texOffs(45, 111).addBox(-3.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F)
-                        .texOffs(57, 111).addBox(2.75F, 1.76F, -9.187F, 1.75F, 0.14F, 0.15F)
-                        .texOffs(5, 121).addBox(-4.275F, 1.76F, -9.187F, 1.75F, 0.14F, 0.15F),
+                        .texOffs(45, 111).addBox(-3.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F),
                 PartPose.offset(0.0F, 7.0F, -10.0F));
+        PartDefinition leftwhiskers = head.addOrReplaceChild("left_whiskers",
+                CubeListBuilder.create()
+                        .texOffs(57, 111).addBox(0.15F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
+                PartPose.offset(2.6F, 2.3F, -8.4F));
+        PartDefinition rightwhiskers = head.addOrReplaceChild("right_whiskers",
+                CubeListBuilder.create()
+                        .texOffs(5, 121).addBox(-1.875F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
+                PartPose.offset(-2.4F, 2.3F, -8.4F));
         PartDefinition leftfrontleg = root.addOrReplaceChild("left_front_leg",
                 CubeListBuilder.create()
                         .texOffs(38, 55).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
@@ -121,14 +134,14 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
                 CubeListBuilder.create()
                         .texOffs(0, 111).addBox(-3.0F, -1.5F, -5.0F, 5.0F, 4.0F, 5.0F),
                 PartPose.offsetAndRotation(0.5F, 2.0F, -8.0F, 0.436F, 0.0F, 0.0F));
-        PartDefinition headwhisker = head.addOrReplaceChild("head_whisker",
+        PartDefinition leftwhiskerswhisker = leftwhiskers.addOrReplaceChild("left_whiskers_whisker",
                 CubeListBuilder.create()
                         .texOffs(52, 111).addBox(0.125F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
-                PartPose.offsetAndRotation(2.625F, 2.3F, -8.4F, 0.0F, 0.0F, 0.349F));
-        PartDefinition headwhisker2 = head.addOrReplaceChild("head_whisker2",
+                PartPose.offsetAndRotation(0.025F, -0.0F, 0.0F, 0.0F, 0.0F, 0.349F));
+        PartDefinition rightwhiskerswhisker = rightwhiskers.addOrReplaceChild("right_whiskers_whisker",
                 CubeListBuilder.create()
                         .texOffs(0, 121).addBox(-1.875F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
-                PartPose.offsetAndRotation(-2.4F, 2.3F, -8.4F, 0.0F, 0.0F, -0.349F));
+                PartPose.offsetAndRotation(-0.0F, -0.0F, 0.0F, 0.0F, 0.0F, -0.349F));
         return mesh;
     }
     // --- end generated ---
@@ -143,6 +156,19 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
 
         this.head.yRot = state.yRot * rad;
         this.head.xRot = state.xRot * rad + Mth.cos(pos * 0.6662F) * 0.04F * walking;
+
+        // Sniffing: every so often while standing, the head dips to the ground, the muzzle works and the
+        // whiskers twitch fast; the rest of the time the whiskers only twitch now and then.
+        float idle = 1.0F - walking;
+        float sniffClock = Mth.sin(age * 0.017F);
+        float sniff = Mth.clamp((sniffClock - 0.75F) / 0.1F, 0.0F, 1.0F) * idle;   // eases in and out of a window
+        this.head.xRot += 0.5F * sniff;
+        this.muzzle.xRot += Mth.sin(age * 1.1F) * 0.08F * sniff;
+        float twitch = Mth.sin(age * 1.6F) * 0.2F * sniff + (Mth.sin(age * 0.031F + 1.0F) > 0.93F ? Mth.sin(age * 1.3F) * 0.12F : 0.0F);
+        this.leftWhiskers.zRot += twitch;
+        this.rightWhiskers.zRot -= twitch;
+        this.leftWhiskers.yRot += twitch * 0.5F;
+        this.rightWhiskers.yRot -= twitch * 0.5F;
 
         // A cat's walk: long low strides from the hip, the knee folding on the forward swing.
         float amp = Gait.swing(16.0F * state.scale) * walking;

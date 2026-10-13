@@ -102,8 +102,10 @@ RIGS = {
         "split_y": {(1, "Leg and paw"): 8, (2, "Leg and paw"): 8, (3, "Leg and paw"): 8, (4, "Leg and paw"): 8},
         "parts": [
             ("body", None, (0, 16, 1), [(0, "Torso"), (0, "Broad shoulders")]),
-            ("head", None, (0, 17, -10), [(5, "Head"), (5, "Cheek ruff", 0), (5, "Cheek ruff", 1), (6, "Ear"), (7, "Ear"), (8, "Muzzle"),
-                                          (11, "Whisker", 0), (11, "Whisker", 1), (12, "Whisker", 0), (12, "Whisker", 1)]),
+            ("head", None, (0, 17, -10), [(5, "Head"), (5, "Cheek ruff", 0), (5, "Cheek ruff", 1), (6, "Ear"), (7, "Ear"), (8, "Muzzle")]),
+            # Each side's two whiskers are a part at their root on the muzzle, so they can twitch.
+            ("left_whiskers", "head", (-2.6, 14.7, -18.4), [(11, "Whisker", 0), (11, "Whisker", 1)]),
+            ("right_whiskers", "head", (2.4, 14.7, -18.4), [(12, "Whisker", 0), (12, "Whisker", 1)]),
             ("left_front_leg", None, (-4.2, 16, -7.5), [(1, "Leg and paw upper")]),
             ("left_front_lower", "left_front_leg", (-4.2, 8, -7.5), [(1, "Leg and paw lower")]),
             ("left_hind_leg", None, (-4.2, 16, 9), [(2, "Leg and paw upper")]),

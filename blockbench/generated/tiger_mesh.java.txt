@@ -8,10 +8,16 @@
                 CubeListBuilder.create()
                         .texOffs(0, 55).addBox(-4.0F, -4.0F, -8.0F, 8.0F, 9.0F, 6.0F)
                         .texOffs(38, 111).addBox(1.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F)
-                        .texOffs(45, 111).addBox(-3.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F)
-                        .texOffs(57, 111).addBox(2.75F, 1.76F, -9.187F, 1.75F, 0.14F, 0.15F)
-                        .texOffs(5, 121).addBox(-4.275F, 1.76F, -9.187F, 1.75F, 0.14F, 0.15F),
+                        .texOffs(45, 111).addBox(-3.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F),
                 PartPose.offset(0.0F, 7.0F, -10.0F));
+        PartDefinition leftwhiskers = head.addOrReplaceChild("left_whiskers",
+                CubeListBuilder.create()
+                        .texOffs(57, 111).addBox(0.15F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
+                PartPose.offset(2.6F, 2.3F, -8.4F));
+        PartDefinition rightwhiskers = head.addOrReplaceChild("right_whiskers",
+                CubeListBuilder.create()
+                        .texOffs(5, 121).addBox(-1.875F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
+                PartPose.offset(-2.4F, 2.3F, -8.4F));
         PartDefinition leftfrontleg = root.addOrReplaceChild("left_front_leg",
                 CubeListBuilder.create()
                         .texOffs(38, 55).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
@@ -64,11 +70,11 @@
                 CubeListBuilder.create()
                         .texOffs(0, 111).addBox(-3.0F, -1.5F, -5.0F, 5.0F, 4.0F, 5.0F),
                 PartPose.offsetAndRotation(0.5F, 2.0F, -8.0F, 0.436F, 0.0F, 0.0F));
-        PartDefinition headwhisker = head.addOrReplaceChild("head_whisker",
+        PartDefinition leftwhiskerswhisker = leftwhiskers.addOrReplaceChild("left_whiskers_whisker",
                 CubeListBuilder.create()
                         .texOffs(52, 111).addBox(0.125F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
-                PartPose.offsetAndRotation(2.625F, 2.3F, -8.4F, 0.0F, 0.0F, 0.349F));
-        PartDefinition headwhisker2 = head.addOrReplaceChild("head_whisker2",
+                PartPose.offsetAndRotation(0.025F, -0.0F, 0.0F, 0.0F, 0.0F, 0.349F));
+        PartDefinition rightwhiskerswhisker = rightwhiskers.addOrReplaceChild("right_whiskers_whisker",
                 CubeListBuilder.create()
                         .texOffs(0, 121).addBox(-1.875F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
-                PartPose.offsetAndRotation(-2.4F, 2.3F, -8.4F, 0.0F, 0.0F, -0.349F));
+                PartPose.offsetAndRotation(-0.0F, -0.0F, 0.0F, 0.0F, 0.0F, -0.349F));
