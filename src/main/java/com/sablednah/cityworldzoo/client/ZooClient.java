@@ -8,6 +8,7 @@ import com.sablednah.cityworldzoo.client.model.BrownBearModel;
 import com.sablednah.cityworldzoo.client.model.DeerModel;
 import com.sablednah.cityworldzoo.client.model.ElephantModel;
 import com.sablednah.cityworldzoo.client.model.GiraffeModel;
+import com.sablednah.cityworldzoo.client.model.LionModel;
 import com.sablednah.cityworldzoo.client.model.MacaqueModel;
 import com.sablednah.cityworldzoo.client.model.ZebraModel;
 import com.sablednah.cityworldzoo.client.renderer.ElephantRenderer;
@@ -46,8 +47,8 @@ public final class ZooClient {
         event.registerLayerDefinition(ZooModelLayers.ZEBRA_BABY, ZebraModel::createBabyLayer);
         event.registerLayerDefinition(ZooModelLayers.DEER, DeerModel::createBodyLayer);
         event.registerLayerDefinition(ZooModelLayers.DEER_BABY, DeerModel::createBabyLayer);
-        event.registerLayerDefinition(ZooModelLayers.LION, () -> BigCatModel.createBodyLayer(true));
-        event.registerLayerDefinition(ZooModelLayers.LION_BABY, () -> BigCatModel.createBabyLayer(true));
+        event.registerLayerDefinition(ZooModelLayers.LION, LionModel::createBodyLayer);
+        event.registerLayerDefinition(ZooModelLayers.LION_BABY, LionModel::createBabyLayer);
         event.registerLayerDefinition(ZooModelLayers.TIGER, () -> BigCatModel.createBodyLayer(false));
         event.registerLayerDefinition(ZooModelLayers.TIGER_BABY, () -> BigCatModel.createBabyLayer(false));
         event.registerLayerDefinition(ZooModelLayers.ELEPHANT, ElephantModel::createBodyLayer);
@@ -66,8 +67,7 @@ public final class ZooClient {
         event.registerEntityRenderer(ZooEntities.ZEBRA.entityType(), ctx -> new ZebraRenderer(ctx,
                 new ZebraModel(ctx.bakeLayer(ZooModelLayers.ZEBRA)), new ZebraModel(ctx.bakeLayer(ZooModelLayers.ZEBRA_BABY)), 0.75F,
                 texture("zebra"), texture("zebra_bite")));
-        register(event, ZooEntities.LION, BigCatModel::new, BigCatModel::new, ZooModelLayers.LION, ZooModelLayers.LION_BABY, 0.8F,
-                texture("lion"), texture("lion"), FelineRenderState::new);
+        plain(event, ZooEntities.LION, LionModel::new, ZooModelLayers.LION, ZooModelLayers.LION_BABY, 0.8F);
         register(event, ZooEntities.TIGER, BigCatModel::new, BigCatModel::new, ZooModelLayers.TIGER, ZooModelLayers.TIGER_BABY, 0.8F,
                 texture("tiger"), texture("tiger"), FelineRenderState::new);
     }

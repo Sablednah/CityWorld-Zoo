@@ -78,6 +78,24 @@ RIGS = {
             ("tail", None, (0, 17, 9), [(6, "Tail")]),
         ],
     },
+    # Sable's lion (2026-10-13), free format: one-box legs split at y=5 for a knee, the muzzle (rotated) becomes
+    # its own part under the head, the mane and face are the head.
+    "lion": {
+        "split_y": {(1, "Paw and leg"): 5, (2, "Paw and leg"): 5, (3, "Paw and leg"): 5, (4, "Paw and leg"): 5},
+        "parts": [
+            ("body", None, (0, 14, 1), [(0, "Torso"), (0, "Shoulders")]),
+            ("head", None, (0, 14, -9), [(5, "Square mane"), (5, "Face"), (5, "Left ear"), (5, "Right ear"), (6, "Muzzle")]),
+            ("left_front_leg", None, (-3.5, 11, -6.5), [(1, "Paw and leg upper")]),
+            ("left_front_lower", "left_front_leg", (-3.5, 5, -6.5), [(1, "Paw and leg lower")]),
+            ("left_hind_leg", None, (-3.5, 11, 9), [(2, "Paw and leg upper")]),
+            ("left_hind_lower", "left_hind_leg", (-3.5, 5, 9), [(2, "Paw and leg lower")]),
+            ("right_front_leg", None, (3.5, 11, -6.5), [(3, "Paw and leg upper")]),
+            ("right_front_lower", "right_front_leg", (3.5, 5, -6.5), [(3, "Paw and leg lower")]),
+            ("right_hind_leg", None, (3.5, 11, 9), [(4, "Paw and leg upper")]),
+            ("right_hind_lower", "right_hind_leg", (3.5, 5, 9), [(4, "Paw and leg lower")]),
+            ("tail", None, (0, 16, 11), [(7, "Tail shaft"), (7, "Dark tail tuft")]),
+        ],
+    },
     "elephant": {
         # Sable's pillar legs are one 19-unit element each; split at y=9 into a 10-unit upper and a 9-unit
         # lower so the knee can bend, each half reading its own rows of the painted leg.
