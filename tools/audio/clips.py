@@ -70,6 +70,22 @@ CUTS = {
     "brown_bear": [
         ("universfield-bear-growl-191995.mp3", 0.06, 1.06, "ambient1", -8.0),
     ],
+    "elephant": [
+        # rumbles and trumpets for ambient
+        ("cartoon_music-elephant-trumpeting-amp-growlin-529233.mp3", 0.16, 2.10, "ambient1", -8.0),
+        ("olenchic--154831.mp3", 0.58, 2.00, "ambient2", -8.0),
+        ("olenchic--154831.mp3", 2.62, 3.72, "ambient3", -8.0),
+        ("olenchic--154831.mp3", 5.00, 5.96, "ambient4", -8.0),
+        # the trumpet as it turns on you
+        ("freesound_community-elephant-trumpets-growls-6047.mp3", 0.08, 1.24, "angry1", -2.0),
+        ("olenchic--154831.mp3", 0.58, 2.00, "angry2", -2.0),
+        # screams: hurt
+        ("freesound_community-elephant-scream-106989.mp3", 0.04, 1.16, "hurt1", -3.0),
+        ("olenchic--154831.mp3", 5.00, 5.96, "hurt2", -3.0),
+        # the long ones: death
+        ("freesound_community-elephant-scream-fake-100274.mp3", 0.02, 2.40, "death1", -1.0),
+        ("cartoon_music-elephant-trumpeting-amp-growlin-529233.mp3", 0.16, 2.30, "death2", -1.0),
+    ],
     "giraffe": [
         # snorts; a giraffe says almost nothing a person can hear, so these play rarely
         ("jerryblessed-giraffe-snorting-and-chewing-leaves-540358.mp3", 1.60, 3.20, "ambient1", -10.0),

@@ -181,5 +181,35 @@
     "sounds": [
       "cityworld_zoo:giraffe/eat1"
     ]
+  },
+  "entity.elephant.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.elephant.ambient",
+    "sounds": [
+      "cityworld_zoo:elephant/ambient1",
+      "cityworld_zoo:elephant/ambient2",
+      "cityworld_zoo:elephant/ambient3",
+      "cityworld_zoo:elephant/ambient4"
+    ]
+  },
+  "entity.elephant.angry": {
+    "subtitle": "subtitles.cityworld_zoo.elephant.angry",
+    "sounds": [
+      "cityworld_zoo:elephant/angry1",
+      "cityworld_zoo:elephant/angry2"
+    ]
+  },
+  "entity.elephant.hurt": {
+    "subtitle": "subtitles.cityworld_zoo.elephant.hurt",
+    "sounds": [
+      "cityworld_zoo:elephant/hurt1",
+      "cityworld_zoo:elephant/hurt2"
+    ]
+  },
+  "entity.elephant.death": {
+    "subtitle": "subtitles.cityworld_zoo.elephant.death",
+    "sounds": [
+      "cityworld_zoo:elephant/death1",
+      "cityworld_zoo:elephant/death2"
+    ]
   }
 }

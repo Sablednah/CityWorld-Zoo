@@ -1,5 +1,7 @@
 package com.sablednah.cityworldzoo.entity;
 
+import com.sablednah.cityworldzoo.ZooSounds;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -93,24 +95,30 @@ public class Elephant extends ZooAnimal {
         return stack.is(Items.WHEAT) || stack.is(Items.APPLE) || stack.is(Items.HAY_BLOCK);
     }
 
+    /** A bull a shade deeper than a cow; the recordings are already elephants, so only a shade. */
     @Override
     public float getVoicePitch() {
-        return super.getVoicePitch() * (isTusked() ? 0.55F : 0.65F);
+        return super.getVoicePitch() * (isTusked() ? 0.9F : 1.0F);
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.CAMEL_AMBIENT;
+        return ZooSounds.ELEPHANT_AMBIENT.get();
+    }
+
+    @Override
+    protected SoundEvent getAngrySound() {
+        return ZooSounds.ELEPHANT_ANGRY.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.CAMEL_HURT;
+        return ZooSounds.ELEPHANT_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.CAMEL_DEATH;
+        return ZooSounds.ELEPHANT_DEATH.get();
     }
 
     @Override

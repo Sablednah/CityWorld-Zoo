@@ -34,12 +34,16 @@ public final class ZooSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> BROWN_BEAR_AMBIENT = sound("entity.brown_bear.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> GIRAFFE_AMBIENT = sound("entity.giraffe.ambient");
     public static final DeferredHolder<SoundEvent, SoundEvent> GIRAFFE_EAT = sound("entity.giraffe.eat");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ELEPHANT_AMBIENT = sound("entity.elephant.ambient");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ELEPHANT_ANGRY = sound("entity.elephant.angry");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ELEPHANT_HURT = sound("entity.elephant.hurt");
+    public static final DeferredHolder<SoundEvent, SoundEvent> ELEPHANT_DEATH = sound("entity.elephant.death");
 
     /** Every event, for the self-test to check against sounds.json. */
     public static java.util.List<DeferredHolder<SoundEvent, SoundEvent>> all() {
         return java.util.List.of(ZEBRA_AMBIENT, ZEBRA_HURT, ZEBRA_DEATH, ZEBRA_ANGRY, RHESUS_MACAQUE_AMBIENT, RHESUS_MACAQUE_HURT, RHESUS_MACAQUE_DEATH,
                 LION_AMBIENT, LION_ANGRY, LION_HURT, LION_DEATH, TIGER_AMBIENT, TIGER_ANGRY, TIGER_HURT, TIGER_DEATH,
-                BROWN_BEAR_AMBIENT, GIRAFFE_AMBIENT, GIRAFFE_EAT);
+                BROWN_BEAR_AMBIENT, GIRAFFE_AMBIENT, GIRAFFE_EAT, ELEPHANT_AMBIENT, ELEPHANT_ANGRY, ELEPHANT_HURT, ELEPHANT_DEATH);
     }
 
     private static DeferredHolder<SoundEvent, SoundEvent> sound(String id) {
