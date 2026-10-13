@@ -211,5 +211,53 @@
       "cityworld_zoo:elephant/death1",
       "cityworld_zoo:elephant/death2"
     ]
+  },
+  "entity.deer.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.deer.ambient",
+    "sounds": [
+      {
+        "name": "cityworld_zoo:deer/ambient1",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:deer/ambient2",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:deer/ambient3",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:deer/ambient4",
+        "weight": 3
+      },
+      {
+        "name": "cityworld_zoo:deer/roar1",
+        "weight": 1
+      }
+    ]
+  },
+  "entity.deer.ambient_baby": {
+    "subtitle": "subtitles.cityworld_zoo.deer.ambient_baby",
+    "sounds": [
+      "cityworld_zoo:deer/ambient_baby1",
+      "cityworld_zoo:deer/ambient_baby2",
+      "cityworld_zoo:deer/ambient_baby3",
+      "cityworld_zoo:deer/ambient_baby4"
+    ]
+  },
+  "entity.deer.hurt": {
+    "subtitle": "subtitles.cityworld_zoo.deer.hurt",
+    "sounds": [
+      "cityworld_zoo:deer/hurt1",
+      "cityworld_zoo:deer/hurt2"
+    ]
+  },
+  "entity.deer.death": {
+    "subtitle": "subtitles.cityworld_zoo.deer.death",
+    "sounds": [
+      "cityworld_zoo:deer/death1",
+      "cityworld_zoo:deer/death2"
+    ]
   }
 }

@@ -1,5 +1,8 @@
 package com.sablednah.cityworldzoo.entity;
 
+import com.sablednah.cityworldzoo.ZooSounds;
+
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -10,8 +13,13 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-/** The Last of Us (Ellie's winter hunt) and I Am Legend (the herd on Fifth Avenue). Skittish; bolts when hurt. */
+/**
+ * The Last of Us (Ellie's winter hunt) and I Am Legend (the herd on Fifth Avenue). Skittish; bolts when hurt.
+ * Grunts, mews and the odd stag roar (art/deer/sounds, through tools/audio/clips.py); a fawn bleats; the
+ * alarm snort when hurt; hooves are the goat's.
+ */
 public class Deer extends ZooAnimal {
 
     public Deer(EntityType<? extends Deer> type, Level level) {
@@ -34,16 +42,26 @@ public class Deer extends ZooAnimal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return null; // deer are quiet
+        return this.isBaby() ? ZooSounds.DEER_AMBIENT_BABY.get() : ZooSounds.DEER_AMBIENT.get();
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        return 240; // a quiet animal
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.GOAT_HURT;
+        return ZooSounds.DEER_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.GOAT_DEATH;
+        return ZooSounds.DEER_DEATH.get();
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(SoundEvents.GOAT_STEP, 0.15F, 1.0F);
     }
 }

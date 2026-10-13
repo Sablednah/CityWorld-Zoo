@@ -86,6 +86,25 @@ CUTS = {
         ("freesound_community-elephant-scream-fake-100274.mp3", 0.02, 2.40, "death1", -1.0),
         ("cartoon_music-elephant-trumpeting-amp-growlin-529233.mp3", 0.16, 2.30, "death2", -1.0),
     ],
+    "deer": [
+        # grunts, snorts and mews for the ambient event; the stag's roar rarely
+        ("dragon-studio-deer-grunt-472371.mp3", 0.22, 1.00, "ambient1", -9.0),
+        ("freesound_community-deer-meewing-01-31634.mp3", 2.88, 3.62, "ambient2", -12.0),
+        ("freesound_community-deer-meewing-01-31634.mp3", 5.30, 6.26, "ambient3", -12.0),
+        ("freesound_community-deer-meewing-01-31634.mp3", 11.78, 12.56, "ambient4", -12.0),
+        ("nickype-the-call-of-red-stag_animal-sound-145885.mp3", 0.80, 3.20, "roar1", -5.0),
+        # a fawn bleats
+        ("freesound_community-fawn-bleats-98384.mp3", 0.10, 0.84, "ambient_baby1", -9.0),
+        ("freesound_community-fawn-bleats-98384.mp3", 1.26, 2.06, "ambient_baby2", -9.0),
+        ("freesound_community-fawn-bleats-98384.mp3", 5.54, 6.30, "ambient_baby3", -9.0),
+        ("freesound_community-fawn-bleats-98384.mp3", 7.38, 7.92, "ambient_baby4", -9.0),
+        # the alarm snort and a sharp mew: hurt
+        ("dragon-studio-deer-snort-472365.mp3", 0.30, 0.92, "hurt1", -3.0),
+        ("freesound_community-deer-meewing-01-31634.mp3", 9.82, 10.36, "hurt2", -4.0),
+        # death: the stag's call, and the fawn's longest bleat
+        ("nickype-the-call-of-red-stag_animal-sound-145885.mp3", 0.80, 3.30, "death1", -1.0),
+        ("freesound_community-fawn-bleats-98384.mp3", 7.98, 9.04, "death2", -2.0),
+    ],
     "giraffe": [
         # snorts; a giraffe says almost nothing a person can hear, so these play rarely
         ("jerryblessed-giraffe-snorting-and-chewing-leaves-540358.mp3", 1.60, 3.20, "ambient1", -10.0),

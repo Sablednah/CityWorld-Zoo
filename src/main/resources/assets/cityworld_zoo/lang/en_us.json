@@ -36,5 +36,9 @@
   "subtitles.cityworld_zoo.elephant.ambient": "Elephant rumbles",
   "subtitles.cityworld_zoo.elephant.angry": "Elephant trumpets",
   "subtitles.cityworld_zoo.elephant.hurt": "Elephant hurts",
-  "subtitles.cityworld_zoo.elephant.death": "Elephant dies"
+  "subtitles.cityworld_zoo.elephant.death": "Elephant dies",
+  "subtitles.cityworld_zoo.deer.ambient": "Deer grunts",
+  "subtitles.cityworld_zoo.deer.ambient_baby": "Fawn bleats",
+  "subtitles.cityworld_zoo.deer.hurt": "Deer hurts",
+  "subtitles.cityworld_zoo.deer.death": "Deer dies"
 }

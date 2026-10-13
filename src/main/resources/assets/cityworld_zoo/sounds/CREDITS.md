@@ -20,6 +20,7 @@ this mod's jar is within the licence; publishing the raw files as a sound pack w
 | `brown_bear/ambient1.ogg` | a growl | Pixabay (universfield); raw `art/brown_bear/sounds/` | Pixabay Content License |
 | `giraffe/*.ogg` | snorts, and chewing leaves for the eating sound | Pixabay (jerryblessed); raw `art/giraffe/sounds/` | Pixabay Content License |
 | `elephant/*.ogg` | rumbles, trumpets and screams | Pixabay (freesound_community x3, olenchic, cartoon_music); raw `art/elephant/sounds/` | Pixabay Content License |
+| `deer/*.ogg` | grunt, snort, mews, a red stag's call, a fawn's bleats | Pixabay (dragon-studio x2, freesound_community x2, nickype); raw `art/deer/sounds/` | Pixabay Content License |
 
 Everything else the animals say is a vanilla sound event referenced from `sounds.json` (`"type": "event"`):
 the zebra's other ambient take, hurt, death and angry calls are the donkey's. Those need no credit.
