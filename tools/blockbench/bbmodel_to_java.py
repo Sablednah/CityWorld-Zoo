@@ -96,6 +96,26 @@ RIGS = {
             ("tail", None, (0, 16, 11), [(7, "Tail shaft"), (7, "Dark tail tuft")]),
         ],
     },
+    # Sable's tiger (2026-10-13), free format: 17-unit legs split at y=8, the rotated cheek ruffs, muzzle and
+    # whiskers become parts under the head, the tail tip its own part on the tail.
+    "tiger": {
+        "split_y": {(1, "Leg and paw"): 8, (2, "Leg and paw"): 8, (3, "Leg and paw"): 8, (4, "Leg and paw"): 8},
+        "parts": [
+            ("body", None, (0, 16, 1), [(0, "Torso"), (0, "Broad shoulders")]),
+            ("head", None, (0, 17, -10), [(5, "Head"), (5, "Cheek ruff", 0), (5, "Cheek ruff", 1), (6, "Ear"), (7, "Ear"), (8, "Muzzle"),
+                                          (11, "Whisker", 0), (11, "Whisker", 1), (12, "Whisker", 0), (12, "Whisker", 1)]),
+            ("left_front_leg", None, (-4.2, 16, -7.5), [(1, "Leg and paw upper")]),
+            ("left_front_lower", "left_front_leg", (-4.2, 8, -7.5), [(1, "Leg and paw lower")]),
+            ("left_hind_leg", None, (-4.2, 16, 9), [(2, "Leg and paw upper")]),
+            ("left_hind_lower", "left_hind_leg", (-4.2, 8, 9), [(2, "Leg and paw lower")]),
+            ("right_front_leg", None, (4.2, 16, -7.5), [(3, "Leg and paw upper")]),
+            ("right_front_lower", "right_front_leg", (4.2, 8, -7.5), [(3, "Leg and paw lower")]),
+            ("right_hind_leg", None, (4.2, 16, 10), [(4, "Leg and paw upper")]),
+            ("right_hind_lower", "right_hind_leg", (4.2, 8, 10), [(4, "Leg and paw lower")]),
+            ("tail", None, (0, 18, 12), [(9, "Tail shaft")]),
+            ("tail_tip", "tail", (0, 10, 21), [(10, "Tail tip")]),
+        ],
+    },
     "elephant": {
         # Sable's pillar legs are one 19-unit element each; split at y=9 into a 10-unit upper and a 9-unit
         # lower so the knee can bend, each half reading its own rows of the painted leg.
@@ -305,7 +325,10 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
                     p["rotation"] = tuple(rot)
                     boxes.append((name, e, lf, lt))
                 else:
-                    sub_name = name + "_" + e["name"].lower().replace(" ", "_")
+                    sub_name = base = name + "_" + e["name"].lower().replace(" ", "_")
+                    n = 2
+                    while sub_name in parts:   # two rotated "Cheek ruff" elements: ruff, ruff2
+                        sub_name = f"{base}{n}"; n += 1
                     parts[sub_name] = {"parent": name, "pivot": pivot, "elements": [e], "rotation": tuple(rot)}
                     order.append(sub_name)
                     boxes.append((sub_name, e, lf, lt))

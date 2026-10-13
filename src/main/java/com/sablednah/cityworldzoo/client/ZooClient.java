@@ -3,13 +3,13 @@ package com.sablednah.cityworldzoo.client;
 import java.util.function.Supplier;
 
 import com.sablednah.cityworldzoo.ZooEntities;
-import com.sablednah.cityworldzoo.client.model.BigCatModel;
 import com.sablednah.cityworldzoo.client.model.BrownBearModel;
 import com.sablednah.cityworldzoo.client.model.DeerModel;
 import com.sablednah.cityworldzoo.client.model.ElephantModel;
 import com.sablednah.cityworldzoo.client.model.GiraffeModel;
 import com.sablednah.cityworldzoo.client.model.LionModel;
 import com.sablednah.cityworldzoo.client.model.MacaqueModel;
+import com.sablednah.cityworldzoo.client.model.TigerModel;
 import com.sablednah.cityworldzoo.client.model.ZebraModel;
 import com.sablednah.cityworldzoo.client.renderer.ElephantRenderer;
 import com.sablednah.cityworldzoo.client.renderer.ZebraRenderer;
@@ -21,7 +21,6 @@ import java.util.function.Function;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.entity.state.FelineRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
@@ -49,8 +48,8 @@ public final class ZooClient {
         event.registerLayerDefinition(ZooModelLayers.DEER_BABY, DeerModel::createBabyLayer);
         event.registerLayerDefinition(ZooModelLayers.LION, LionModel::createBodyLayer);
         event.registerLayerDefinition(ZooModelLayers.LION_BABY, LionModel::createBabyLayer);
-        event.registerLayerDefinition(ZooModelLayers.TIGER, () -> BigCatModel.createBodyLayer(false));
-        event.registerLayerDefinition(ZooModelLayers.TIGER_BABY, () -> BigCatModel.createBabyLayer(false));
+        event.registerLayerDefinition(ZooModelLayers.TIGER, TigerModel::createBodyLayer);
+        event.registerLayerDefinition(ZooModelLayers.TIGER_BABY, TigerModel::createBabyLayer);
         event.registerLayerDefinition(ZooModelLayers.ELEPHANT, ElephantModel::createBodyLayer);
         event.registerLayerDefinition(ZooModelLayers.ELEPHANT_BABY, ElephantModel::createBabyLayer);
         event.registerLayerDefinition(ZooModelLayers.BROWN_BEAR, BrownBearModel::createBodyLayer);
@@ -68,8 +67,7 @@ public final class ZooClient {
                 new ZebraModel(ctx.bakeLayer(ZooModelLayers.ZEBRA)), new ZebraModel(ctx.bakeLayer(ZooModelLayers.ZEBRA_BABY)), 0.75F,
                 texture("zebra"), texture("zebra_bite")));
         plain(event, ZooEntities.LION, LionModel::new, ZooModelLayers.LION, ZooModelLayers.LION_BABY, 0.8F);
-        register(event, ZooEntities.TIGER, BigCatModel::new, BigCatModel::new, ZooModelLayers.TIGER, ZooModelLayers.TIGER_BABY, 0.8F,
-                texture("tiger"), texture("tiger"), FelineRenderState::new);
+        plain(event, ZooEntities.TIGER, TigerModel::new, ZooModelLayers.TIGER, ZooModelLayers.TIGER_BABY, 0.8F);
     }
 
     private static Identifier texture(String name) {
