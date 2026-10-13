@@ -18,6 +18,7 @@ import com.sablednah.cityworldzoo.entity.ZooAnimal;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
@@ -99,6 +100,30 @@ public final class SelfTest {
                 }
                 z.discard();
                 check("zebra: the bitten skin has a texture", resource("/assets/cityworld_zoo/textures/entity/zebra_bite.png"));
+            }
+        }
+
+        // Sounds: every event of ours is registered, defined in sounds.json, and every file it names is in the jar.
+        {
+            JsonObject sounds = json("/assets/cityworld_zoo/sounds.json");
+            check("sounds.json parses", sounds != null);
+            for (var holder : java.util.List.of(com.sablednah.cityworldzoo.ZooSounds.ZEBRA_AMBIENT, com.sablednah.cityworldzoo.ZooSounds.ZEBRA_HURT,
+                    com.sablednah.cityworldzoo.ZooSounds.ZEBRA_DEATH, com.sablednah.cityworldzoo.ZooSounds.ZEBRA_ANGRY)) {
+                String path = holder.getId().getPath();
+                check("sound " + path + " is registered", BuiltInRegistries.SOUND_EVENT.containsKey(holder.getId()));
+                check("sound " + path + " is defined in sounds.json", sounds != null && sounds.has(path));
+                check("sound " + path + " has a subtitle", lang("subtitles.cityworld_zoo." + path.substring("entity.".length())));
+                if (sounds != null && sounds.has(path)) {
+                    for (var take : sounds.getAsJsonObject(path).getAsJsonArray("sounds")) {
+                        JsonObject t = take.getAsJsonObject();
+                        String name = t.get("name").getAsString();
+                        if (t.has("type") && "event".equals(t.get("type").getAsString())) {
+                            check("sound " + path + " borrows a real vanilla event: " + name, BuiltInRegistries.SOUND_EVENT.containsKey(Identifier.parse(name)));
+                        } else {
+                            check("sound " + path + " take exists in the jar: " + name, resource("/assets/cityworld_zoo/sounds/" + name.substring(name.indexOf(':') + 1) + ".ogg"));
+                        }
+                    }
+                }
             }
         }
 

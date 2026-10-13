@@ -1,0 +1,21 @@
+{
+  "entity.zebra.ambient": {
+    "subtitle": "subtitles.cityworld_zoo.zebra.ambient",
+    "sounds": [
+      { "name": "cityworld_zoo:zebra/whinny", "weight": 2 },
+      { "name": "minecraft:entity.donkey.ambient", "type": "event" }
+    ]
+  },
+  "entity.zebra.hurt": {
+    "subtitle": "subtitles.cityworld_zoo.zebra.hurt",
+    "sounds": [ { "name": "minecraft:entity.donkey.hurt", "type": "event" } ]
+  },
+  "entity.zebra.death": {
+    "subtitle": "subtitles.cityworld_zoo.zebra.death",
+    "sounds": [ { "name": "minecraft:entity.donkey.death", "type": "event" } ]
+  },
+  "entity.zebra.angry": {
+    "subtitle": "subtitles.cityworld_zoo.zebra.angry",
+    "sounds": [ { "name": "minecraft:entity.donkey.angry", "type": "event" } ]
+  }
+}

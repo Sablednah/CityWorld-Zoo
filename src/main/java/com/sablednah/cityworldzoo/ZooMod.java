@@ -33,6 +33,7 @@ public class ZooMod {
     public ZooMod(IEventBus modEventBus, ModContainer modContainer) {
         LOGGER.info("CityWorld: Zoo {} initialising", BuildInfo.describe());
         ZooEntities.register(modEventBus);
+        ZooSounds.register(modEventBus);
         NeoForge.EVENT_BUS.register(ZooEvents.class);
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> ZooCommands.register(event.getDispatcher()));
         if (FMLEnvironment.getDist().isClient()) com.sablednah.cityworldzoo.client.ZooClient.register(modEventBus);

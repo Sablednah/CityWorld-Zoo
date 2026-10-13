@@ -1,5 +1,7 @@
 package com.sablednah.cityworldzoo.entity;
 
+import com.sablednah.cityworldzoo.ZooSounds;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -24,6 +26,9 @@ import net.minecraft.world.level.storage.ValueOutput;
  * <p>One in a hundred wears the bitten skin (Sable's Madagascar nod, 2026-10-13): rolled from the entity's own
  * random in the constructor (no level read: CityWorld builds these on a worldgen thread), kept in
  * {@code Bitten}, drawn by the renderer from {@code zebra_bite.png}.</p>
+ *
+ * <p>Sounds: zebras bray like donkeys, so the calls are the donkey's, with Sable's bark-like whinny as an
+ * extra ambient take ({@code ZooSounds}, {@code sounds.json}).</p>
  */
 public class Zebra extends ZooAnimal {
 
@@ -77,17 +82,17 @@ public class Zebra extends ZooAnimal {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.HORSE_AMBIENT;
+        return ZooSounds.ZEBRA_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.HORSE_HURT;
+        return ZooSounds.ZEBRA_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.HORSE_DEATH;
+        return ZooSounds.ZEBRA_DEATH.get();
     }
 
     @Override

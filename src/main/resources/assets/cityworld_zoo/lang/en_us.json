@@ -14,5 +14,9 @@
   "item.cityworld_zoo.lion_spawn_egg": "Lion Spawn Egg",
   "item.cityworld_zoo.tiger_spawn_egg": "Tiger Spawn Egg",
   "item.cityworld_zoo.elephant_spawn_egg": "Elephant Spawn Egg",
-  "item.cityworld_zoo.brown_bear_spawn_egg": "Brown Bear Spawn Egg"
+  "item.cityworld_zoo.brown_bear_spawn_egg": "Brown Bear Spawn Egg",
+  "subtitles.cityworld_zoo.zebra.ambient": "Zebra brays",
+  "subtitles.cityworld_zoo.zebra.hurt": "Zebra hurts",
+  "subtitles.cityworld_zoo.zebra.death": "Zebra dies",
+  "subtitles.cityworld_zoo.zebra.angry": "Zebra neighs"
 }
