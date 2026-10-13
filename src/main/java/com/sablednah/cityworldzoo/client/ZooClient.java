@@ -10,6 +10,7 @@ import com.sablednah.cityworldzoo.client.model.ElephantModel;
 import com.sablednah.cityworldzoo.client.model.GiraffeModel;
 import com.sablednah.cityworldzoo.client.model.MacaqueModel;
 import com.sablednah.cityworldzoo.client.model.ZebraModel;
+import com.sablednah.cityworldzoo.client.renderer.ElephantRenderer;
 import com.sablednah.cityworldzoo.client.renderer.ZooRenderer;
 import com.sablednah.cityworldzoo.entity.ZooAnimal;
 
@@ -60,7 +61,8 @@ public final class ZooClient {
         plain(event, ZooEntities.GIRAFFE, GiraffeModel::new, ZooModelLayers.GIRAFFE, ZooModelLayers.GIRAFFE_BABY, 1.0F);
         plain(event, ZooEntities.RHESUS_MACAQUE, MacaqueModel::new, ZooModelLayers.RHESUS_MACAQUE, ZooModelLayers.RHESUS_MACAQUE_BABY, 0.35F);
         plain(event, ZooEntities.DEER, DeerModel::new, ZooModelLayers.DEER, ZooModelLayers.DEER_BABY, 0.6F);
-        plain(event, ZooEntities.ELEPHANT, ElephantModel::new, ZooModelLayers.ELEPHANT, ZooModelLayers.ELEPHANT_BABY, 1.2F);
+        event.registerEntityRenderer(ZooEntities.ELEPHANT.entityType(), ctx -> new ElephantRenderer(ctx,
+                new ElephantModel(ctx.bakeLayer(ZooModelLayers.ELEPHANT)), new ElephantModel(ctx.bakeLayer(ZooModelLayers.ELEPHANT_BABY)), 1.2F, texture("elephant")));
         plain(event, ZooEntities.BROWN_BEAR, BrownBearModel::new, ZooModelLayers.BROWN_BEAR, ZooModelLayers.BROWN_BEAR_BABY, 0.9F);
         // The foal is vanilla's baby horse mesh with its own box layout, hence its own texture.
         register(event, ZooEntities.ZEBRA, ZebraModel::new, BabyHorseModel::new, ZooModelLayers.ZEBRA, ZooModelLayers.ZEBRA_BABY, 0.75F,

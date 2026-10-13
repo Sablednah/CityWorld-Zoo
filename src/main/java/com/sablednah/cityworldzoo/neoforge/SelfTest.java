@@ -59,6 +59,30 @@ public final class SelfTest {
 
         for (ZooEntities.Species<? extends ZooAnimal> s : ZooEntities.ALL) species(server, level, spawn, s);
 
+        // Elephants: a bull is a cow times the scale attribute, and the flag survives a save.
+        {
+            var e = ZooEntities.ELEPHANT.entityType().create(level, EntitySpawnReason.COMMAND);
+            if (e instanceof com.sablednah.cityworldzoo.entity.Elephant el) {
+                el.setTusked(false);
+                float cow = el.getBbHeight();
+                el.setTusked(true);
+                check("elephant: a bull stands 3.5 blocks to a cow's 3", Math.abs(el.getBbHeight() / cow - com.sablednah.cityworldzoo.entity.Elephant.BULL_SCALE) < 1e-3
+                        && Math.abs(cow - 3.0F) < 1e-3);
+                var out = net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess());
+                el.saveWithoutId(out);
+                var copy = ZooEntities.ELEPHANT.entityType().create(level, EntitySpawnReason.COMMAND);
+                if (copy instanceof com.sablednah.cityworldzoo.entity.Elephant el2) {
+                    el2.setTusked(false);
+                    el2.load(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), out.buildResult()));
+                    check("elephant: Tusked survives a save and reload, scale with it", el2.isTusked() && Math.abs(el2.getBbHeight() - el.getBbHeight()) < 1e-3);
+                    el2.discard();
+                }
+                el.discard();
+            } else {
+                FAILURES.add("elephant did not create");
+            }
+        }
+
         // The worldgen-thread rule, as a guard: no species and not the base may override finalizeSpawn.
         List<Class<?>> classes = new ArrayList<>();
         classes.add(ZooAnimal.class);
