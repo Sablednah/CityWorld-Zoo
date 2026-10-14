@@ -9,7 +9,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -18,7 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * The Last of Us (Ellie's winter hunt) and I Am Legend (the herd on Fifth Avenue). Skittish; bolts when hurt.
  * Grunts, mews and the odd stag roar (art/deer/sounds, through tools/audio/clips.py); a fawn bleats; the
- * alarm snort when hurt; hooves are the goat's.
+ * alarm snort when hurt; hooves are the goat's. Skittish as an ocelot: it runs from a player who is not
+ * sneaking within ten blocks, so feeding one means creeping up on it.
  */
 public class Deer extends ZooAnimal {
 
@@ -38,6 +41,13 @@ public class Deer extends ZooAnimal {
     @Override
     protected Stride stride() {
         return Stride.DEER;
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, p -> !p.isSteppingCarefully(), 10.0F, 1.3D, 1.8D,
+                net.minecraft.world.entity.EntitySelector.NO_CREATIVE_OR_SPECTATOR));
     }
 
     @Override

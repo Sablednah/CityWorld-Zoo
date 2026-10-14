@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import com.sablednah.cityworldzoo.client.renderer.MacaqueRenderState;
 import net.minecraft.util.Mth;
 
 /**
@@ -20,9 +20,10 @@ import net.minecraft.util.Mth;
  * tools/blockbench/spec_to_model.py from its "rhesus_macaque" spec (which also paints the placeholder texture
  * and writes blockbench/rhesus_macaque.bbmodel for Sable): change the spec and re-run, do not edit the
  * numbers here. Legs are 3 + 3 with a knee. The animation is hand-written: a quick walk sized to the ground
- * going by ({@link Gait}), head following the look, a tail that curls and sways. Baby: big-headed half size.
+ * going by ({@link Gait}), head following the look, a tail that curls and sways; climbing, the body stands up
+ * against the trunk with the legs spread and working. Baby: big-headed half size.
  */
-public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
+public class MacaqueModel extends EntityModel<MacaqueRenderState> {
 
     private final ModelPart body;
     private final ModelPart head;
@@ -114,7 +115,7 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
     // --- end generated ---
 
     @Override
-    public void setupAnim(LivingEntityRenderState state) {
+    public void setupAnim(MacaqueRenderState state) {
         super.setupAnim(state);
         float rad = (float) Math.PI / 180.0F;
         float pos = state.walkAnimationPos;
@@ -130,6 +131,22 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
         }
         this.tail.zRot = Mth.cos(age * 0.2F) * 0.15F;
         this.tail2.xRot += Mth.cos(age * 0.2F) * 0.2F;
+
+        // Climbing: hugging the trunk, body upright, limbs spread and working, head tipped back to look up.
+        if (state.climbing) {
+            this.body.xRot -= 1.35F;
+            this.body.y += 2.0F;
+            this.body.z -= 3.0F;
+            this.head.xRot -= 0.9F;
+            float reach = Mth.cos(age * 0.5F) * 0.35F;
+            for (int i = 0; i < 4; i++) {
+                this.upper[i].xRot = -1.3F + (i % 2 == 0 ? reach : -reach);
+                this.upper[i].zRot = (i == 0 || i == 3 ? -0.35F : 0.35F);
+                this.lower[i].xRot = 0.9F;
+                this.upper[i].y -= 2.0F;
+                this.upper[i].z -= 3.0F;
+            }
+        }
 
         // Sitting: standing still for a while, it sits up on its haunches -- body pitched up and dropped onto
         // the ground, hind legs folded forward, head up -- and scratches with a front hand now and then.
