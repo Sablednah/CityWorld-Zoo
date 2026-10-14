@@ -1,6 +1,7 @@
 package com.sablednah.cityworldzoo.entity;
 
 import com.sablednah.cityworldzoo.ZooSounds;
+import com.sablednah.cityworldzoo.entity.ai.ProtectYoungGoal;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -28,6 +29,12 @@ public class BrownBear extends ZooAnimal {
                 .add(Attributes.FOLLOW_RANGE, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_DAMAGE, 6.0D);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.addGoal(2, new ProtectYoungGoal(this));
     }
 
     @Override

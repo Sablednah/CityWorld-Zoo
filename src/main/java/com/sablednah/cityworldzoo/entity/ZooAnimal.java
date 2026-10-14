@@ -33,8 +33,17 @@ import net.minecraft.world.level.Level;
  */
 public abstract class ZooAnimal extends Animal {
 
+    /** Ticks left before a predator hunts again, set by {@code HuntGoal} after a kill. Not saved: a restart is a meal. */
+    public int huntRest;
+
     protected ZooAnimal(EntityType<? extends ZooAnimal> type, Level level) {
         super(type, level);
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (huntRest > 0 && !this.level().isClientSide()) huntRest--;
     }
 
     /** Whether this animal fights back when hurt (a melee goal and a hurt-by target) or runs. */
@@ -79,7 +88,7 @@ public abstract class ZooAnimal extends Animal {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         if (fightsBack()) {
             this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.25D, true));
-            this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+            this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());   // the pride, the sleuth, the herd
         } else {
             this.goalSelector.addGoal(1, new PanicGoal(this, 1.5D));
         }

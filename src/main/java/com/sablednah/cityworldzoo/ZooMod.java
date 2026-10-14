@@ -3,10 +3,12 @@ package com.sablednah.cityworldzoo;
 import com.mojang.logging.LogUtils;
 import com.sablednah.cityworldzoo.neoforge.ZooCommands;
 import com.sablednah.cityworldzoo.neoforge.ZooEvents;
+import com.sablednah.cityworldzoo.neoforge.ZooSpawns;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -32,8 +34,10 @@ public class ZooMod {
 
     public ZooMod(IEventBus modEventBus, ModContainer modContainer) {
         LOGGER.info("CityWorld: Zoo {} initialising", BuildInfo.describe());
+        modContainer.registerConfig(ModConfig.Type.COMMON, ZooConfig.SPEC);
         ZooEntities.register(modEventBus);
         ZooSounds.register(modEventBus);
+        ZooSpawns.register(modEventBus);
         NeoForge.EVENT_BUS.register(ZooEvents.class);
         NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent event) -> ZooCommands.register(event.getDispatcher()));
         if (FMLEnvironment.getDist().isClient()) com.sablednah.cityworldzoo.client.ZooClient.register(modEventBus);

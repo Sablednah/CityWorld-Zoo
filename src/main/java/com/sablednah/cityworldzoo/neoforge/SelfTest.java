@@ -126,6 +126,33 @@ public final class SelfTest {
             }
         }
 
+        // Natural spawning: the modifier type is registered, its data file names it, every species has a config
+        // entry, and the default biome lists are real tags.
+        check("biome modifier type cityworld_zoo:natural_spawns is registered",
+                net.neoforged.neoforge.registries.NeoForgeRegistries.BIOME_MODIFIER_SERIALIZERS.containsKey(ZooEntities.id("natural_spawns")));
+        JsonObject modifier = json("/data/cityworld_zoo/neoforge/biome_modifier/natural_spawns.json");
+        check("the natural_spawns data file names the type", modifier != null && "cityworld_zoo:natural_spawns".equals(modifier.get("type").getAsString()));
+        for (var s : ZooEntities.ALL) {
+            var c = com.sablednah.cityworldzoo.ZooConfig.SPAWNS.get(s.id());
+            check(s.id() + " has a spawn config", c != null);
+            if (c != null) {
+                boolean anyBiome = false;
+                for (String b : c.biomes().get()) {
+                    if (b.startsWith("#")) {
+                        var tag = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BIOME, Identifier.parse(b.substring(1)));
+                        anyBiome |= server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME).get(tag).isPresent();
+                    } else {
+                        anyBiome |= server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME).containsKey(Identifier.parse(b));
+                    }
+                }
+                check(s.id() + "'s default biomes exist: " + c.biomes().get(), anyBiome);
+            }
+        }
+        check("the savanna takes a giraffe", server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME)
+                .get(net.minecraft.world.level.biome.Biomes.SAVANNA).map(h -> com.sablednah.cityworldzoo.neoforge.ZooSpawns.matches(h, java.util.List.of("#minecraft:is_savanna"))).orElse(false));
+        check("the jungle does not", !server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME)
+                .get(net.minecraft.world.level.biome.Biomes.JUNGLE).map(h -> com.sablednah.cityworldzoo.neoforge.ZooSpawns.matches(h, java.util.List.of("#minecraft:is_savanna"))).orElse(true));
+
         // The worldgen-thread rule, as a guard: no species and not the base may override finalizeSpawn.
         List<Class<?>> classes = new ArrayList<>();
         classes.add(ZooAnimal.class);
