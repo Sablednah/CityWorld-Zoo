@@ -42,6 +42,20 @@ public abstract class ZooAnimal extends Animal {
         return false;
     }
 
+    /** How this species walks: the model swings by {@code stride().swing()}, the entity steps at its cadence. */
+    protected abstract Stride stride();
+
+    /**
+     * Vanilla's walk clock with this species' cadence as the position scale (a baby's halved legs double it,
+     * a bull elephant's scale slows it: {@code getScale} carries both), so legs swing a modest angle and the
+     * feet still do not slide. See {@link Stride}.
+     */
+    @Override
+    protected void updateWalkAnimation(float distance) {
+        float target = Math.min(distance * 4.0F, 1.0F);
+        this.walkAnimation.update(target, 0.4F, stride().cadence() / this.getScale());
+    }
+
     /** The call when it turns on something (played once, as the target is first taken); null for none. */
     protected @Nullable SoundEvent getAngrySound() {
         return null;

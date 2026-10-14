@@ -2,6 +2,8 @@ package com.sablednah.cityworldzoo.client.model;
 
 import java.util.Set;
 
+import com.sablednah.cityworldzoo.entity.Stride;
+
 import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -92,7 +94,7 @@ public class BrownBearModel extends EntityModel<LivingEntityRenderState> {
         float idle = 1.0F - walking;
         this.head.yRot += Mth.sin(state.ageInTicks * 0.04F) * 0.3F * idle;
         this.head.xRot += 0.45F * Idle.window(state.ageInTicks, 0.015F, 0.7F, 0.8F, 0.1F) * idle;
-        float amp = Gait.swing(10.0F * SCALE * state.scale) * walking;
+        float amp = Stride.BROWN_BEAR.swing() * walking;
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
             this.legs[i].xRot += Mth.cos(phase) * amp;

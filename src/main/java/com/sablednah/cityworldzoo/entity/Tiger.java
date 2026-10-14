@@ -32,6 +32,11 @@ public class Tiger extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.TIGER;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return BigCats.isMeat(stack);
     }

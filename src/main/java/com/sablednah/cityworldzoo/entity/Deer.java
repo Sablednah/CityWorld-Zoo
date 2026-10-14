@@ -36,6 +36,11 @@ public class Deer extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.DEER;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(Items.WHEAT) || stack.is(Items.APPLE) || stack.is(Items.SWEET_BERRIES);
     }

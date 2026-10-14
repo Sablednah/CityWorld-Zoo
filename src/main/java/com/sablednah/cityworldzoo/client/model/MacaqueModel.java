@@ -2,6 +2,8 @@ package com.sablednah.cityworldzoo.client.model;
 
 import java.util.Set;
 
+import com.sablednah.cityworldzoo.entity.Stride;
+
 import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -32,8 +34,8 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
     public MacaqueModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
-        this.head = root.getChild("head");
-        this.tail = root.getChild("tail");
+        this.head = body.getChild("head");
+        this.tail = body.getChild("tail");
         this.tail2 = tail.getChild("tail2");
         String[] legs = {"left_front", "right_hind", "right_front", "left_hind"}; // diagonal pairs: 0 with 1, 2 with 3
         this.upper = new ModelPart[4];
@@ -60,13 +62,13 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
                 CubeListBuilder.create()
                         .texOffs(0, 0).addBox(-2.5F, -2.5F, -4.5F, 5.0F, 5.0F, 9.0F),
                 PartPose.offset(0.0F, 15.5F, 0.0F));
-        PartDefinition head = root.addOrReplaceChild("head",
+        PartDefinition head = body.addOrReplaceChild("head",
                 CubeListBuilder.create()
                         .texOffs(0, 15).addBox(-2.0F, -4.0F, -3.0F, 4.0F, 4.0F, 4.0F)
                         .texOffs(18, 36).addBox(-1.0F, -2.0F, -4.0F, 2.0F, 2.0F, 1.0F)
                         .texOffs(25, 36).addBox(2.0F, -3.0F, -1.0F, 1.0F, 2.0F, 1.0F)
                         .texOffs(0, 42).addBox(-3.0F, -3.0F, -1.0F, 1.0F, 2.0F, 1.0F),
-                PartPose.offset(0.0F, 13.0F, -4.0F));
+                PartPose.offset(0.0F, -2.5F, -4.0F));
         PartDefinition leftfrontleg = root.addOrReplaceChild("left_front_leg",
                 CubeListBuilder.create()
                         .texOffs(0, 24).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
@@ -99,10 +101,10 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
                 CubeListBuilder.create()
                         .texOffs(9, 36).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 3.0F, 2.0F),
                 PartPose.offset(0.0F, 3.0F, 0.0F));
-        PartDefinition tail = root.addOrReplaceChild("tail",
+        PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create()
                         .texOffs(17, 15).addBox(-0.5F, -6.0F, -0.5F, 1.0F, 6.0F, 1.0F),
-                PartPose.offsetAndRotation(0.0F, 14.0F, 4.0F, -0.8F, 0.0F, 0.0F));
+                PartPose.offsetAndRotation(0.0F, -1.5F, 4.0F, -0.8F, 0.0F, 0.0F));
         PartDefinition tail2 = tail.addOrReplaceChild("tail2",
                 CubeListBuilder.create()
                         .texOffs(22, 15).addBox(-0.5F, -6.0F, -0.5F, 1.0F, 6.0F, 1.0F),
@@ -120,7 +122,7 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
         float age = state.ageInTicks;
         this.head.yRot = state.yRot * rad;
         this.head.xRot = state.xRot * rad;
-        float amp = Gait.swing(6.0F * state.scale) * walking;
+        float amp = Stride.RHESUS_MACAQUE.swing() * walking;
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
             this.upper[i].xRot += Mth.cos(phase) * amp;
@@ -139,7 +141,7 @@ public class MacaqueModel extends EntityModel<LivingEntityRenderState> {
             this.upper[i].y += 4.0F * sit;
             this.lower[i].xRot += 1.6F * sit;
         }
-        this.head.xRot += 0.25F * sit;
+        this.head.xRot += 0.6F * sit;   // the body pitched up 0.9 would tip the face at the sky; look ahead instead
         float scratch = Idle.window(age, 0.05F, 1.0F, 0.8F, 0.1F) * sit;
         this.upper[2].xRot += (-0.6F + Mth.sin(age * 1.5F) * 0.3F) * scratch;
         this.lower[2].xRot += 0.9F * scratch;

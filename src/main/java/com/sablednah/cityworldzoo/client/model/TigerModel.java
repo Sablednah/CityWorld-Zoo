@@ -2,6 +2,8 @@ package com.sablednah.cityworldzoo.client.model;
 
 import java.util.Set;
 
+import com.sablednah.cityworldzoo.entity.Stride;
+
 import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -38,8 +40,8 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
     public TigerModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
-        this.head = root.getChild("head");
-        this.tail = root.getChild("tail");
+        this.head = body.getChild("head");
+        this.tail = body.getChild("tail");
         this.tailTip = tail.getChild("tail_tip");
         this.muzzle = head.getChild("head_muzzle");
         this.leftWhiskers = head.getChild("left_whiskers");
@@ -70,19 +72,19 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
                         .texOffs(0, 0).addBox(-4.2F, -5.0F, -3.0F, 8.4F, 12.0F, 15.0F)
                         .texOffs(0, 28).addBox(-5.0F, -6.0F, -13.0F, 10.0F, 14.0F, 12.0F),
                 PartPose.offset(0.0F, 8.0F, 1.0F));
-        PartDefinition head = root.addOrReplaceChild("head",
+        PartDefinition head = body.addOrReplaceChild("head",
                 CubeListBuilder.create()
                         .texOffs(0, 55).addBox(-4.0F, -4.0F, -8.0F, 8.0F, 9.0F, 6.0F)
-                        .texOffs(38, 111).addBox(1.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F)
-                        .texOffs(45, 111).addBox(-3.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F),
-                PartPose.offset(0.0F, 7.0F, -10.0F));
+                        .texOffs(38, 113).addBox(1.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F)
+                        .texOffs(45, 113).addBox(-3.8F, -6.0F, -4.0F, 2.0F, 3.0F, 1.0F),
+                PartPose.offset(0.0F, -1.0F, -11.0F));
         PartDefinition leftwhiskers = head.addOrReplaceChild("left_whiskers",
                 CubeListBuilder.create()
-                        .texOffs(57, 111).addBox(0.15F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
+                        .texOffs(57, 113).addBox(0.15F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
                 PartPose.offset(2.6F, 2.3F, -8.4F));
         PartDefinition rightwhiskers = head.addOrReplaceChild("right_whiskers",
                 CubeListBuilder.create()
-                        .texOffs(5, 121).addBox(-1.875F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
+                        .texOffs(5, 123).addBox(-1.875F, -0.54F, -0.787F, 1.75F, 0.14F, 0.15F),
                 PartPose.offset(-2.4F, 2.3F, -8.4F));
         PartDefinition leftfrontleg = root.addOrReplaceChild("left_front_leg",
                 CubeListBuilder.create()
@@ -90,59 +92,59 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(4.2F, 8.0F, -7.5F));
         PartDefinition leftfrontlower = leftfrontleg.addOrReplaceChild("left_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(0, 85).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F),
+                        .texOffs(0, 71).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition lefthindleg = root.addOrReplaceChild("left_hind_leg",
                 CubeListBuilder.create()
-                        .texOffs(0, 71).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
+                        .texOffs(17, 71).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
                 PartPose.offset(4.2F, 8.0F, 9.0F));
         PartDefinition lefthindlower = lefthindleg.addOrReplaceChild("left_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(17, 85).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F),
+                        .texOffs(34, 71).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition rightfrontleg = root.addOrReplaceChild("right_front_leg",
                 CubeListBuilder.create()
-                        .texOffs(17, 71).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
+                        .texOffs(0, 85).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
                 PartPose.offset(-4.2F, 8.0F, -7.5F));
         PartDefinition rightfrontlower = rightfrontleg.addOrReplaceChild("right_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(34, 85).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F),
+                        .texOffs(17, 85).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition righthindleg = root.addOrReplaceChild("right_hind_leg",
                 CubeListBuilder.create()
-                        .texOffs(34, 71).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
+                        .texOffs(34, 85).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
                 PartPose.offset(-4.2F, 8.0F, 10.0F));
         PartDefinition righthindlower = righthindleg.addOrReplaceChild("right_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(0, 98).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F),
+                        .texOffs(0, 99).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
-        PartDefinition tail = root.addOrReplaceChild("tail",
+        PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create()
                         .texOffs(29, 55).addBox(-1.0F, 0.0F, 0.0F, 2.0F, 12.0F, 2.0F),
-                PartPose.offset(0.0F, 6.0F, 12.0F));
+                PartPose.offset(0.0F, -2.0F, 11.0F));
         PartDefinition tailtip = tail.addOrReplaceChild("tail_tip",
                 CubeListBuilder.create()
-                        .texOffs(21, 111).addBox(-0.75F, -0.75F, -0.5F, 1.5F, 1.5F, 6.5F),
-                PartPose.offset(0.0F, 8.0F, 9.0F));
+                        .texOffs(21, 113).addBox(-0.75F, -0.75F, -0.5F, 1.5F, 1.5F, 6.5F),
+                PartPose.offset(0.0F, 8.0F, 2.0F));
         PartDefinition headcheekruff = head.addOrReplaceChild("head_cheek_ruff",
                 CubeListBuilder.create()
-                        .texOffs(17, 98).addBox(-0.3F, -0.0F, -5.2F, 4.6F, 7.0F, 3.7F),
+                        .texOffs(17, 99).addBox(-0.3F, -0.0F, -5.2F, 4.6F, 7.0F, 3.7F),
                 PartPose.offsetAndRotation(0.0F, -2.0F, -2.0F, 0.0F, 0.0F, -0.436F));
         PartDefinition headcheekruff2 = head.addOrReplaceChild("head_cheek_ruff2",
                 CubeListBuilder.create()
-                        .texOffs(35, 98).addBox(-6.644F, -2.958F, -5.3F, 4.6F, 7.0F, 3.7F),
+                        .texOffs(35, 99).addBox(-6.644F, -2.958F, -5.3F, 4.6F, 7.0F, 3.7F),
                 PartPose.offsetAndRotation(1.0F, 1.558F, -2.0F, 0.0F, 0.0F, 0.436F));
         PartDefinition headmuzzle = head.addOrReplaceChild("head_muzzle",
                 CubeListBuilder.create()
-                        .texOffs(0, 111).addBox(-3.0F, -1.5F, -5.0F, 5.0F, 4.0F, 5.0F),
+                        .texOffs(0, 113).addBox(-3.0F, -1.5F, -5.0F, 5.0F, 4.0F, 5.0F),
                 PartPose.offsetAndRotation(0.5F, 2.0F, -8.0F, 0.436F, 0.0F, 0.0F));
         PartDefinition leftwhiskerswhisker = leftwhiskers.addOrReplaceChild("left_whiskers_whisker",
                 CubeListBuilder.create()
-                        .texOffs(52, 111).addBox(0.125F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
+                        .texOffs(52, 113).addBox(0.125F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
                 PartPose.offsetAndRotation(0.025F, -0.0F, 0.0F, 0.0F, 0.0F, 0.349F));
         PartDefinition rightwhiskerswhisker = rightwhiskers.addOrReplaceChild("right_whiskers_whisker",
                 CubeListBuilder.create()
-                        .texOffs(0, 121).addBox(-1.875F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
+                        .texOffs(0, 123).addBox(-1.875F, 0.56F, -0.787F, 1.75F, 0.14F, 0.15F),
                 PartPose.offsetAndRotation(-0.0F, -0.0F, 0.0F, 0.0F, 0.0F, -0.349F));
         return mesh;
     }
@@ -174,7 +176,7 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
         this.rightWhiskers.yRot -= twitch * 0.5F;
 
         // A cat's walk: long low strides from the hip, the knee folding on the forward swing.
-        float amp = Gait.swing(16.0F * state.scale) * walking;
+        float amp = Stride.TIGER.swing() * walking;
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
             this.upper[i].xRot += Mth.cos(phase) * amp;
@@ -193,8 +195,7 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
             this.lower[i].xRot += 1.6F * sit;
         }
         for (int i : new int[] {0, 2}) this.upper[i].y -= 1.8F * sit;   // the front legs hang from the raised chest
-        this.head.y -= 1.8F * sit;
-        this.head.xRot -= 0.1F * sit;
+        this.head.xRot += 0.3F * sit;   // the head rides the pitched body; keep the gaze level
 
         // The tail sways with the stride; its tip curls and twitches on its own.
         this.tail.zRot = Mth.sin(age * 0.08F) * 0.12F + Mth.cos(pos * 0.3331F) * 0.15F * walking;

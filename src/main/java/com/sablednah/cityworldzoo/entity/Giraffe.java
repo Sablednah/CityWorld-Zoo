@@ -32,6 +32,11 @@ public class Giraffe extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.GIRAFFE;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(Items.WHEAT);
     }

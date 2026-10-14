@@ -76,6 +76,11 @@ public class Zebra extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.ZEBRA;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(Items.WHEAT) || stack.is(Items.APPLE);
     }

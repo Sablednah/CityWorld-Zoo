@@ -2,6 +2,8 @@ package com.sablednah.cityworldzoo.client.model;
 
 import java.util.Set;
 
+import com.sablednah.cityworldzoo.entity.Stride;
+
 import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -33,8 +35,8 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
     public LionModel(ModelPart root) {
         super(root);
         this.body = root.getChild("body");
-        this.head = root.getChild("head");
-        this.tail = root.getChild("tail");
+        this.head = body.getChild("head");
+        this.tail = body.getChild("tail");
         String[] legs = {"left_front", "right_hind", "right_front", "left_hind"}; // diagonal pairs: 0 with 1, 2 with 3
         this.upper = new ModelPart[4];
         this.lower = new ModelPart[4];
@@ -61,50 +63,50 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
                         .texOffs(0, 0).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 10.0F, 15.0F)
                         .texOffs(0, 52).addBox(-4.5F, -5.0F, -11.0F, 9.0F, 12.0F, 10.0F),
                 PartPose.offset(0.0F, 10.0F, 1.0F));
-        PartDefinition head = root.addOrReplaceChild("head",
+        PartDefinition head = body.addOrReplaceChild("head",
                 CubeListBuilder.create()
                         .texOffs(0, 26).addBox(-7.0F, -8.0F, -8.0F, 14.0F, 16.0F, 9.0F)
                         .texOffs(32, 75).addBox(-4.5F, -5.0F, -10.5F, 9.0F, 11.0F, 2.5F)
-                        .texOffs(13, 112).addBox(3.3F, -6.0F, -10.0F, 2.0F, 2.0F, 1.0F)
-                        .texOffs(20, 112).addBox(-5.3F, -6.0F, -10.0F, 2.0F, 2.0F, 1.0F),
-                PartPose.offset(0.0F, 10.0F, -9.0F));
+                        .texOffs(13, 113).addBox(3.3F, -6.0F, -10.0F, 2.0F, 2.0F, 1.0F)
+                        .texOffs(20, 113).addBox(-5.3F, -6.0F, -10.0F, 2.0F, 2.0F, 1.0F),
+                PartPose.offset(0.0F, 0.0F, -10.0F));
         PartDefinition leftfrontleg = root.addOrReplaceChild("left_front_leg",
                 CubeListBuilder.create()
                         .texOffs(0, 91).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 6.0F, 4.0F),
                 PartPose.offset(3.5F, 13.0F, -6.5F));
         PartDefinition leftfrontlower = leftfrontleg.addOrReplaceChild("left_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(0, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F),
+                        .texOffs(16, 91).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition lefthindleg = root.addOrReplaceChild("left_hind_leg",
                 CubeListBuilder.create()
-                        .texOffs(16, 91).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 6.0F, 4.0F),
+                        .texOffs(32, 91).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 6.0F, 4.0F),
                 PartPose.offset(3.5F, 13.0F, 9.0F));
         PartDefinition lefthindlower = lefthindleg.addOrReplaceChild("left_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(16, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F),
+                        .texOffs(48, 91).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition rightfrontleg = root.addOrReplaceChild("right_front_leg",
                 CubeListBuilder.create()
-                        .texOffs(32, 91).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 6.0F, 4.0F),
+                        .texOffs(0, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 6.0F, 4.0F),
                 PartPose.offset(-3.5F, 13.0F, -6.5F));
         PartDefinition rightfrontlower = rightfrontleg.addOrReplaceChild("right_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(32, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F),
+                        .texOffs(16, 102).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition righthindleg = root.addOrReplaceChild("right_hind_leg",
                 CubeListBuilder.create()
-                        .texOffs(48, 91).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 6.0F, 4.0F),
+                        .texOffs(32, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 6.0F, 4.0F),
                 PartPose.offset(-3.5F, 13.0F, 9.0F));
         PartDefinition righthindlower = righthindleg.addOrReplaceChild("right_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(48, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F),
+                        .texOffs(48, 102).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
-        PartDefinition tail = root.addOrReplaceChild("tail",
+        PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create()
                         .texOffs(56, 75).addBox(-0.75F, 0.0F, 0.0F, 1.5F, 10.0F, 1.5F)
-                        .texOffs(0, 112).addBox(-1.4F, 9.0F, -0.6F, 2.8F, 3.3F, 2.8F),
-                PartPose.offset(0.0F, 8.0F, 11.0F));
+                        .texOffs(0, 113).addBox(-1.4F, 9.0F, -0.6F, 2.8F, 3.3F, 2.8F),
+                PartPose.offset(0.0F, -2.0F, 10.0F));
         PartDefinition headmuzzle = head.addOrReplaceChild("head_muzzle",
                 CubeListBuilder.create()
                         .texOffs(0, 75).addBox(-2.4F, -1.0F, -4.5F, 4.8F, 4.0F, 10.5F),
@@ -125,7 +127,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
         this.head.xRot = state.xRot * rad + Mth.cos(pos * 0.6662F) * 0.04F * walking;
 
         // A cat's walk: long low strides from the hip, the knee folding on the forward swing.
-        float amp = Gait.swing(11.0F * state.scale) * walking;
+        float amp = Stride.LION.swing() * walking;
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
             this.upper[i].xRot += Mth.cos(phase) * amp;
@@ -144,8 +146,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
             this.lower[i].xRot += 1.6F * sit;
         }
         for (int i : new int[] {0, 2}) this.upper[i].y -= 1.8F * sit;   // the front legs hang from the raised chest
-        this.head.y -= 1.8F * sit;
-        this.head.xRot -= 0.1F * sit;
+        this.head.xRot += 0.3F * sit;   // the head rides the pitched body; keep the gaze level
 
         // The tail hangs low, sways with the stride and flicks on its own now and then.
         this.tail.xRot = 0.15F + Mth.cos(pos * 0.3331F) * 0.1F * walking;

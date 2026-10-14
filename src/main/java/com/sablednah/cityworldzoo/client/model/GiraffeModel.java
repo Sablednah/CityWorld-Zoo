@@ -2,6 +2,8 @@ package com.sablednah.cityworldzoo.client.model;
 
 import java.util.Set;
 
+import com.sablednah.cityworldzoo.entity.Stride;
+
 import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -173,7 +175,7 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
         // Walking: diagonal pairs swing from the shoulder by the angle that keeps a planted hoof still on the
         // ground (the hip is 30 units up, times the entity's scale); the knee folds as the leg swings forward
         // and the hoof trails it, so the leg reads as three joints rather than a stiff post.
-        float amp = Gait.swing(30.0F * state.scale) * Gait.ramp(speed);
+        float amp = Stride.GIRAFFE.swing() * Gait.ramp(speed);
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
             this.upper[i].xRot += Mth.cos(phase) * amp;
@@ -182,11 +184,12 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
             this.hoof[i].xRot += -fold * 0.5F;
         }
 
-        // Grazing: standing a while, the neck swings down and the head follows, back up before it walks off.
-        float graze = Idle.window(age, 0.006F, 1.0F, 0.4F, 0.15F) * (1.0F - Gait.ramp(speed));
-        this.neck.xRot += 1.25F * graze;
-        this.head.xRot -= 0.45F * graze;
-        this.head.yRot += Mth.sin(age * 0.09F) * 0.15F * graze;   // nosing about
+        // Browsing: standing a while, the neck straightens up and the head reaches into the canopy, nibbling
+        // side to side (a giraffe eats from trees; it only drops its head to drink, and there is no water goal).
+        float browse = Idle.window(age, 0.006F, 1.0F, 0.4F, 0.15F) * (1.0F - Gait.ramp(speed));
+        this.neck.xRot -= 0.3F * browse;
+        this.head.xRot += (0.15F + Mth.sin(age * 0.45F) * 0.08F) * browse;
+        this.head.yRot += Mth.sin(age * 0.07F) * 0.3F * browse;
 
         // Idle: ears twitch on their own clocks, the tail swishes side to side and lifts a little as it walks.
         this.leftEar.zRot += Mth.sin(age * 0.11F) * 0.12F + flick(age, 0.0F);

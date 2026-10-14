@@ -32,6 +32,11 @@ public class Lion extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.LION;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return BigCats.isMeat(stack);
     }

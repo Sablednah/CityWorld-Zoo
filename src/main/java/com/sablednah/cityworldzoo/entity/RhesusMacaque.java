@@ -38,6 +38,11 @@ public class RhesusMacaque extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.RHESUS_MACAQUE;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(Items.APPLE) || stack.is(Items.MELON_SLICE) || stack.is(Items.SWEET_BERRIES);
     }

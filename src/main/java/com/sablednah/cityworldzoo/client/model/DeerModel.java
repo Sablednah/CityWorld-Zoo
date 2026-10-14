@@ -2,6 +2,8 @@ package com.sablednah.cityworldzoo.client.model;
 
 import java.util.Set;
 
+import com.sablednah.cityworldzoo.entity.Stride;
+
 import net.minecraft.client.model.BabyModelTransform;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -132,7 +134,7 @@ public class DeerModel extends EntityModel<LivingEntityRenderState> {
         this.head.xRot = state.xRot * rad + Mth.cos(pos * 0.6662F) * 0.05F * walking;
 
         // Short legs, so a wide swing to keep up with the ground; the knee folds on the forward swing.
-        float amp = Gait.swing(12.0F * SCALE * state.scale) * walking;
+        float amp = Stride.DEER.swing() * walking;
         for (int i = 0; i < 4; i++) {
             float phase = pos * 0.6662F + (i < 2 ? 0.0F : (float) Math.PI);
             this.upper[i].xRot += Mth.cos(phase) * amp;

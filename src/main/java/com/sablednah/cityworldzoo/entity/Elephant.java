@@ -91,6 +91,11 @@ public class Elephant extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.ELEPHANT;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return stack.is(Items.WHEAT) || stack.is(Items.APPLE) || stack.is(Items.HAY_BLOCK);
     }

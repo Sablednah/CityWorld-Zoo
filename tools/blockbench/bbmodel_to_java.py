@@ -84,7 +84,7 @@ RIGS = {
         "split_y": {(1, "Paw and leg"): 5, (2, "Paw and leg"): 5, (3, "Paw and leg"): 5, (4, "Paw and leg"): 5},
         "parts": [
             ("body", None, (0, 14, 1), [(0, "Torso"), (0, "Shoulders")]),
-            ("head", None, (0, 14, -9), [(5, "Square mane"), (5, "Face"), (5, "Left ear"), (5, "Right ear"), (6, "Muzzle")]),
+            ("head", "body", (0, 14, -9), [(5, "Square mane"), (5, "Face"), (5, "Left ear"), (5, "Right ear"), (6, "Muzzle")]),
             ("left_front_leg", None, (-3.5, 11, -6.5), [(1, "Paw and leg upper")]),
             ("left_front_lower", "left_front_leg", (-3.5, 5, -6.5), [(1, "Paw and leg lower")]),
             ("left_hind_leg", None, (-3.5, 11, 9), [(2, "Paw and leg upper")]),
@@ -93,7 +93,7 @@ RIGS = {
             ("right_front_lower", "right_front_leg", (3.5, 5, -6.5), [(3, "Paw and leg lower")]),
             ("right_hind_leg", None, (3.5, 11, 9), [(4, "Paw and leg upper")]),
             ("right_hind_lower", "right_hind_leg", (3.5, 5, 9), [(4, "Paw and leg lower")]),
-            ("tail", None, (0, 16, 11), [(7, "Tail shaft"), (7, "Dark tail tuft")]),
+            ("tail", "body", (0, 16, 11), [(7, "Tail shaft"), (7, "Dark tail tuft")]),
         ],
     },
     # Sable's tiger (2026-10-13), free format: 17-unit legs split at y=8, the rotated cheek ruffs, muzzle and
@@ -102,7 +102,7 @@ RIGS = {
         "split_y": {(1, "Leg and paw"): 8, (2, "Leg and paw"): 8, (3, "Leg and paw"): 8, (4, "Leg and paw"): 8},
         "parts": [
             ("body", None, (0, 16, 1), [(0, "Torso"), (0, "Broad shoulders")]),
-            ("head", None, (0, 17, -10), [(5, "Head"), (5, "Cheek ruff", 0), (5, "Cheek ruff", 1), (6, "Ear"), (7, "Ear"), (8, "Muzzle")]),
+            ("head", "body", (0, 17, -10), [(5, "Head"), (5, "Cheek ruff", 0), (5, "Cheek ruff", 1), (6, "Ear"), (7, "Ear"), (8, "Muzzle")]),
             # Each side's two whiskers are a part at their root on the muzzle, so they can twitch.
             ("left_whiskers", "head", (-2.6, 14.7, -18.4), [(11, "Whisker", 0), (11, "Whisker", 1)]),
             ("right_whiskers", "head", (2.4, 14.7, -18.4), [(12, "Whisker", 0), (12, "Whisker", 1)]),
@@ -114,10 +114,14 @@ RIGS = {
             ("right_front_lower", "right_front_leg", (4.2, 8, -7.5), [(3, "Leg and paw lower")]),
             ("right_hind_leg", None, (4.2, 16, 10), [(4, "Leg and paw upper")]),
             ("right_hind_lower", "right_hind_leg", (4.2, 8, 10), [(4, "Leg and paw lower")]),
-            ("tail", None, (0, 18, 12), [(9, "Tail shaft")]),
-            ("tail_tip", "tail", (0, 10, 21), [(10, "Tail tip")]),
+            ("tail", "body", (0, 18, 12), [(9, "Tail shaft")]),
+            ("tail_tip", "tail", (0, 10, 14), [(10, "Tail tip")]),
         ],
+        # The tail tip was modelled six units behind the shaft; moved to grow out of the shaft's lower back.
+        "offset": {(10, "Tail tip"): (0, 0, -7)},
     },
+    # Sable's macaque: the file's groups are the rig; head and tail ride on the body so a sit carries them.
+    "rhesus_macaque": {"reparent": {"head": "body", "tail": "body"}},
     "elephant": {
         # Sable's pillar legs are one 19-unit element each; split at y=9 into a 10-unit upper and a 9-unit
         # lower so the knee can bend, each half reading its own rows of the painted leg.
@@ -197,15 +201,18 @@ def measure_scale(d, tex):
     r = ratios[len(ratios) // 2] if ratios else 1.0
     return max(1, int(round(r)))
 
-def split_element(e, y_cut):
+def split_element(e, y_cut, overlap=0.5):
     """Two elements from one, cut horizontally at y_cut: the upper keeps the up face, the lower the down face,
-    the side faces are sliced by height, and the two new inside faces borrow the rows beside the cut."""
+    the side faces are sliced by height, and the two new inside faces borrow the rows beside the cut. The
+    lower half reaches {overlap} units up inside the upper, so its cut face stays hidden as the knee folds
+    (a top face catches the light, and showed as a bright band at the elephant's knee)."""
     y0, y1 = e["from"][1], e["to"][1]
-    f_up = (y1 - y_cut) / (y1 - y0)   # share of the height above the cut
+    f_up = (y1 - y_cut) / (y1 - y0)                 # share of the height above the cut
+    f_low = (y1 - y_cut - overlap) / (y1 - y0)      # the lower half's top, inside the upper
     upper = json.loads(json.dumps(e)); lower = json.loads(json.dumps(e))
     upper["name"] += " upper"; lower["name"] += " lower"; upper["uuid"] += "-upper"; lower["uuid"] += "-lower"
     upper["from"] = [e["from"][0], y_cut, e["from"][2]]
-    lower["to"] = [e["to"][0], y_cut, e["to"][2]]
+    lower["to"] = [e["to"][0], y_cut + overlap, e["to"][2]]
     for face in ("north", "south", "east", "west"):
         f = e["faces"].get(face)
         if not f:
@@ -213,7 +220,7 @@ def split_element(e, y_cut):
         x1, v1, x2, v2 = f["uv"]       # uv[1] is the face's top edge, uv[3] its bottom, whichever is larger
         vc = v1 + (v2 - v1) * f_up
         upper["faces"][face] = dict(f, uv=[x1, v1, x2, vc])
-        lower["faces"][face] = dict(f, uv=[x1, vc, x2, v2])
+        lower["faces"][face] = dict(f, uv=[x1, v1 + (v2 - v1) * f_low, x2, v2])
     n = e["faces"].get("north")
     if n:
         x1, v1, x2, v2 = n["uv"]
@@ -252,6 +259,11 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
             if e["name"] == ename:
                 e["from"] = [e["from"][0] + inset, e["from"][1], e["from"][2] + inset]
                 e["to"] = [e["to"][0] - inset, e["to"][1], e["to"][2] - inset]
+    for (gi, ename), (dx, dy, dz) in rig.get("offset", {}).items():
+        for e in groups[gi]:
+            if e["name"] == ename:
+                e["from"] = [e["from"][0] + dx, e["from"][1] + dy, e["from"][2] + dz]
+                e["to"] = [e["to"][0] + dx, e["to"][1] + dy, e["to"][2] + dz]
     for (gi, ename), y_cut in rig.get("split_y", {}).items():
         for e in list(groups[gi]):
             if e["name"] == ename:
@@ -275,6 +287,8 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
         for node in d["outliner"]:
             if isinstance(node, dict) and node.get("name"):
                 from_group(node, None)
+        for child, parent in rig.get("reparent", {}).items():
+            parts[child]["parent"] = parent
         rig = dict(rig, parts=[])
     for name, parent, pivot, members in rig["parts"]:
         found = []

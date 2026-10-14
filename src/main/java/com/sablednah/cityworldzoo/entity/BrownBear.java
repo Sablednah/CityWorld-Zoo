@@ -36,6 +36,11 @@ public class BrownBear extends ZooAnimal {
     }
 
     @Override
+    protected Stride stride() {
+        return Stride.BROWN_BEAR;
+    }
+
+    @Override
     public boolean isFood(ItemStack stack) {
         return BigCats.isMeat(stack) || stack.is(Items.SWEET_BERRIES) || stack.is(Items.HONEY_BOTTLE);
     }
