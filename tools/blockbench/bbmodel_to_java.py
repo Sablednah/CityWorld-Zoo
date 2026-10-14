@@ -208,7 +208,7 @@ def split_element(e, y_cut, overlap=0.5):
     knee); a third, slightly narrower "plug" rides with the lower half {overlap} units up inside the upper,
     hidden until the knee folds, so the gap that opens there shows skin rather than daylight. Its sides sit
     inside the upper's, so nothing shares a plane and nothing flickers. The plug and the two cut faces are
-    painted dark, so the hairline where the boxes meet reads as a crease and not as the next bright row."""
+    painted a shade darker, so the wedge that opens on the outside of a fold reads as a crease in the skin."""
     y0, y1 = e["from"][1], e["to"][1]
     f_up = (y1 - y_cut) / (y1 - y0)                 # share of the height above the cut
     f_plug = (y1 - y_cut - overlap) / (y1 - y0)     # the plug's top, inside the upper
@@ -228,16 +228,16 @@ def split_element(e, y_cut, overlap=0.5):
         vc = v1 + (v2 - v1) * f_up
         upper["faces"][face] = dict(f, uv=[x1, v1, x2, vc])
         lower["faces"][face] = dict(f, uv=[x1, vc, x2, v2])
-        plug["faces"][face] = dict(f, uv=[x1, v1 + (v2 - v1) * f_plug, x2, vc], shade=0.5)
+        plug["faces"][face] = dict(f, uv=[x1, v1 + (v2 - v1) * f_plug, x2, vc], shade=0.85)
     n = e["faces"].get("north")
     if n:
         x1, v1, x2, v2 = n["uv"]
         vc = v1 + (v2 - v1) * f_up
         dep_share = (e["to"][2] - e["from"][2]) / (y1 - y0) * (v2 - v1)
-        upper["faces"]["down"] = dict(n, uv=[x1, vc - dep_share, x2, vc], shade=0.5)
-        lower["faces"]["up"] = dict(n, uv=[x1, vc, x2, vc + dep_share], shade=0.5)
-        plug["faces"]["up"] = dict(n, uv=[x1, vc - dep_share, x2, vc], shade=0.5)
-        plug["faces"]["down"] = dict(n, uv=[x1, vc, x2, vc + dep_share], shade=0.5)
+        upper["faces"]["down"] = dict(n, uv=[x1, vc - dep_share, x2, vc], shade=0.85)
+        lower["faces"]["up"] = dict(n, uv=[x1, vc, x2, vc + dep_share], shade=0.85)
+        plug["faces"]["up"] = dict(n, uv=[x1, vc - dep_share, x2, vc], shade=0.85)
+        plug["faces"]["down"] = dict(n, uv=[x1, vc, x2, vc + dep_share], shade=0.85)
     else:
         upper["faces"].pop("down", None); lower["faces"].pop("up", None)
     return upper, lower, plug
@@ -364,11 +364,18 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
                 boxes.append((name, e, sub(e["from"], p["pivot"]), sub(e["to"], p["pivot"])))
 
     # Pack a box net per element: cell sizes in model units, placed at integer unit offsets.
+    # A box's UV net is laid out by the game from its width, height and depth, so a fractional size puts a
+    # face edge at a fractional texel and the sampler leaks the neighbouring face's row across it (the
+    # elephant's sole showed as "white toes" at the top of its leg). Every box is therefore given to the
+    # game at integer size with the fractional remainder as a CubeDeformation, which grows or shrinks the
+    # drawn cube without touching the UV: drawn size exact, net on whole texels.
     nets = []
     for part, e, lf, lt in boxes:
         w, h, dep = [lt[i] - lf[i] for i in range(3)]
-        nets.append({"part": part, "e": e, "lf": lf, "lt": lt, "w": w, "h": h, "d": dep,
-                     "nw": math.ceil(2 * (w + dep)), "nh": math.ceil(dep + h)})
+        W, H, D = [max(1, round(v)) for v in (w, h, dep)]
+        nets.append({"part": part, "e": e, "lf": lf, "lt": lt, "w": W, "h": H, "d": D,
+                     "grow": ((w - W) / 2, (h - H) / 2, (dep - D) / 2),
+                     "nw": 2 * (W + D), "nh": D + H})
     nets.sort(key=lambda n: -n["nh"])
     # A texture roughly square: the pack width is the power of two nearest the root of the nets' area (with
     # room for the gaps), never narrower than the widest net.
@@ -442,8 +449,12 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
         cubes = []
         for n in by_part.get(name, []):
             lf, lt = n["lf"], n["lt"]
-            jmin = [-lt[0], -lt[1], lf[2]]
-            cubes.append(f'.texOffs({n["u"]}, {n["v"]}).addBox({fmt(jmin[0])}, {fmt(jmin[1])}, {fmt(jmin[2])}, {fmt(n["w"])}, {fmt(n["h"])}, {fmt(n["d"])})')
+            gx, gy, gz = n["grow"]
+            jmin = [-lt[0] + gx, -lt[1] + gy, lf[2] + gz]   # the integer box sits centred in the real one
+            if any(abs(g) > 1e-6 for g in (gx, gy, gz)):
+                cubes.append(f'.texOffs({n["u"]}, {n["v"]}).addBox({fmt(jmin[0])}, {fmt(jmin[1])}, {fmt(jmin[2])}, {fmt(n["w"])}, {fmt(n["h"])}, {fmt(n["d"])}, new CubeDeformation({fmt(gx)}, {fmt(gy)}, {fmt(gz)}))')
+            else:
+                cubes.append(f'.texOffs({n["u"]}, {n["v"]}).addBox({fmt(jmin[0])}, {fmt(jmin[1])}, {fmt(jmin[2])}, {fmt(n["w"])}, {fmt(n["h"])}, {fmt(n["d"])})')
         builder = "CubeListBuilder.create()" + "".join("\n                        " + c for c in cubes)
         if any((rx, ry, rz)):
             pose = f"PartPose.offsetAndRotation({fmt(pj[0])}, {fmt(pj[1])}, {fmt(pj[2])}, {fmt(math.radians(-rx))}, {fmt(math.radians(-ry))}, {fmt(math.radians(rz))})"
