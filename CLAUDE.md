@@ -63,17 +63,21 @@ coordinate and face rules are in the converter's docstring; the giraffe (2026-10
 Self-contained `.java` model files for Blockbench to open were tried first and opened blank; do not go back
 to that. `tools/textures/paint.py` skips any species in its `HANDMADE` set.
 
-**Art and sound are original or licensed.** The textures today are `tools/textures/paint.py`'s
-placeholders, painted on each model's box net; Sable is revamping them. Sounds are vanilla sound events
-standing in (horse for the zebra, polar bear for the bear, ocelot pitched down for the cats ...). Models
-match the 26.1+ vanilla style: the zebra IS the horse mesh, the cats the ocelot mesh at 2x, the bear the
-polar bear mesh; giraffe, deer, elephant and macaque are ours.
+**Art and sound are original or licensed.** All eight models and textures are Sable's (`art/<animal>/`,
+2026-10-13); `tools/textures/paint.py` only paints the spawn eggs now. Sounds are cut from Sable's Pixabay
+recordings by `tools/audio/clips.py` (its `CUTS` table is the record; raw files in `art/<animal>/sounds/`,
+licence and sources in `assets/cityworld_zoo/sounds/CREDITS.md`, Pixabay Content License: shippable in the
+jar, never as a sound pack). `ZooSounds` registers the events; `sounds.json` mixes shipped takes with
+vanilla events by reference. The self-test checks every event is registered, defined, subtitled and has
+its files.
 
-**Leg swing is maths, not taste.** `client/model/Gait`: vanilla advances the walk position 4 units per
-block and models use `cos(0.6662 * position)`, so one leg cycle is 2.36 blocks at any speed, and a planted
-foot must sweep half of it: `sin(A) = 9.43 / hip height in rendered units`. Multiply the angle by the walk
-speed (vanilla's quadrupeds do) and a slow heavy animal glides, which Sable saw on the giraffe and elephant
-(2026-10-13). Use `Gait.swing(hipUnits * state.scale) * Gait.ramp(speed)`.
+**Leg swing is chosen, cadence is maths.** `entity/Stride` holds each species' hip height and swing angle
+(picked for looks, and under what the leg spacing allows so legs never cross); the entity overrides
+`updateWalkAnimation` to set vanilla's walk position scale to `9.43 / (hip * sin(swing))`, so a planted
+foot does not slide and short legs step faster. Models swing by `Stride.X.swing() * Gait.ramp(speed)`.
+Two lessons paid for: multiply the angle by the walk speed (vanilla's quadrupeds do) and a slow heavy
+animal glides (2026-10-13); and the no-slip angle is `asin(9.43 / L)` -- a planted foot sweeps
+`2 L sin A`, and the first version dropped the 2, pegging every short-legged animal at 90 degrees (2026-10-14).
 
 ## Layout
 
