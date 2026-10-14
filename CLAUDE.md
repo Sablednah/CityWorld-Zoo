@@ -68,9 +68,10 @@ to that. `tools/textures/paint.py` skips any species in its `HANDMADE` set.
 the 32x32 set ships), and so are the logo and wordmark (`docs/logo.png`, `docs/wordmark.png`, 2026-10-14): the
 mods-menu icon and banner in `src/main/resources` and the page's `docs/wordmark-850.png` are resized from them.
 `tools/textures/paint.py` is only for a placeholder on a new species. Sounds are cut from Sable's Pixabay
-recordings by `tools/audio/clips.py` (its `CUTS` table is the record; raw files in `art/<animal>/sounds/`,
-licence and sources in `assets/cityworld_zoo/sounds/CREDITS.md`, Pixabay Content License: shippable in the
-jar, never as a sound pack). `ZooSounds` registers the events; `sounds.json` mixes shipped takes with
+recordings by `tools/audio/clips.py` (its `CUTS` table is the record; the raw files live in `art/<animal>/sounds/` but are
+gitignored and were purged from history on 2026-10-15, because Pixabay's licence allows the cut clips in the jar
+but not redistributing its files; licence and sources in `assets/cityworld_zoo/sounds/CREDITS.md`, never ship
+them as a sound pack). `ZooSounds` registers the events; `sounds.json` mixes shipped takes with
 vanilla events by reference. The self-test checks every event is registered, defined, subtitled and has
 its files.
 

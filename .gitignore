@@ -36,3 +36,6 @@ repo/
 
 ### Dev server logs ###
 server.log
+
+### Raw Pixabay recordings (licensed for the cut clips in the jar, not for redistribution as files) ###
+art/*/sounds/*.mp3
