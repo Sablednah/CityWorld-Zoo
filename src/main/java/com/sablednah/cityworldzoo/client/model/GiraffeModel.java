@@ -186,9 +186,11 @@ public class GiraffeModel extends EntityModel<LivingEntityRenderState> {
 
         // Browsing: standing a while, the neck straightens up and the head reaches into the canopy, nibbling
         // side to side (a giraffe eats from trees; it only drops its head to drink, and there is no water goal).
+        // (Sable's neck is modelled vertical already: leaning it "up" tipped it backwards. The neck stays, the
+        // muzzle lifts.)
         float browse = Idle.window(age, 0.006F, 1.0F, 0.4F, 0.15F) * (1.0F - Gait.ramp(speed));
-        this.neck.xRot -= 0.3F * browse;
-        this.head.xRot += (0.15F + Mth.sin(age * 0.45F) * 0.08F) * browse;
+        this.neck.xRot += 0.08F * browse;
+        this.head.xRot -= (0.3F + Mth.sin(age * 0.45F) * 0.08F) * browse;
         this.head.yRot += Mth.sin(age * 0.07F) * 0.3F * browse;
 
         // Idle: ears twitch on their own clocks, the tail swishes side to side and lifts a little as it walks.
