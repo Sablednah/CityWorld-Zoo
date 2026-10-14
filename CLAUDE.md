@@ -80,6 +80,13 @@ Two lessons paid for: multiply the angle by the walk speed (vanilla's quadrupeds
 animal glides (2026-10-13); and the no-slip angle is `asin(9.43 / L)` -- a planted foot sweeps
 `2 L sin A`, and the first version dropped the 2, pegging every short-legged animal at 90 degrees (2026-10-14).
 
+**Natural spawns come from the config, through one code-driven biome modifier.** `ZooConfig` holds, per
+species, on/off, weight, herd size and a biome list (ids or `#tags`); `neoforge/ZooSpawns` registers the
+`cityworld_zoo:natural_spawns` modifier type and `data/cityworld_zoo/neoforge/biome_modifier/natural_spawns.json`
+is the one data file. Spawns are read as a world's biomes are built, so a config change is a restart. Hunting
+(`entity/ai/HuntGoal`, lions and tigers) and cub defence (`ProtectYoungGoal`, cats and bear) are config
+switches too, read live. Sable asked for all of it to be dials (2026-10-14).
+
 ## Layout
 
 ```
