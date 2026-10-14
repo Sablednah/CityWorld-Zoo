@@ -1,3 +1,5 @@
+![CityWorld: Zoo](https://raw.githubusercontent.com/Sablednah/CityWorld-Zoo/mc26.2/docs/wordmark-850.png)
+
 # CityWorld: Zoo — the animals every zombie story walks past
 
 **Eight zoo animals, each from a scene you remember.** The giraffes at the Salt Lake City overpass,
@@ -8,6 +10,8 @@ every zoo has a bear.
 They are ordinary Minecraft animals: a spawn egg each, they breed on their food, they wander, and the
 ones with teeth fight back if you hurt them. No new mechanics to learn, nothing to craft. They just
 live in the world, and in the ruins of a city, they make the zoo look like somewhere people used to go.
+
+![The eight spawn eggs in an inventory row: giraffe, macaque, zebra, deer, lion, tiger, elephant, bear](https://raw.githubusercontent.com/Sablednah/CityWorld-Zoo/mc26.2/docs/screenshots/spawn-eggs.png)
 
 ---
 

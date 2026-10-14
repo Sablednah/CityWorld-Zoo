@@ -1,3 +1,5 @@
+![CityWorld: Zoo](https://raw.githubusercontent.com/Sablednah/CityWorld-Zoo/mc26.2/docs/wordmark-850.png)
+
 # CityWorld: Zoo
 
 Zoo animals from zombie media, for NeoForge: **giraffe** and **rhesus macaque** (The Last of Us), **zebra**

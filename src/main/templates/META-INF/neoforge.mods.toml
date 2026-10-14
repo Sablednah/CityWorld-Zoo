@@ -14,6 +14,13 @@ description='''
 ${mod_description}
 '''
 displayURL="https://sablecraft.co.uk/cityworld-zoo/"
+# Older loaders ignore keys they do not know: iconFile is the small square beside the name (26.2+),
+# bannerFile the wide info-panel image (26.2+), logoFile what 1.21.x and 26.1 show and 26.2's fallback.
+# cityworld_zoo-icon.png is the 256 square (docs/logo.png), cityworld_zoo.png the 850 wordmark (docs/).
+iconFile="cityworld_zoo-icon.png"
+bannerFile="cityworld_zoo.png"
+logoFile="cityworld_zoo.png"
+logoBlur=false
 
 [[dependencies.${mod_id}]]
     modId="neoforge"
