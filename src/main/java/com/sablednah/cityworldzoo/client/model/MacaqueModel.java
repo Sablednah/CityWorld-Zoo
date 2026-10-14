@@ -132,20 +132,22 @@ public class MacaqueModel extends EntityModel<MacaqueRenderState> {
         this.tail.zRot = Mth.cos(age * 0.2F) * 0.15F;
         this.tail2.xRot += Mth.cos(age * 0.2F) * 0.2F;
 
-        // Climbing: hugging the trunk, body upright, limbs spread and working, head tipped back to look up.
+        // Climbing: the WHOLE monkey turns upright against the trunk (the root part pitches a quarter turn, so
+        // the legs come with the body instead of flailing on their own), belly to the bark, head tipped back;
+        // the limbs reach and pull on their own clock, since the walk clock only runs on horizontal travel.
         if (state.climbing) {
-            this.body.xRot -= 1.35F;
-            this.body.y += 2.0F;
-            this.body.z -= 3.0F;
-            this.head.xRot -= 0.9F;
-            float reach = Mth.cos(age * 0.5F) * 0.35F;
+            ModelPart root = this.root();
+            root.xRot = -(float) (Math.PI / 2);
+            root.y += 12.0F;    // the pitch swings the body a block up and forward; bring it back onto the entity
+            root.z += 14.0F;
+            this.head.xRot -= 0.7F;
+            float reach = Mth.cos(age * 0.45F) * 0.4F;
             for (int i = 0; i < 4; i++) {
-                this.upper[i].xRot = -1.3F + (i % 2 == 0 ? reach : -reach);
-                this.upper[i].zRot = (i == 0 || i == 3 ? -0.35F : 0.35F);
-                this.lower[i].xRot = 0.9F;
-                this.upper[i].y -= 2.0F;
-                this.upper[i].z -= 3.0F;
+                this.upper[i].xRot = -0.5F + (i < 2 ? reach : -reach);
+                this.upper[i].zRot = (i == 0 || i == 3 ? -0.3F : 0.3F);
+                this.lower[i].xRot = 0.6F;
             }
+            return;   // no sitting while climbing
         }
 
         // Sitting: standing still for a while, it sits up on its haunches -- body pitched up and dropped onto
@@ -158,7 +160,7 @@ public class MacaqueModel extends EntityModel<MacaqueRenderState> {
             this.upper[i].y += 4.0F * sit;
             this.lower[i].xRot += 1.6F * sit;
         }
-        this.head.xRot += 0.6F * sit;   // the body pitched up 0.9 would tip the face at the sky; look ahead instead
+        this.head.xRot += 0.9F * sit;   // the head rides the body, pitched up 0.9: undo it so the face looks ahead
         float scratch = Idle.window(age, 0.05F, 1.0F, 0.8F, 0.1F) * sit;
         this.upper[2].xRot += (-0.6F + Mth.sin(age * 1.5F) * 0.3F) * scratch;
         this.lower[2].xRot += 0.9F * scratch;

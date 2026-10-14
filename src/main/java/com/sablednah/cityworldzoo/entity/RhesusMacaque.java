@@ -65,15 +65,17 @@ public class RhesusMacaque extends ZooAnimal {
         return this.entityData.get(CLIMBING);
     }
 
+    /** On the server, a climbable the moment it presses against a tree; the client reads the synced flag. */
     @Override
     public boolean onClimbable() {
-        return isClimbing();
+        return this.level().isClientSide() ? isClimbing() : this.horizontalCollision && touchingTree();
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide()) this.entityData.set(CLIMBING, this.horizontalCollision && touchingTree());
+        // The pose is for climbing, not for bumping a trunk at ground level: off the ground and against a tree.
+        if (!this.level().isClientSide()) this.entityData.set(CLIMBING, this.horizontalCollision && !this.onGround() && touchingTree());
     }
 
     /** A log or leaves beside it, at foot or head height, in any of the four directions. */

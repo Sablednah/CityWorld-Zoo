@@ -9,14 +9,16 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 /**
  * Now and then a macaque on the ground picks a tree nearby, walks to the trunk and climbs it (the wall-climber
  * navigation walks it into the trunk, and {@link RhesusMacaque#onClimbable} lets it rise against logs and
  * leaves, up the outside of the canopy to the top). Up there it potters about for a while, then makes for
- * the ground beside the trunk, dropping off the edge: it takes no fall damage. The canopy leap is
- * {@link CanopyLeapGoal}, which runs on its own whenever the monkey stands on leaves.
+ * the ground beside the trunk, dropping off the edge: it takes no fall damage. On the canopy it also leaps
+ * gaps ({@link CanopyLeapGoal#tryLeap}). A climber blocked by leaves overhead scrambles up through them to
+ * the first air above, so an overhanging canopy never pins it under the branches.
  */
 public class ClimbTreeGoal extends Goal {
 
@@ -28,6 +30,8 @@ public class ClimbTreeGoal extends Goal {
     private int phase;          // 0 going to the tree and climbing, 1 on top, 2 coming down
     private int phaseTicks;
     private int stay;
+    private int stuckTicks;
+    private double lastY;
 
     public ClimbTreeGoal(RhesusMacaque mob) {
         this.mob = mob;
@@ -71,13 +75,26 @@ public class ClimbTreeGoal extends Goal {
                 // Keep steering into the trunk top; the climb happens on collision with the logs and leaves.
                 if (mob.getNavigation().isDone())
                     mob.getMoveControl().setWantedPosition(trunkTop.getX() + 0.5, trunkTop.getY() + 2, trunkTop.getZ() + 0.5, 1.1D);
+                // Pinned under leaves (climbing, but not rising): scramble up through them to the first air above.
+                if (mob.horizontalCollision && !mob.onGround() && mob.getY() <= lastY + 0.01) stuckTicks++; else stuckTicks = 0;
+                lastY = mob.getY();
+                if (stuckTicks > 15) {
+                    stuckTicks = 0;
+                    BlockPos p = mob.blockPosition().above();
+                    int climbed = 0;
+                    while (level.getBlockState(p).is(BlockTags.LEAVES) && climbed < 6) { p = p.above(); climbed++; }
+                    if (climbed > 0 && level.getBlockState(p).isAir() && level.getBlockState(p.above()).isAir())
+                        mob.setPos(Vec3.atBottomCenterOf(p));
+                }
                 boolean onCanopy = level.getBlockState(mob.blockPosition().below()).is(BlockTags.LEAVES) && mob.onGround();
                 if (onCanopy || mob.getY() >= trunkTop.getY() + 1) { phase = 1; phaseTicks = 0; }
                 else if (phaseTicks > 20 * 25) phase = 3;   // never got up: give up
             }
             case 1 -> {
-                // On top: wander the canopy a little (straight-line moves, leaves are solid to stand on).
-                if (phaseTicks % 60 == 0) {
+                // On top: wander the canopy a little (straight-line moves, leaves are solid to stand on), and
+                // leap a gap to the next tree now and then.
+                if (CanopyLeapGoal.tryLeap(mob)) { phaseTicks = Math.max(phaseTicks, 1); }
+                else if (phaseTicks % 60 == 0) {
                     BlockPos here = mob.blockPosition();
                     RandomSource r = mob.getRandom();
                     for (int i = 0; i < 8; i++) {
