@@ -17,5 +17,6 @@ public class MacaqueRenderer extends ZooRenderer<RhesusMacaque, MacaqueRenderSta
     public void extractRenderState(RhesusMacaque entity, MacaqueRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
         state.climbing = entity.isClimbing();
+        state.sitting = entity.isSitting();
     }
 }

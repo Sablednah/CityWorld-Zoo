@@ -42,7 +42,7 @@ public class ClimbTreeGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!mob.onGround() || mob.isBaby() || mob.getRandom().nextInt(reducedTickDelay(300)) != 0) return false;
+        if (!mob.onGround() || mob.isBaby() || mob.getRandom().nextInt(reducedTickDelay(120)) != 0) return false;
         BlockPos top = findTree();
         if (top == null) return false;
         trunkTop = top;
@@ -52,19 +52,20 @@ public class ClimbTreeGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return ticks < 20 * 90 && phase < 3;
+        return ticks < 20 * 240 && phase < 3;
     }
 
     @Override
     public void start() {
         ticks = 0; phase = 0; phaseTicks = 0; stuckTicks = 0; lastY = mob.getY();
-        stay = 20 * (8 + mob.getRandom().nextInt(12));
+        stay = 20 * (40 + mob.getRandom().nextInt(80));
         mob.getNavigation().moveTo(trunkBase.getX() + 0.5, trunkBase.getY(), trunkBase.getZ() + 0.5, 1.1D);
     }
 
     @Override
     public void stop() {
         mob.getNavigation().stop();
+        mob.setSitting(false);
         trunkTop = null; trunkBase = null;
     }
 
@@ -79,7 +80,12 @@ public class ClimbTreeGoal extends Goal {
                     phase = 3;   // fell out of the tree: the climb is over
                     return;
                 }
-                if (CanopyLeapGoal.tryLeap(mob)) { phaseTicks = Math.max(phaseTicks, 1); }
+                // Mostly it sits and feeds; every so often it gets up, moves a step or leaps, and sits again.
+                boolean upAndAbout = (phaseTicks / 100) % 3 == 0;
+                mob.setSitting(!upAndAbout);
+                if (!upAndAbout) {
+                    mob.getNavigation().stop();
+                } else if (CanopyLeapGoal.tryLeap(mob)) { phaseTicks = Math.max(phaseTicks, 1); }
                 else if (phaseTicks % 60 == 0) {
                     // a step or two away, never our own block (a target under one's feet spins the body), with
                     // leaves under the way there too, so it does not walk off a gap
@@ -97,7 +103,7 @@ public class ClimbTreeGoal extends Goal {
                         }
                     }
                 }
-                if (phaseTicks > stay) { phase = 2; phaseTicks = 0; }
+                if (phaseTicks > stay) { phase = 2; phaseTicks = 0; mob.setSitting(false); }
             }
             case 2 -> {
                 if (trunkBase != null)
@@ -150,7 +156,7 @@ public class ClimbTreeGoal extends Goal {
             // leaves overhead: scramble up through them to the first air
             BlockPos p = above;
             int climbed = 0;
-            while (level.getBlockState(p).is(BlockTags.LEAVES) && climbed < 6) { p = p.above(); climbed++; }
+            while (level.getBlockState(p).is(BlockTags.LEAVES) && climbed < 10) { p = p.above(); climbed++; }
             if (level.getBlockState(p).isAir() && level.getBlockState(p.above()).isAir()) mob.setPos(Vec3.atBottomCenterOf(p));
         } else {
             // open air above and we stopped rising: the trunk has ended or bent. Step across to a log within a block.

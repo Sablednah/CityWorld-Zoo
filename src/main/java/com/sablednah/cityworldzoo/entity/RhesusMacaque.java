@@ -38,6 +38,7 @@ import net.minecraft.world.level.Level;
 public class RhesusMacaque extends ZooAnimal {
 
     private static final EntityDataAccessor<Boolean> CLIMBING = SynchedEntityData.defineId(RhesusMacaque.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(RhesusMacaque.class, EntityDataSerializers.BOOLEAN);
 
     public RhesusMacaque(EntityType<? extends RhesusMacaque> type, Level level) {
         super(type, level);
@@ -59,6 +60,16 @@ public class RhesusMacaque extends ZooAnimal {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(CLIMBING, false);
+        builder.define(SITTING, false);
+    }
+
+    /** Sat down to feed in a tree (the climb goal's doing); the model sits and brings a hand to its mouth. */
+    public boolean isSitting() {
+        return this.entityData.get(SITTING);
+    }
+
+    public void setSitting(boolean sitting) {
+        this.entityData.set(SITTING, sitting);
     }
 
     public boolean isClimbing() {

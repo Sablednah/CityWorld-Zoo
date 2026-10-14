@@ -21,7 +21,8 @@ import net.minecraft.util.Mth;
  * and writes blockbench/rhesus_macaque.bbmodel for Sable): change the spec and re-run, do not edit the
  * numbers here. Legs are 3 + 3 with a knee. The animation is hand-written: a quick walk sized to the ground
  * going by ({@link Gait}), head following the look, a tail that curls and sways; climbing, the body stands up
- * against the trunk with the legs spread and working. Baby: big-headed half size.
+ * against the trunk with the legs spread and working; sat in a tree (a synced flag) it sits and feeds, a hand
+ * going from the leaves below to its mouth and back. Baby: big-headed half size.
  */
 public class MacaqueModel extends EntityModel<MacaqueRenderState> {
 
@@ -152,7 +153,7 @@ public class MacaqueModel extends EntityModel<MacaqueRenderState> {
 
         // Sitting: standing still for a while, it sits up on its haunches -- body pitched up and dropped onto
         // the ground, hind legs folded forward, head up -- and scratches with a front hand now and then.
-        float sit = Idle.window(age, 0.008F, 0.0F, 0.3F, 0.15F) * (1.0F - walking);
+        float sit = Math.max(state.sitting ? 1.0F : 0.0F, Idle.window(age, 0.008F, 0.0F, 0.3F, 0.15F) * (1.0F - walking));
         this.body.xRot -= 0.9F * sit;
         this.body.y += 3.4F * sit;
         for (int i : new int[] {1, 3}) {   // the hind legs (diagonal order: 1 = right hind, 3 = left hind)
@@ -161,8 +162,17 @@ public class MacaqueModel extends EntityModel<MacaqueRenderState> {
             this.lower[i].xRot += 1.6F * sit;
         }
         this.head.xRot += 0.9F * sit;   // the head rides the body, pitched up 0.9: undo it so the face looks ahead
-        float scratch = Idle.window(age, 0.05F, 1.0F, 0.8F, 0.1F) * sit;
-        this.upper[2].xRot += (-0.6F + Mth.sin(age * 1.5F) * 0.3F) * scratch;
-        this.lower[2].xRot += 0.9F * scratch;
+        if (state.sitting) {
+            // Feeding: the right hand reaches down to the leaves, comes up to the mouth, pauses, and goes back.
+            float t = (Mth.sin(age * 0.2F) + 1.0F) * 0.5F;
+            t = t * t * (3.0F - 2.0F * t);                  // ease: dwell at each end
+            this.upper[2].xRot += -0.5F - 1.7F * t;        // 2 = right front; the body is pitched up 0.9 already
+            this.lower[2].xRot += 0.4F + 1.2F * t;
+            this.head.xRot += 0.15F * t + Mth.sin(age * 1.4F) * 0.05F * t;   // chewing as the hand arrives
+        } else {
+            float scratch = Idle.window(age, 0.05F, 1.0F, 0.8F, 0.1F) * sit;
+            this.upper[2].xRot += (-0.6F + Mth.sin(age * 1.5F) * 0.3F) * scratch;
+            this.lower[2].xRot += 0.9F * scratch;
+        }
     }
 }

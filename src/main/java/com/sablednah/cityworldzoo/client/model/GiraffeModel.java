@@ -34,8 +34,10 @@ public class GiraffeModel extends EntityModel<GiraffeRenderState> {
     private static final float NECK_LEAN = 0.15F;
     /** The neck pivot above the feet and forward of the centre, in blocks as drawn. */
     private static final float NECK_UP = 29.0F / 16.0F * SCALE, NECK_FORWARD = 8.0F / 16.0F * SCALE;
-    /** Neck length plus the reach of the head, in blocks as drawn. */
-    private static final float NECK_LENGTH = 29.0F / 16.0F * SCALE, HEAD_REACH = 9.0F / 16.0F * SCALE;
+    /** The head's length from its pivot to the muzzle tip, in blocks as drawn. */
+    private static final float HEAD_LENGTH = 13.0F / 16.0F * SCALE;
+    /** How far the muzzle goes into the leaf block (whose near face is half a block before its centre). */
+    private static final float BITE = 0.3F;
 
     private final ModelPart neck;
     private final ModelPart head;
@@ -205,7 +207,7 @@ public class GiraffeModel extends EntityModel<GiraffeRenderState> {
             double fwd = -(b.x * Math.sin(yaw)) + b.z * Math.cos(yaw);
             double side = b.x * Math.cos(yaw) + b.z * Math.sin(yaw);
             double up = b.y - NECK_UP;
-            double reach = fwd - NECK_FORWARD - HEAD_REACH * 0.8;
+            double reach = fwd - NECK_FORWARD - HEAD_LENGTH - 0.5 + BITE;
             float pitch = (float) Mth.clamp(Math.atan2(reach, up), -0.25, 1.35);   // 0 is the neck straight up
             float turn = (float) Mth.clamp(Math.atan2(-side, Math.max(0.3, fwd)), -0.7, 0.7);
             this.neck.xRot = pitch;
