@@ -12,6 +12,7 @@ import com.sablednah.cityworldzoo.client.model.MacaqueModel;
 import com.sablednah.cityworldzoo.client.model.TigerModel;
 import com.sablednah.cityworldzoo.client.model.ZebraModel;
 import com.sablednah.cityworldzoo.client.renderer.ElephantRenderer;
+import com.sablednah.cityworldzoo.client.renderer.GiraffeRenderer;
 import com.sablednah.cityworldzoo.client.renderer.MacaqueRenderer;
 import com.sablednah.cityworldzoo.client.renderer.ZebraRenderer;
 import com.sablednah.cityworldzoo.client.renderer.ZooRenderer;
@@ -58,7 +59,8 @@ public final class ZooClient {
     }
 
     private static void renderers(EntityRenderersEvent.RegisterRenderers event) {
-        plain(event, ZooEntities.GIRAFFE, GiraffeModel::new, ZooModelLayers.GIRAFFE, ZooModelLayers.GIRAFFE_BABY, 1.0F);
+        event.registerEntityRenderer(ZooEntities.GIRAFFE.entityType(), ctx -> new GiraffeRenderer(ctx,
+                new GiraffeModel(ctx.bakeLayer(ZooModelLayers.GIRAFFE)), new GiraffeModel(ctx.bakeLayer(ZooModelLayers.GIRAFFE_BABY)), 1.1F, texture("giraffe")));
         event.registerEntityRenderer(ZooEntities.RHESUS_MACAQUE.entityType(), ctx -> new MacaqueRenderer(ctx,
                 new MacaqueModel(ctx.bakeLayer(ZooModelLayers.RHESUS_MACAQUE)), new MacaqueModel(ctx.bakeLayer(ZooModelLayers.RHESUS_MACAQUE_BABY)), 0.35F, texture("rhesus_macaque")));
         plain(event, ZooEntities.DEER, DeerModel::new, ZooModelLayers.DEER, ZooModelLayers.DEER_BABY, 0.6F);

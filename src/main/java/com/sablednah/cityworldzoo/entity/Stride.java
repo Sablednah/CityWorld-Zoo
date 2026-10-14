@@ -20,7 +20,7 @@ public record Stride(float hip, float swing) {
     /** Position units in one leg cycle: {@code 2 PI / 0.6662}. */
     public static final float CYCLE = (float) (2.0 * Math.PI / 0.6662);
 
-    public static final Stride GIRAFFE = new Stride(30.0F, 0.22F);        // legs 16 apart: 2*30*sin = 13
+    public static final Stride GIRAFFE = new Stride(37.5F, 0.22F);        // 30 * 1.25; legs 20 apart: 2*37.5*sin = 16
     public static final Stride ELEPHANT = new Stride(25.0F, 0.32F);       // 19 * 1.315; legs 19 apart
     public static final Stride DEER = new Stride(9.6F, 0.50F);            // 12 * 0.8; legs 11 apart
     public static final Stride RHESUS_MACAQUE = new Stride(6.0F, 0.45F);  // legs 6 apart

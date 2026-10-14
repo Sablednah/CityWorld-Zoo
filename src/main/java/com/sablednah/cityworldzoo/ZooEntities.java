@@ -68,7 +68,7 @@ public final class ZooEntities {
         return new Species<>(id, type, egg, attributes);
     }
 
-    public static final Species<Giraffe> GIRAFFE = species("giraffe", Giraffe::new, 1.6F, 4.2F, 3.6F, Giraffe::createAttributes);
+    public static final Species<Giraffe> GIRAFFE = species("giraffe", Giraffe::new, 1.8F, 5.2F, 4.5F, Giraffe::createAttributes);
     public static final Species<RhesusMacaque> RHESUS_MACAQUE = species("rhesus_macaque", RhesusMacaque::new, 0.5F, 0.9F, 0.7F, RhesusMacaque::createAttributes);
     public static final Species<Zebra> ZEBRA = species("zebra", Zebra::new, 1.4F, 1.6F, 1.5F, Zebra::createAttributes);
     public static final Species<Deer> DEER = species("deer", Deer::new, 0.7F, 1.6F, 1.3F, Deer::createAttributes);

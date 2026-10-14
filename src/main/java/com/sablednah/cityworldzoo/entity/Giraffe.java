@@ -1,8 +1,15 @@
 package com.sablednah.cityworldzoo.entity;
 
+import java.util.Optional;
+
 import com.sablednah.cityworldzoo.ZooSounds;
+import com.sablednah.cityworldzoo.entity.ai.BrowseLeavesGoal;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import org.jspecify.annotations.Nullable;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -15,11 +22,44 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** The Last of Us: the giraffes at the top of Salt Lake City. Tall, placid, eats wheat. Mostly silent. */
+/**
+ * The Last of Us: the giraffes at the top of Salt Lake City. Tall, placid, eats wheat. Mostly silent. Feeds from
+ * trees: {@link BrowseLeavesGoal} finds a leaf block three to six blocks up, walks beside it and the neck
+ * reaches in (the leaf is synced as {@code Browsing} for the client to pose the neck and head). Leaves are
+ * never broken.
+ */
 public class Giraffe extends ZooAnimal {
+
+    private static final EntityDataAccessor<Optional<BlockPos>> BROWSING = SynchedEntityData.defineId(Giraffe.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
 
     public Giraffe(EntityType<? extends Giraffe> type, Level level) {
         super(type, level);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(5, new BrowseLeavesGoal(this));
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(BROWSING, Optional.empty());
+    }
+
+    /** The leaf block it is feeding from, while it is. */
+    public Optional<BlockPos> browsing() {
+        return this.entityData.get(BROWSING);
+    }
+
+    public void setBrowsing(@Nullable BlockPos leaf) {
+        this.entityData.set(BROWSING, Optional.ofNullable(leaf));
+    }
+
+    /** A mouthful: the chewing sound, from the browse goal. */
+    public void chew() {
+        this.makeSound(ZooSounds.GIRAFFE_EAT.get());
     }
 
     public static AttributeSupplier.Builder createAttributes() {
