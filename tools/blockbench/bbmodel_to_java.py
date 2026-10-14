@@ -212,7 +212,11 @@ def split_element(e, y_cut, overlap=0.5):
     upper = json.loads(json.dumps(e)); lower = json.loads(json.dumps(e))
     upper["name"] += " upper"; lower["name"] += " lower"; upper["uuid"] += "-upper"; lower["uuid"] += "-lower"
     upper["from"] = [e["from"][0], y_cut, e["from"][2]]
-    lower["to"] = [e["to"][0], y_cut + overlap, e["to"][2]]
+    # The lower half is a hair narrower, or over the overlap its sides lie on the upper's and the two flicker
+    # (the elephant's knees showed the next wrinkle row as light dashes).
+    eps = 0.04
+    lower["from"] = [e["from"][0] + eps, e["from"][1], e["from"][2] + eps]
+    lower["to"] = [e["to"][0] - eps, y_cut + overlap, e["to"][2] - eps]
     for face in ("north", "south", "east", "west"):
         f = e["faces"].get(face)
         if not f:

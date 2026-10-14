@@ -92,15 +92,15 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(4.2F, 8.0F, -7.5F));
         PartDefinition leftfrontlower = leftfrontleg.addOrReplaceChild("left_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(0, 71).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
+                        .texOffs(0, 71).addBox(-1.76F, -0.5F, -1.96F, 3.52F, 8.5F, 3.92F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition lefthindleg = root.addOrReplaceChild("left_hind_leg",
                 CubeListBuilder.create()
-                        .texOffs(17, 71).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
+                        .texOffs(16, 71).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
                 PartPose.offset(4.2F, 8.0F, 9.0F));
         PartDefinition lefthindlower = lefthindleg.addOrReplaceChild("left_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(34, 71).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
+                        .texOffs(33, 71).addBox(-1.76F, -0.5F, -1.96F, 3.52F, 8.5F, 3.92F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition rightfrontleg = root.addOrReplaceChild("right_front_leg",
                 CubeListBuilder.create()
@@ -108,15 +108,15 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(-4.2F, 8.0F, -7.5F));
         PartDefinition rightfrontlower = rightfrontleg.addOrReplaceChild("right_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(17, 85).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
+                        .texOffs(17, 85).addBox(-1.76F, -0.5F, -1.96F, 3.52F, 8.5F, 3.92F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition righthindleg = root.addOrReplaceChild("right_hind_leg",
                 CubeListBuilder.create()
-                        .texOffs(34, 85).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
+                        .texOffs(33, 85).addBox(-1.8F, -1.0F, -2.0F, 3.6F, 9.0F, 4.0F),
                 PartPose.offset(-4.2F, 8.0F, 10.0F));
         PartDefinition righthindlower = righthindleg.addOrReplaceChild("right_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(0, 99).addBox(-1.8F, -0.5F, -2.0F, 3.6F, 8.5F, 4.0F),
+                        .texOffs(0, 99).addBox(-1.76F, -0.5F, -1.96F, 3.52F, 8.5F, 3.92F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create()
@@ -128,11 +128,11 @@ public class TigerModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(0.0F, 8.0F, 2.0F));
         PartDefinition headcheekruff = head.addOrReplaceChild("head_cheek_ruff",
                 CubeListBuilder.create()
-                        .texOffs(17, 99).addBox(-0.3F, -0.0F, -5.2F, 4.6F, 7.0F, 3.7F),
+                        .texOffs(16, 99).addBox(-0.3F, -0.0F, -5.2F, 4.6F, 7.0F, 3.7F),
                 PartPose.offsetAndRotation(0.0F, -2.0F, -2.0F, 0.0F, 0.0F, -0.436F));
         PartDefinition headcheekruff2 = head.addOrReplaceChild("head_cheek_ruff2",
                 CubeListBuilder.create()
-                        .texOffs(35, 99).addBox(-6.644F, -2.958F, -5.3F, 4.6F, 7.0F, 3.7F),
+                        .texOffs(34, 99).addBox(-6.644F, -2.958F, -5.3F, 4.6F, 7.0F, 3.7F),
                 PartPose.offsetAndRotation(1.0F, 1.558F, -2.0F, 0.0F, 0.0F, 0.436F));
         PartDefinition headmuzzle = head.addOrReplaceChild("head_muzzle",
                 CubeListBuilder.create()

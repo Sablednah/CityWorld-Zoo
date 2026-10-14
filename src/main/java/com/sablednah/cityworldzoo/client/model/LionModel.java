@@ -76,7 +76,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(3.5F, 13.0F, -6.5F));
         PartDefinition leftfrontlower = leftfrontleg.addOrReplaceChild("left_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(16, 91).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
+                        .texOffs(16, 91).addBox(-1.71F, -0.5F, -1.96F, 3.42F, 5.5F, 3.92F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition lefthindleg = root.addOrReplaceChild("left_hind_leg",
                 CubeListBuilder.create()
@@ -84,7 +84,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(3.5F, 13.0F, 9.0F));
         PartDefinition lefthindlower = lefthindleg.addOrReplaceChild("left_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(48, 91).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
+                        .texOffs(48, 91).addBox(-1.71F, -0.5F, -1.96F, 3.42F, 5.5F, 3.92F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition rightfrontleg = root.addOrReplaceChild("right_front_leg",
                 CubeListBuilder.create()
@@ -92,7 +92,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(-3.5F, 13.0F, -6.5F));
         PartDefinition rightfrontlower = rightfrontleg.addOrReplaceChild("right_front_lower",
                 CubeListBuilder.create()
-                        .texOffs(16, 102).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
+                        .texOffs(16, 102).addBox(-1.71F, -0.5F, -1.96F, 3.42F, 5.5F, 3.92F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition righthindleg = root.addOrReplaceChild("right_hind_leg",
                 CubeListBuilder.create()
@@ -100,7 +100,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
                 PartPose.offset(-3.5F, 13.0F, 9.0F));
         PartDefinition righthindlower = righthindleg.addOrReplaceChild("right_hind_lower",
                 CubeListBuilder.create()
-                        .texOffs(48, 102).addBox(-1.75F, -0.5F, -2.0F, 3.5F, 5.5F, 4.0F),
+                        .texOffs(48, 102).addBox(-1.71F, -0.5F, -1.96F, 3.42F, 5.5F, 3.92F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create()
