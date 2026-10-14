@@ -17,6 +17,8 @@ import org.jspecify.annotations.Nullable;
  * A giraffe eats from trees: now and then it finds a leaf block three to six blocks above the ground within
  * reach, walks to stand beside it, and feeds -- the leaf position is synced so the client bends the neck and
  * head to put the muzzle in it -- chewing for a while before it wanders off. The leaves are never broken.
+ * Only leaves on the canopy's edge count, reached from a spot under open sky one block out, so it never
+ * feeds from underneath or stops short.
  */
 public class BrowseLeavesGoal extends Goal {
 
@@ -27,6 +29,7 @@ public class BrowseLeavesGoal extends Goal {
     private int ticks;
     private int eating;
     private int feed;
+    private int repaths;
 
     public BrowseLeavesGoal(Giraffe mob) {
         this.mob = mob;
@@ -46,7 +49,7 @@ public class BrowseLeavesGoal extends Goal {
 
     @Override
     public void start() {
-        ticks = 0; eating = 0;
+        ticks = 0; eating = 0; repaths = 0;
         feed = 20 * (6 + mob.getRandom().nextInt(8));
         mob.getNavigation().moveTo(stand.x, stand.y, stand.z, 1.0D);
     }
@@ -66,11 +69,12 @@ public class BrowseLeavesGoal extends Goal {
         mob.getLookControl().setLookAt(leafCentre.x, mob.getEyeY(), leafCentre.z);
         double flat = mob.position().multiply(1, 0, 1).distanceTo(stand.multiply(1, 0, 1));
         if (eating == 0) {
-            if (flat < 1.2 || (mob.getNavigation().isDone() && flat < 2.5)) {
+            if (flat < 0.9) {
                 eating = 1;
                 mob.getNavigation().stop();
                 mob.setBrowsing(leaf);
             } else if (mob.getNavigation().isDone() && ticks % 20 == 0) {
+                if (++repaths > 4) { leaf = null; return; }   // cannot get there: give up rather than feed from afar
                 mob.getNavigation().moveTo(stand.x, stand.y, stand.z, 1.0D);
             }
         } else {
@@ -92,19 +96,20 @@ public class BrowseLeavesGoal extends Goal {
         for (int i = 0; i < 80; i++) {
             BlockPos p = here.offset(r.nextInt(SEARCH * 2 + 1) - SEARCH, 2 + r.nextInt(6), r.nextInt(SEARCH * 2 + 1) - SEARCH);
             if (!level.getBlockState(p).is(BlockTags.LEAVES)) continue;
-            // a spot one or two blocks out from the leaf, on the ground under open air, with the leaf's side open
+            // an edge leaf: open air beside it and beyond; stand one block out, under open sky all the way up
             for (Direction d : Direction.Plane.HORIZONTAL) {
-                if (!level.getBlockState(p.relative(d)).isAir()) continue;
-                for (int out = 1; out <= 2; out++) {
-                    BlockPos col = p.relative(d, out);
-                    BlockPos ground = groundBelow(level, col, p.getY() - 2);
-                    if (ground == null) continue;
-                    int rise = p.getY() - ground.getY();
-                    if (rise < 3 || rise > 6) continue;
-                    leaf = p;
-                    stand = Vec3.atBottomCenterOf(ground);
-                    return true;
-                }
+                if (!level.getBlockState(p.relative(d)).isAir() || !level.getBlockState(p.relative(d, 2)).isAir()) continue;
+                BlockPos col = p.relative(d);
+                BlockPos ground = groundBelow(level, col, p.getY() - 2);
+                if (ground == null) continue;
+                int rise = p.getY() - ground.getY();
+                if (rise < 3 || rise > 6) continue;
+                boolean clear = true;
+                for (BlockPos q = ground; clear && q.getY() <= p.getY() + 1; q = q.above()) clear = level.getBlockState(q).isAir();
+                if (!clear) continue;
+                leaf = p;
+                stand = Vec3.atBottomCenterOf(ground);
+                return true;
             }
         }
         return false;

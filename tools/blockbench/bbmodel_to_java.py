@@ -207,7 +207,8 @@ def split_element(e, y_cut, overlap=0.5):
     halves keep the full width, so the sides meet flush (a narrower half left a visible step at the elephant's
     knee); a third, slightly narrower "plug" rides with the lower half {overlap} units up inside the upper,
     hidden until the knee folds, so the gap that opens there shows skin rather than daylight. Its sides sit
-    inside the upper's, so nothing shares a plane and nothing flickers."""
+    inside the upper's, so nothing shares a plane and nothing flickers. The plug and the two cut faces are
+    painted dark, so the hairline where the boxes meet reads as a crease and not as the next bright row."""
     y0, y1 = e["from"][1], e["to"][1]
     f_up = (y1 - y_cut) / (y1 - y0)                 # share of the height above the cut
     f_plug = (y1 - y_cut - overlap) / (y1 - y0)     # the plug's top, inside the upper
@@ -216,7 +217,7 @@ def split_element(e, y_cut, overlap=0.5):
     upper["uuid"] += "-upper"; lower["uuid"] += "-lower"; plug["uuid"] += "-plug"
     upper["from"] = [e["from"][0], y_cut, e["from"][2]]
     lower["to"] = [e["to"][0], y_cut, e["to"][2]]
-    eps = 0.06
+    eps = 0.03
     plug["from"] = [e["from"][0] + eps, y_cut - 0.02, e["from"][2] + eps]
     plug["to"] = [e["to"][0] - eps, y_cut + overlap, e["to"][2] - eps]
     for face in ("north", "south", "east", "west"):
@@ -227,16 +228,16 @@ def split_element(e, y_cut, overlap=0.5):
         vc = v1 + (v2 - v1) * f_up
         upper["faces"][face] = dict(f, uv=[x1, v1, x2, vc])
         lower["faces"][face] = dict(f, uv=[x1, vc, x2, v2])
-        plug["faces"][face] = dict(f, uv=[x1, v1 + (v2 - v1) * f_plug, x2, vc])
+        plug["faces"][face] = dict(f, uv=[x1, v1 + (v2 - v1) * f_plug, x2, vc], shade=0.5)
     n = e["faces"].get("north")
     if n:
         x1, v1, x2, v2 = n["uv"]
         vc = v1 + (v2 - v1) * f_up
         dep_share = (e["to"][2] - e["from"][2]) / (y1 - y0) * (v2 - v1)
-        upper["faces"]["down"] = dict(n, uv=[x1, vc - dep_share, x2, vc])
-        lower["faces"]["up"] = dict(n, uv=[x1, vc, x2, vc + dep_share])
-        plug["faces"]["up"] = dict(n, uv=[x1, vc - dep_share, x2, vc])
-        plug["faces"]["down"] = dict(n, uv=[x1, vc, x2, vc + dep_share])
+        upper["faces"]["down"] = dict(n, uv=[x1, vc - dep_share, x2, vc], shade=0.5)
+        lower["faces"]["up"] = dict(n, uv=[x1, vc, x2, vc + dep_share], shade=0.5)
+        plug["faces"]["up"] = dict(n, uv=[x1, vc - dep_share, x2, vc], shade=0.5)
+        plug["faces"]["down"] = dict(n, uv=[x1, vc, x2, vc + dep_share], shade=0.5)
     else:
         upper["faces"].pop("down", None); lower["faces"].pop("up", None)
     return upper, lower, plug
@@ -400,6 +401,9 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
         if flip_y: im = im.transpose(Image.FLIP_TOP_BOTTOM)
         r = f.get("rotation", 0)
         if r: im = im.rotate(-r, expand=True)
+        if f.get("shade"):   # a face we invented (a cut, a plug): darker, so a seam reads as a crease
+            k = f["shade"]
+            im = Image.merge("RGBA", [c.point(lambda v: int(v * k)) for c in im.split()[:3]] + [im.split()[3]])
         return im
 
     def place(im, u, v, w, h):

@@ -25,7 +25,7 @@
         PartDefinition leftfrontlower = leftfrontleg.addOrReplaceChild("left_front_lower",
                 CubeListBuilder.create()
                         .texOffs(0, 85).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F)
-                        .texOffs(38, 111).addBox(-1.74F, -0.5F, -1.94F, 3.48F, 0.52F, 3.88F),
+                        .texOffs(38, 111).addBox(-1.77F, -0.5F, -1.97F, 3.54F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition lefthindleg = root.addOrReplaceChild("left_hind_leg",
                 CubeListBuilder.create()
@@ -34,7 +34,7 @@
         PartDefinition lefthindlower = lefthindleg.addOrReplaceChild("left_hind_lower",
                 CubeListBuilder.create()
                         .texOffs(17, 85).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F)
-                        .texOffs(0, 121).addBox(-1.74F, -0.5F, -1.94F, 3.48F, 0.52F, 3.88F),
+                        .texOffs(0, 121).addBox(-1.77F, -0.5F, -1.97F, 3.54F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition rightfrontleg = root.addOrReplaceChild("right_front_leg",
                 CubeListBuilder.create()
@@ -43,7 +43,7 @@
         PartDefinition rightfrontlower = rightfrontleg.addOrReplaceChild("right_front_lower",
                 CubeListBuilder.create()
                         .texOffs(34, 85).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F)
-                        .texOffs(16, 121).addBox(-1.74F, -0.5F, -1.94F, 3.48F, 0.52F, 3.88F),
+                        .texOffs(16, 121).addBox(-1.77F, -0.5F, -1.97F, 3.54F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition righthindleg = root.addOrReplaceChild("right_hind_leg",
                 CubeListBuilder.create()
@@ -52,7 +52,7 @@
         PartDefinition righthindlower = righthindleg.addOrReplaceChild("right_hind_lower",
                 CubeListBuilder.create()
                         .texOffs(0, 98).addBox(-1.8F, 0.0F, -2.0F, 3.6F, 8.0F, 4.0F)
-                        .texOffs(32, 121).addBox(-1.74F, -0.5F, -1.94F, 3.48F, 0.52F, 3.88F),
+                        .texOffs(32, 121).addBox(-1.77F, -0.5F, -1.97F, 3.54F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 8.0F, 0.0F));
         PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create()

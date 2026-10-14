@@ -77,7 +77,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
         PartDefinition leftfrontlower = leftfrontleg.addOrReplaceChild("left_front_lower",
                 CubeListBuilder.create()
                         .texOffs(0, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F)
-                        .texOffs(13, 112).addBox(-1.69F, -0.5F, -1.94F, 3.38F, 0.52F, 3.88F),
+                        .texOffs(13, 112).addBox(-1.72F, -0.5F, -1.97F, 3.44F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition lefthindleg = root.addOrReplaceChild("left_hind_leg",
                 CubeListBuilder.create()
@@ -86,7 +86,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
         PartDefinition lefthindlower = lefthindleg.addOrReplaceChild("left_hind_lower",
                 CubeListBuilder.create()
                         .texOffs(16, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F)
-                        .texOffs(29, 112).addBox(-1.69F, -0.5F, -1.94F, 3.38F, 0.52F, 3.88F),
+                        .texOffs(29, 112).addBox(-1.72F, -0.5F, -1.97F, 3.44F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition rightfrontleg = root.addOrReplaceChild("right_front_leg",
                 CubeListBuilder.create()
@@ -95,7 +95,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
         PartDefinition rightfrontlower = rightfrontleg.addOrReplaceChild("right_front_lower",
                 CubeListBuilder.create()
                         .texOffs(32, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F)
-                        .texOffs(45, 112).addBox(-1.69F, -0.5F, -1.94F, 3.38F, 0.52F, 3.88F),
+                        .texOffs(45, 112).addBox(-1.72F, -0.5F, -1.97F, 3.44F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition righthindleg = root.addOrReplaceChild("right_hind_leg",
                 CubeListBuilder.create()
@@ -104,7 +104,7 @@ public class LionModel extends EntityModel<LivingEntityRenderState> {
         PartDefinition righthindlower = righthindleg.addOrReplaceChild("right_hind_lower",
                 CubeListBuilder.create()
                         .texOffs(48, 102).addBox(-1.75F, 0.0F, -2.0F, 3.5F, 5.0F, 4.0F)
-                        .texOffs(0, 120).addBox(-1.69F, -0.5F, -1.94F, 3.38F, 0.52F, 3.88F),
+                        .texOffs(0, 120).addBox(-1.72F, -0.5F, -1.97F, 3.44F, 0.52F, 3.94F),
                 PartPose.offset(-0.0F, 6.0F, 0.0F));
         PartDefinition tail = body.addOrReplaceChild("tail",
                 CubeListBuilder.create()
