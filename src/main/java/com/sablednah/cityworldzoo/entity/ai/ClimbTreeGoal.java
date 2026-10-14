@@ -18,7 +18,8 @@ import org.jspecify.annotations.Nullable;
  * leaves, up the outside of the canopy to the top). Up there it potters about for a while, then makes for
  * the ground beside the trunk, dropping off the edge: it takes no fall damage. On the canopy it also leaps
  * gaps ({@link CanopyLeapGoal#tryLeap}). A climber blocked by leaves overhead scrambles up through them to
- * the first air above, so an overhanging canopy never pins it under the branches.
+ * the first air above; blocked by a log (a savanna tree's slanting branch) it circles the trunk to climb
+ * past on the open side. Fallen to the ground from the canopy, the climb is over.
  */
 public class ClimbTreeGoal extends Goal {
 
@@ -32,6 +33,7 @@ public class ClimbTreeGoal extends Goal {
     private int stay;
     private int stuckTicks;
     private double lastY;
+    private int circle;   // the quarter-turn around the trunk the climber is working from, 0-3
 
     public ClimbTreeGoal(RhesusMacaque mob) {
         this.mob = mob;
@@ -55,7 +57,7 @@ public class ClimbTreeGoal extends Goal {
 
     @Override
     public void start() {
-        ticks = 0; phase = 0; phaseTicks = 0;
+        ticks = 0; phase = 0; phaseTicks = 0; stuckTicks = 0; circle = 0; lastY = mob.getY();
         stay = 20 * (8 + mob.getRandom().nextInt(12));
         mob.getNavigation().moveTo(trunkTop.getX() + 0.5, trunkTop.getY() + 1, trunkTop.getZ() + 0.5, 1.1D);
     }
@@ -81,10 +83,18 @@ public class ClimbTreeGoal extends Goal {
                 if (stuckTicks > 15) {
                     stuckTicks = 0;
                     BlockPos p = mob.blockPosition().above();
-                    int climbed = 0;
-                    while (level.getBlockState(p).is(BlockTags.LEAVES) && climbed < 6) { p = p.above(); climbed++; }
-                    if (climbed > 0 && level.getBlockState(p).isAir() && level.getBlockState(p.above()).isAir())
-                        mob.setPos(Vec3.atBottomCenterOf(p));
+                    if (level.getBlockState(p).is(BlockTags.LOGS) || level.getBlockState(p.above()).is(BlockTags.LOGS)) {
+                        // a branch overhead: go round the trunk a quarter turn and climb from there
+                        circle = (circle + 1) % 4;
+                        int dx = circle == 0 ? 1 : circle == 2 ? -1 : 0, dz = circle == 1 ? 1 : circle == 3 ? -1 : 0;
+                        mob.getMoveControl().setWantedPosition(trunkTop.getX() + 0.5 + dx * 1.2, mob.getY(), trunkTop.getZ() + 0.5 + dz * 1.2, 1.0D);
+                        phaseTicks = Math.max(0, phaseTicks - 60);   // buy the detour some time
+                    } else {
+                        int climbed = 0;
+                        while (level.getBlockState(p).is(BlockTags.LEAVES) && climbed < 6) { p = p.above(); climbed++; }
+                        if (climbed > 0 && level.getBlockState(p).isAir() && level.getBlockState(p.above()).isAir())
+                            mob.setPos(Vec3.atBottomCenterOf(p));
+                    }
                 }
                 boolean onCanopy = level.getBlockState(mob.blockPosition().below()).is(BlockTags.LEAVES) && mob.onGround();
                 if (onCanopy || mob.getY() >= trunkTop.getY() + 1) { phase = 1; phaseTicks = 0; }
@@ -93,13 +103,21 @@ public class ClimbTreeGoal extends Goal {
             case 1 -> {
                 // On top: wander the canopy a little (straight-line moves, leaves are solid to stand on), and
                 // leap a gap to the next tree now and then.
+                if (mob.onGround() && !level.getBlockState(mob.blockPosition().below()).is(BlockTags.LEAVES) && phaseTicks > 10) {
+                    phase = 3;   // fell out of the tree: the climb is over
+                    break;
+                }
                 if (CanopyLeapGoal.tryLeap(mob)) { phaseTicks = Math.max(phaseTicks, 1); }
                 else if (phaseTicks % 60 == 0) {
+                    // two blocks at most, and leaves under the way there too, so it does not walk off a gap
                     BlockPos here = mob.blockPosition();
                     RandomSource r = mob.getRandom();
                     for (int i = 0; i < 8; i++) {
-                        BlockPos p = here.offset(r.nextInt(7) - 3, r.nextInt(3) - 1, r.nextInt(7) - 3);
-                        if (level.getBlockState(p).isAir() && level.getBlockState(p.below()).is(BlockTags.LEAVES)) {
+                        int ox = r.nextInt(5) - 2, oz = r.nextInt(5) - 2;
+                        BlockPos p = here.offset(ox, 0, oz);
+                        BlockPos mid = here.offset(ox / 2, 0, oz / 2);
+                        if (level.getBlockState(p).isAir() && level.getBlockState(p.below()).is(BlockTags.LEAVES)
+                                && level.getBlockState(mid).isAir() && level.getBlockState(mid.below()).is(BlockTags.LEAVES)) {
                             mob.getMoveControl().setWantedPosition(p.getX() + 0.5, p.getY(), p.getZ() + 0.5, 0.8D);
                             break;
                         }

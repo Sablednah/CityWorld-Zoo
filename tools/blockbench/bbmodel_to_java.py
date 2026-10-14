@@ -202,21 +202,23 @@ def measure_scale(d, tex):
     return max(1, int(round(r)))
 
 def split_element(e, y_cut, overlap=0.5):
-    """Two elements from one, cut horizontally at y_cut: the upper keeps the up face, the lower the down face,
-    the side faces are sliced by height, and the two new inside faces borrow the rows beside the cut. The
-    lower half reaches {overlap} units up inside the upper, so its cut face stays hidden as the knee folds
-    (a top face catches the light, and showed as a bright band at the elephant's knee)."""
+    """Three elements from one, cut horizontally at y_cut: the upper keeps the up face, the lower the down face,
+    the side faces are sliced by height, and the two new inside faces borrow the rows beside the cut. Both
+    halves keep the full width, so the sides meet flush (a narrower half left a visible step at the elephant's
+    knee); a third, slightly narrower "plug" rides with the lower half {overlap} units up inside the upper,
+    hidden until the knee folds, so the gap that opens there shows skin rather than daylight. Its sides sit
+    inside the upper's, so nothing shares a plane and nothing flickers."""
     y0, y1 = e["from"][1], e["to"][1]
     f_up = (y1 - y_cut) / (y1 - y0)                 # share of the height above the cut
-    f_low = (y1 - y_cut - overlap) / (y1 - y0)      # the lower half's top, inside the upper
-    upper = json.loads(json.dumps(e)); lower = json.loads(json.dumps(e))
-    upper["name"] += " upper"; lower["name"] += " lower"; upper["uuid"] += "-upper"; lower["uuid"] += "-lower"
+    f_plug = (y1 - y_cut - overlap) / (y1 - y0)     # the plug's top, inside the upper
+    upper = json.loads(json.dumps(e)); lower = json.loads(json.dumps(e)); plug = json.loads(json.dumps(e))
+    upper["name"] += " upper"; lower["name"] += " lower"; plug["name"] += " lower plug"
+    upper["uuid"] += "-upper"; lower["uuid"] += "-lower"; plug["uuid"] += "-plug"
     upper["from"] = [e["from"][0], y_cut, e["from"][2]]
-    # The lower half is a hair narrower, or over the overlap its sides lie on the upper's and the two flicker
-    # (the elephant's knees showed the next wrinkle row as light dashes).
-    eps = 0.04
-    lower["from"] = [e["from"][0] + eps, e["from"][1], e["from"][2] + eps]
-    lower["to"] = [e["to"][0] - eps, y_cut + overlap, e["to"][2] - eps]
+    lower["to"] = [e["to"][0], y_cut, e["to"][2]]
+    eps = 0.06
+    plug["from"] = [e["from"][0] + eps, y_cut - 0.02, e["from"][2] + eps]
+    plug["to"] = [e["to"][0] - eps, y_cut + overlap, e["to"][2] - eps]
     for face in ("north", "south", "east", "west"):
         f = e["faces"].get(face)
         if not f:
@@ -224,7 +226,8 @@ def split_element(e, y_cut, overlap=0.5):
         x1, v1, x2, v2 = f["uv"]       # uv[1] is the face's top edge, uv[3] its bottom, whichever is larger
         vc = v1 + (v2 - v1) * f_up
         upper["faces"][face] = dict(f, uv=[x1, v1, x2, vc])
-        lower["faces"][face] = dict(f, uv=[x1, v1 + (v2 - v1) * f_low, x2, v2])
+        lower["faces"][face] = dict(f, uv=[x1, vc, x2, v2])
+        plug["faces"][face] = dict(f, uv=[x1, v1 + (v2 - v1) * f_plug, x2, vc])
     n = e["faces"].get("north")
     if n:
         x1, v1, x2, v2 = n["uv"]
@@ -232,9 +235,11 @@ def split_element(e, y_cut, overlap=0.5):
         dep_share = (e["to"][2] - e["from"][2]) / (y1 - y0) * (v2 - v1)
         upper["faces"]["down"] = dict(n, uv=[x1, vc - dep_share, x2, vc])
         lower["faces"]["up"] = dict(n, uv=[x1, vc, x2, vc + dep_share])
+        plug["faces"]["up"] = dict(n, uv=[x1, vc - dep_share, x2, vc])
+        plug["faces"]["down"] = dict(n, uv=[x1, vc, x2, vc + dep_share])
     else:
         upper["faces"].pop("down", None); lower["faces"].pop("up", None)
-    return upper, lower
+    return upper, lower, plug
 
 # --- the work ----------------------------------------------------------------------------------------------
 def convert(rig_name, bb_path, tex_path, texture_as=None):
@@ -272,7 +277,7 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
         for e in list(groups[gi]):
             if e["name"] == ename:
                 groups[gi].remove(e)
-                groups[gi].extend(split_element(e, y_cut))
+                groups[gi].extend(split_element(e, y_cut))   # upper, lower, and the lower's plug
 
     # Assign elements to parts: from the rig table, or, when the file's groups are named (a model that went
     # out through spec_to_model.py and came back), straight from the groups: each group is a part with its
@@ -302,6 +307,8 @@ def convert(rig_name, bb_path, tex_path, texture_as=None):
             matches = [e for e in groups[gi] if e["name"] == ename]
             if nth is not None:
                 matches = [matches[nth]]
+            if ename.endswith(" lower"):
+                matches += [e for e in groups[gi] if e["name"] == ename + " plug"]
             if not matches:
                 raise SystemExit(f"rig {rig_name}: no element '{ename}' in group {gi}")
             found.extend(matches)

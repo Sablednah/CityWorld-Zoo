@@ -149,5 +149,4 @@ if __name__ == "__main__":
         if name in HANDMADE:
             continue
         print(paint_species(name, spec))
-        if spec["egg"]:
-            print(paint_egg(name, *spec["egg"]))
+        # Spawn eggs are Sable's art now (art/eggs/, 32x32 in assets); paint_egg stays for a new species.

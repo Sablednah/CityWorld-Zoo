@@ -89,8 +89,8 @@ public class BrowseLeavesGoal extends Goal {
         Level level = mob.level();
         BlockPos here = mob.blockPosition();
         RandomSource r = mob.getRandom();
-        for (int i = 0; i < 30; i++) {
-            BlockPos p = here.offset(r.nextInt(SEARCH * 2 + 1) - SEARCH, 3 + r.nextInt(4), r.nextInt(SEARCH * 2 + 1) - SEARCH);
+        for (int i = 0; i < 80; i++) {
+            BlockPos p = here.offset(r.nextInt(SEARCH * 2 + 1) - SEARCH, 2 + r.nextInt(6), r.nextInt(SEARCH * 2 + 1) - SEARCH);
             if (!level.getBlockState(p).is(BlockTags.LEAVES)) continue;
             // a spot one or two blocks out from the leaf, on the ground under open air, with the leaf's side open
             for (Direction d : Direction.Plane.HORIZONTAL) {
@@ -110,15 +110,20 @@ public class BrowseLeavesGoal extends Goal {
         return false;
     }
 
-    /** The first standable block top at or below {@code from.y} down to {@code minY}: air above, something to stand on. */
+    /**
+     * The standable spot in this column below {@code from.y}: down through air and leaves (a giraffe stands
+     * under the canopy it eats from) to the first block with a shape that is not leaves, then the block above
+     * it, which must have two more blocks of air over it for the body.
+     */
     private static @Nullable BlockPos groundBelow(Level level, BlockPos from, int minY) {
         BlockPos p = from;
-        while (p.getY() > minY - 6) {
-            if (!level.getBlockState(p).isAir()) return null;
-            BlockPos below = p.below();
-            if (!level.getBlockState(below).getCollisionShape(level, below).isEmpty())
-                return level.getBlockState(p.above()).isAir() && level.getBlockState(p.above(2)).isAir() ? p : null;
-            p = below;
+        while (p.getY() > minY - 8) {
+            var state = level.getBlockState(p);
+            if (!state.isAir() && !state.is(BlockTags.LEAVES)) {
+                BlockPos stand = p.above();
+                return level.getBlockState(stand).isAir() && level.getBlockState(stand.above()).isAir() && level.getBlockState(stand.above(2)).isAir() ? stand : null;
+            }
+            p = p.below();
         }
         return null;
     }
