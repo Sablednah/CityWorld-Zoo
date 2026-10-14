@@ -51,9 +51,8 @@ LOADER_ID="$(jq -r 'map(select(.name == "NeoForge")) | .[0].id // empty' <<<"$VE
 [ -n "$LOADER_ID" ] || echo "!! Warning: no 'NeoForge' modloader tag found; uploading without it." >&2
 
 # CurseForge rejects an upload that names no environment ("You must select at least one version from
-# the environment group of versions"). Cast is genuinely both: it installs server-only (chat,
-# action bar, nameplate and boss bars all reach vanilla clients), client-only (graphical bars are
-# drawn from health the client already has), or both sides.
+# the environment group of versions"). CityWorld: Zoo adds creatures, so it is required on both the
+# server and every client.
 CLIENT_ID="$(jq -r 'map(select(.name == "Client")) | .[0].id // empty' <<<"$VERSIONS_JSON")"
 SERVER_ID="$(jq -r 'map(select(.name == "Server")) | .[0].id // empty' <<<"$VERSIONS_JSON")"
 if [ -z "$CLIENT_ID" ] || [ -z "$SERVER_ID" ]; then
@@ -75,12 +74,12 @@ JAVA_ID="$(jq -r --arg j "Java $JAVA_VERSION" 'map(select(.name == $j)) | .[0].i
 GAME_VERSIONS="[$MC_ID${LOADER_ID:+,$LOADER_ID},$CLIENT_ID,$SERVER_ID${JAVA_ID:+,$JAVA_ID}]"
 echo "   Minecraft $MC_VERSION = $MC_ID${LOADER_ID:+, NeoForge = $LOADER_ID}, Client = $CLIENT_ID, Server = $SERVER_ID${JAVA_ID:+, Java $JAVA_VERSION = $JAVA_ID}"
 
-# "Cast 2.5.0 / MC 26.2" reads far better in the file list than the raw filename does. The mod
-# version comes out of the filename (cast-2.5.0+mc26.2.jar), falling back to the whole basename
-# if a jar is ever named differently. The file itself keeps its original name either way.
-MOD_VERSION="$(basename "$JAR" .jar | sed -n 's/^cast-\(.*\)+mc.*$/\1/p')"
+# "CityWorld: Zoo 1.0.0 / MC 26.2" reads far better in the file list than the raw filename does. The
+# mod version comes out of the filename (cityworld_zoo-1.0.0+mc26.2.jar), falling back to the whole
+# basename if a jar is ever named differently. The file itself keeps its original name either way.
+MOD_VERSION="$(basename "$JAR" .jar | sed -n 's/^cityworld_zoo-\(.*\)+mc.*$/\1/p')"
 if [ -n "$MOD_VERSION" ]; then
-    DISPLAY_NAME="Cast $MOD_VERSION / MC $MC_VERSION"
+    DISPLAY_NAME="CityWorld: Zoo $MOD_VERSION / MC $MC_VERSION"
 else
     DISPLAY_NAME="$(basename "$JAR" .jar)"
 fi

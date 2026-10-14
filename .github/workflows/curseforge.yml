@@ -1,7 +1,7 @@
 name: Publish to CurseForge
 
 # Publishing a GitHub release publishes to CurseForge too. Every jar attached to the release is
-# uploaded, with the Minecraft version read from its filename (cityworld_zoo-0.1.0+mc26.2.jar) and the
+# uploaded, with the Minecraft version read from its filename (cityworld_zoo-1.0.0+mc26.2.jar) and the
 # release body used as the changelog.
 #
 # Setup, once:
@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to upload (e.g. v2.5.0)
+        description: Release tag to upload (e.g. v1.0.0)
         required: true
       release_type:
         description: CurseForge release type
@@ -90,7 +90,7 @@ jobs:
           fi
           failed=0
           for jar in "${jars[@]}"; do
-            # cityworld_zoo-0.1.0+mc26.2.jar -> 26.2
+            # cityworld_zoo-1.0.0+mc26.2.jar -> 26.2
             mc="$(basename "$jar" .jar | sed -n 's/.*+mc\(.*\)$/\1/p')"
             if [ -z "$mc" ]; then
               echo "::warning::Cannot read a Minecraft version from $(basename "$jar") — skipping it."

@@ -90,6 +90,16 @@ is the one data file. Spawns are read as a world's biomes are built, so a config
 (`entity/ai/HuntGoal`, lions and tigers) and cub defence (`ProtectYoungGoal`, cats and bear) are config
 switches too, read live. Sable asked for all of it to be dials (2026-10-14).
 
+## Releasing
+
+CurseForge project **1745522** (https://www.curseforge.com/minecraft/mc-mods/cityworld-zoo). The store page
+is `CURSEFORGE.md`; its images are `docs/` on GitHub (`wordmark-850.png`, `screenshots/`, repo public since
+2026-10-15). Release day: `mod_version`, dated CHANGELOG heading, rot sweep (`grep -rn "not yet\|to come"`),
+build, self-test, commit, `git tag -a vX.Y.Z`, `gh release create` with the jar and the CHANGELOG section as
+notes; publishing fires `.github/workflows/curseforge.yml` (`CURSEFORGE_TOKEN` secret and
+`CURSEFORGE_PROJECT_ID` variable are set), which runs `scripts/curseforge-upload.sh` per jar. A 200 is
+acceptance, not publication; never handle the token. Then `./deploy.sh`. First release 1.0.0, 2026-10-15.
+
 ## Layout
 
 ```
