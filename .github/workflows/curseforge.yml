@@ -34,7 +34,7 @@ on:
         default: false
         type: boolean
       only:
-        description: Upload only jars whose name contains this (e.g. mc26.2) — for testing
+        description: Upload only the jar whose name ends in this (e.g. mc26.2, or mc1.21.1 which does not match mc1.21.11)
         required: false
         type: string
 
@@ -96,7 +96,9 @@ jobs:
               echo "::warning::Cannot read a Minecraft version from $(basename "$jar") — skipping it."
               continue
             fi
-            if [ -n "$ONLY" ] && [[ "$(basename "$jar")" != *"$ONLY"* ]]; then
+            # Suffix match, not substring: "mc1.21.1" must not also take mc1.21.11 (it did once, 2026-10-15,
+            # and CurseForge rejected the duplicate in moderation).
+            if [ -n "$ONLY" ] && [[ "$(basename "$jar" .jar)" != *"+$ONLY" ]]; then
               echo "Skipping $(basename "$jar") — does not match '$ONLY'."
               continue
             fi

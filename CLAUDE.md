@@ -115,7 +115,8 @@ is `CURSEFORGE.md`; its images are `docs/` on GitHub (`wordmark-850.png`, `scree
 build, self-test, commit, `git tag -a vX.Y.Z`, `gh release create` with the five jars (one per line, named `+mc<version>`) and the CHANGELOG section as
 notes; publishing fires `.github/workflows/curseforge.yml` (`CURSEFORGE_TOKEN` secret and
 `CURSEFORGE_PROJECT_ID` variable are set), which runs `scripts/curseforge-upload.sh` per jar. A 200 is
-acceptance, not publication; never handle the token. Then `./deploy.sh`. First release 1.0.0, 2026-10-15.
+acceptance, not publication; never handle the token. The workflow's `only` input re-uploads one line by the `+mc<version>` suffix (a substring
+match once sent 1.21.11 twice for `only=mc1.21.1`; CurseForge rejects the duplicate). Then `./deploy.sh`. First release 1.0.0, 2026-10-15.
 
 ## Layout
 
