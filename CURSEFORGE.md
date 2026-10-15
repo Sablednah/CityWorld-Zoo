@@ -76,7 +76,7 @@ cub defence are switches too, with the hunters' keenness and rest time beside th
 
 ## With CityWorld
 
-Install [CityWorld ReForged](https://www.curseforge.com/minecraft/mc-mods/cityworld-reforged) 6.3.0 or
+Install [CityWorld ReForged](https://www.curseforge.com/minecraft/mc-mods/cityworld-reforged) 6.4.0 or
 newer beside it and the city's zoos fill with them: giraffes behind a taller fence, an elephant in a big
 paddock or a sunken pit, lions on a savanna lot, macaques in the trees, a bear on the rockery. Each
 animal ships its own habitat and sign text; CityWorld's catalog picks from them and its own. No

@@ -46,7 +46,7 @@ registers **`ATTACK_DAMAGE`** -- vanilla's `Mob.doHurtTarget` throws without it 
 and `MOVEMENT_SPEED`. The self-test checks all three on every species.
 
 **The CityWorld contract is data, not code.** `data/cityworld_zoo/cityworld/zoo/animal/<id>.json` and
-`.../habitat/<name>.json` are CityWorld 6.3.0's datapack registries (`worldgen/ZooCatalog` in
+`.../habitat/<name>.json` are CityWorld 6.4.0's datapack registries (the released 6.3.0 has no zoo code) (`worldgen/ZooCatalog` in
 `../CityWorld-ReForged-worktrees/mc26.2`; schema in that class's comment). Nothing here imports
 CityWorld; the self-test reads its catalog by reflection when the jar is in `run-mc26.2/mods`. An entry
 is skipped quietly when its entity, habitat or `requires_mod` is missing. Change the schema with the
@@ -116,7 +116,7 @@ tools/textures/paint.py                 placeholder textures + spawn eggs from t
 
 ## Who consumes what
 
-- **CityWorld** (`../CityWorld-ReForged-worktrees/mc26.2`, commit 99c48ca2 "Zoos are data", 6.3.0+): the zoo
+- **CityWorld** (`../CityWorld-ReForged-worktrees/mc26.2`, commit 99c48ca2 "Zoos are data", released as 6.4.0 on 2026-10-15): the zoo
   datapack. `size: "tall"` (giraffe) raises the fence; `"large"` (elephant) needs a big pen.
 - **Threadwork / ZARP** (`../Threadwork`): spawns these wild near zoo lots by the entity tag; Kit's quest
   "Other City: Before" needs only `cityworld_zoo:giraffe` to exist. Ids are a promise once ZARP ships.

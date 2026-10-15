@@ -20,7 +20,7 @@ on every client.
   `config/cityworld_zoo-common.toml`: on/off overall and per species, weight, herd size, biome ids or
   tags. Hunting and cub defence are switches with their own dials. Biome changes take a restart.
 - **CityWorld zoos.** A datapack of eight animal entries over five habitats (savanna, woodland,
-  scrubland, canopy, rockery) for CityWorld's data-driven zoos (6.3.0 or newer). Giraffes get the
+  scrubland, canopy, rockery) for CityWorld's data-driven zoos (6.4.0 or newer; 6.3.0 has no zoo catalog). Giraffes get the
   taller fence; elephants need a big pen. CityWorld is optional.
 - `#cityworld_zoo:zoo_animals`, an entity-type tag of all eight, for other mods' spawn rules. The
   animals are plain `Animal`s with vanilla goals and the standard attributes, so variant-making mods

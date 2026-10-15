@@ -37,7 +37,7 @@ logoBlur=false
     side="BOTH"
 
 # CityWorld reads this jar's data/cityworld_zoo/cityworld/zoo/{animal,habitat} as datapack registries
-# (CityWorld 6.3.0+, "Zoos are data"). Nothing here imports CityWorld's code, so the relation is
+# (CityWorld 6.4.0+, "Zoos are data"; the range stays [1,) so an older CityWorld still loads beside it, its zoos just stay vanilla). Nothing here imports CityWorld's code, so the relation is
 # informational: without CityWorld the animals still exist, through spawn eggs.
 [[dependencies.${mod_id}]]
     modId="cityworld"
