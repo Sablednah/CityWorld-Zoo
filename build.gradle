@@ -117,6 +117,11 @@ dependencies {
             prefer '2.2'
         }
     }
+    // 1.21.1 only: NeoForge 21.1's dev runtime does not see plain implementation libraries from a mod's
+    // module (the shipped jar is fine, jarJar bundles it), so the self-test boot crashed on
+    // ServerAboutToStart with ClassNotFoundException: org.yaml.snakeyaml.Yaml (2026-10-15). 21.11 and
+    // 26.x do not need this.
+    additionalRuntimeClasspath 'org.yaml:snakeyaml:2.2'
 }
 
 // ---------------------------------------------------------------------------
