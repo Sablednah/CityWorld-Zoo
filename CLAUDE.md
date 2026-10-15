@@ -22,13 +22,15 @@ built from.
 ```bash
 ./gradlew compileJava              # the inner loop
 ./gradlew runServer -Pselftest     # neoforge/SelfTest on ServerStartedEvent; read "SelfTest:" and every FAILED
-./deploy.sh                        # -> the CurseForge "26.2" instance (never the ZARP one: .sablecraft-no-deploy)
+./deploy.sh                        # -> the CurseForge instance named for this line (1.21.11: "MobHealth - Forge"); never the ZARP one
 python3 tools/textures/paint.py    # regenerate the placeholder textures from the box lists
 ```
 
-Run the self-test in the FOREGROUND of one command, kill only the JVM whose command line has
-`CityWorld-Zoo/build/classes`, and never `pkill` on `java` or `fml.modFolders`. Boot checks print the
-ERROR lines (`grep -nE "ERROR|FATAL|RegistryDataLoader"`), never a count. Note **25575 is also Standards'
+Run the self-test in the FOREGROUND of one command (background the gradle call, poll the log for
+`Zoo SelfTest: (ALL PASSED|FAILURES ABOVE)`), kill only the JVM whose command line has `build/classes`, and
+never `pkill` on `java` or `fml.modFolders`. `pgrep -f` also matches the shell running that very command,
+so check `/proc/<pid>/cmdline` starts with java before killing (a blind `head -1` killed its own shell,
+2026-10-15). Boot checks print the ERROR lines (`grep -nE "ERROR|FATAL|RegistryDataLoader"`), never a count. Note **25575 is also Standards'
 RCON port** in Chronicler's port table: the two dev servers cannot be up together.
 
 ## The rules everything follows from
@@ -46,8 +48,8 @@ registers **`ATTACK_DAMAGE`** -- vanilla's `Mob.doHurtTarget` throws without it 
 and `MOVEMENT_SPEED`. The self-test checks all three on every species.
 
 **The CityWorld contract is data, not code.** `data/cityworld_zoo/cityworld/zoo/animal/<id>.json` and
-`.../habitat/<name>.json` are CityWorld 6.4.0's datapack registries (the released 6.3.0 has no zoo code) (`worldgen/ZooCatalog` in
-`../CityWorld-ReForged-worktrees/mc26.2`; schema in that class's comment). Nothing here imports
+`.../habitat/<name>.json` are CityWorld's datapack registries, shipped in 6.4.0 (the released 6.3.0 has no zoo code; `worldgen/ZooCatalog`
+in `../CityWorld-ReForged-worktrees/mc26.2`, schema in that class's comment). Nothing here imports
 CityWorld; the self-test reads its catalog by reflection when the jar is in `run-mc26.2/mods`. An entry
 is skipped quietly when its entity, habitat or `requires_mod` is missing. Change the schema with the
 CityWorld session, never by guessing.
@@ -129,7 +131,10 @@ neoforge/Lang, Feedback, ZooCommands    messages.yml, '&' colours, /zoo status |
 neoforge/ZooEvents, SelfTest            Lang on ServerAboutToStart; the self-test on ServerStarted when -Pselftest
 data/cityworld_zoo/cityworld/zoo/       the CityWorld datapack: 8 animals, 5 habitats
 data/cityworld_zoo/tags/entity_type/zoo_animals.json   #cityworld_zoo:zoo_animals (Threadwork's spawn rules)
-tools/textures/paint.py                 placeholder textures + spawn eggs from the box lists (keep in step with the models)
+tools/blockbench/, tools/audio/, tools/textures/   the .bbmodel converter, the sound cutter, the placeholder painter
+art/<animal>/, art/eggs/                Sable's sources (models, textures, egg art; raw sounds gitignored)
+docs/                                   logo, wordmark, screenshots for the store page (raw GitHub links)
+scripts/curseforge-upload.sh, .github/workflows/curseforge.yml   the release upload (see Releasing)
 ```
 
 ## Who consumes what
@@ -154,7 +159,9 @@ tools/textures/paint.py                 placeholder textures + spawn eggs from t
   each have a hand-made baby mesh; that is the road if a big-headed cub is ever wanted.
 - 26.2 names: `EntityTypes.X`, `Identifier`, models under `client/model/animal/<name>/`, renderers
   `submit(...)` with `SubmitNodeCollector`, `Item.Properties.spawnEgg(type)` (a per-mob egg texture, no
-  tints). Vanilla sources: `../Threadwork/build/moddev/artifacts/minecraft-patched-26.2.0.72-sources.jar`.
+  tints). Vanilla sources: `build/moddev/artifacts/minecraft-patched-26.2.0.72-sources.jar` in each worktree
+  after its first gradle run (1.21.1's is `neoforge-21.1.251-sources.jar`). Beware `ls *sources.jar`: it also
+  matches `...-client-extra-aka-minecraft-resources.jar`.
 - Entity types register before items (vanilla's registry order), which is what lets a spawn egg's
   properties call `type.get()`.
 - Never edit a sibling's `CLAUDE.md`; raise it with Sable instead. Never touch the ZARP instance's
