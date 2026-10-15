@@ -15,7 +15,7 @@ built from.
 
 | | |
 |---|---|
-| Minecraft / NeoForge / Java | 26.2 / 26.2.0.72 (the ZARP pack runs .88) / 25 (`mc26.2`, the only branch so far) |
+| Minecraft / NeoForge / Java | 26.2 / 26.2.0.72 (the ZARP pack runs .88) / 25 on `mc26.2`, the default branch and where the docs live; four more lines, see Versions |
 | Dev server | port **25575**, RCON **25585** (`run-mc26.2/server.properties`, gitignored) |
 | JAVA_HOME | `/home/sable/.gradle/jdks/eclipse_adoptium-25-amd64-linux.2` (no system Java) |
 
@@ -90,12 +90,29 @@ is the one data file. Spawns are read as a world's biomes are built, so a config
 (`entity/ai/HuntGoal`, lions and tigers) and cub defence (`ProtectYoungGoal`, cats and bear) are config
 switches too, read live. Sable asked for all of it to be dials (2026-10-14).
 
+## Versions
+
+A branch per Minecraft line, the same code with the smallest diff that compiles (ported 2026-10-15, all five
+self-tests at 319 passed with CityWorld 6.4.0's catalog taking 18 of 18). Worktrees in
+`../CityWorld-Zoo-worktrees/mc<version>`; each has its own `run-mc<version>` (needs `eula.txt`, `server.properties`
+with port 25575, and that line's CityWorld jar in `mods/`, all gitignored). Docs and the store page live on
+`mc26.2`; the other branches carry only their port commits, so a feature lands on `mc26.2` and is cherry-picked.
+
+| Branch | Minecraft / NeoForge / Java / MDG | What differs from `mc26.2` |
+|---|---|---|
+| `mc26.3` | 26.3 / 26.3.0.58-beta / 25 / 2.0.147 | `ModConfig.Type.LOCAL` for `COMMON`, registered with the explicit file name `cityworld_zoo-common.toml`; `BiomeModifier.modify` takes a `RegistryAccess` first; `MobSpawnSettingsBuilder.addSpawn(type, weight, min, max)` (category read from the type). |
+| `mc26.1` | 26.1.2 / 26.1.2.95 / 25 / 2.0.144 | nothing but the version lines. |
+| `main` | 1.21.11 / 21.11.42 / 21 / 2.0.141 | `CameraRenderState` is in `client.renderer.state`, not `state.level`; `SpawnEggItem.getType(stack)` is an instance method. Deploys to the `MobHealth - Forge` instance, the family's 1.21.11 test instance. |
+| `mc1.21.1` | 1.21.1 / 21.1.251 / 21 / 2.0.141 | the big one (39 files): `ResourceLocation` for `Identifier`, jetbrains `@Nullable`, `DeferredRegister.create(Registries.ENTITY_TYPE)` + `EntityType.Builder`, `DeferredSpawnEggItem` with white tints over the same 32x32 egg models, `Mob.createMobAttributes()`, `type.create(level)`, `CompoundTag` save data, `hasImpulse`, `getEatingSound(stack)`, one-arg goal predicates, `addSpawn(cat, SpawnerData(type, weight, min, max))`, `FMLEnvironment.dist`. No render states: models extend `HierarchicalModel<Entity>` with the six-arg `setupAnim` and reset every part's pose themselves (26.2's `EntityModel` did it), reading tusked/climbing/sitting/browse off the entity; the four `*RenderState` classes and the special renderers are gone, `ZooRenderer` is a plain `MobRenderer` and babies are `poseStack.scale(0.5)` in `scale()`. `WalkAnimationState.update` has no position scale there, so the Stride cadence is applied in the models (`ZooAnimal.walkPosition`), and 1.21.1's renderer triples a baby's walk position where 26.2's does not, so each model divides it back. SnakeYAML must also be on `additionalRuntimeClasspath` for the dev run (the jar bundles it either way). |
+
+Before a release, `./gradlew runServer -Pselftest` in every worktree in turn (the port is shared) and `./deploy.sh` from each.
+
 ## Releasing
 
 CurseForge project **1745522** (https://www.curseforge.com/minecraft/mc-mods/cityworld-zoo). The store page
 is `CURSEFORGE.md`; its images are `docs/` on GitHub (`wordmark-850.png`, `screenshots/`, repo public since
-2026-10-15). Release day: `mod_version`, dated CHANGELOG heading, rot sweep (`grep -rn "not yet\|to come"`),
-build, self-test, commit, `git tag -a vX.Y.Z`, `gh release create` with the jar and the CHANGELOG section as
+2026-10-15). Release day (on every branch; `mod_version` is shared): `mod_version`, dated CHANGELOG heading, rot sweep (`grep -rn "not yet\|to come"`),
+build, self-test, commit, `git tag -a vX.Y.Z`, `gh release create` with the five jars (one per line, named `+mc<version>`) and the CHANGELOG section as
 notes; publishing fires `.github/workflows/curseforge.yml` (`CURSEFORGE_TOKEN` secret and
 `CURSEFORGE_PROJECT_ID` variable are set), which runs `scripts/curseforge-upload.sh` per jar. A 200 is
 acceptance, not publication; never handle the token. Then `./deploy.sh`. First release 1.0.0, 2026-10-15.

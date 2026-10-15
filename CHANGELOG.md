@@ -2,8 +2,9 @@
 
 ## 1.0.0 — 2026-10-15
 
-The first release. Minecraft 26.2 on NeoForge 26.2.0.72 or newer, Java 25. Install on the server and
-on every client.
+The first release, one jar per Minecraft line: 1.21.1 (NeoForge 21.1.251+), 1.21.11 (21.11.42+), 26.1.2
+(26.1.2.95+), 26.2 (26.2.0.72+) and 26.3 (26.3.0.58-beta+); Java 21 for the 1.21 jars, 25 for the 26.x ones.
+Install on the server and on every client.
 
 - **Eight animals**, each a spawn egg and breedable: giraffe, rhesus macaque, zebra, deer, lion, tiger,
   elephant, brown bear. Models, textures and spawn eggs by Sablednah; sounds cut from Pixabay recordings
