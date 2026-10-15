@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.144'
+    id 'net.neoforged.moddev' version '2.0.141'
     id 'idea'
 }
 
@@ -35,7 +35,7 @@ base {
 }
 
 // Minecraft 26.x ships Java 25 to players.
-java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 neoForge {
     version = project.neo_version

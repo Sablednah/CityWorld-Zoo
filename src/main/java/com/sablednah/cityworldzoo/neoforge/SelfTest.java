@@ -220,7 +220,7 @@ public final class SelfTest {
             e.discard();
         }
         ItemStack egg = new ItemStack(s.egg().get());
-        check(id + " spawn egg is a spawn egg for this type", egg.getItem() instanceof SpawnEggItem && SpawnEggItem.getType(egg) == type);
+        check(id + " spawn egg is a spawn egg for this type", egg.getItem() instanceof SpawnEggItem se && se.getType(egg) == type);
         check(id + " and its egg have English names", lang(type.getDescriptionId()) && lang(s.egg().get().getDescriptionId()));
         check(id + " has a loot table in the jar", json("/data/cityworld_zoo/loot_table/entities/" + s.id() + ".json") != null);
         JsonObject zoo = json("/data/cityworld_zoo/cityworld/zoo/animal/" + s.id() + ".json");
