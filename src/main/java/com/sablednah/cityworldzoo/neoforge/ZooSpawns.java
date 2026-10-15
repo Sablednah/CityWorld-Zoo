@@ -9,13 +9,12 @@ import com.sablednah.cityworldzoo.ZooMod;
 import com.sablednah.cityworldzoo.entity.ZooAnimal;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.neoforge.common.world.ModifiableBiomeInfo;
@@ -43,13 +42,14 @@ public final class ZooSpawns {
     /** The modifier itself: stateless, everything comes from {@link ZooConfig}. */
     public record NaturalSpawns() implements BiomeModifier {
         @Override
-        public void modify(Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
+        public void modify(RegistryAccess registries, Holder<Biome> biome, Phase phase, ModifiableBiomeInfo.BiomeInfo.Builder builder) {
             if (phase != Phase.ADD || !ZooConfig.NATURAL_SPAWNS.get()) return;
             for (ZooEntities.Species<? extends ZooAnimal> s : ZooEntities.ALL) {
                 ZooConfig.Spawn c = ZooConfig.SPAWNS.get(s.id());
                 if (c == null || !c.enabled().get() || c.weight().get() <= 0 || !matches(biome, c.biomes().get())) continue;
                 int min = c.minHerd().get(), max = Math.max(min, c.maxHerd().get());
-                builder.getMobSpawnSettings().addSpawn(MobCategory.CREATURE, c.weight().get(), new MobSpawnSettings.SpawnerData(s.entityType(), min, max));
+                // 26.3: the category comes from the entity type (CREATURE for every species) and the count is an IntProvider.
+                builder.getMobSpawnSettings().addSpawn(s.entityType(), c.weight().get(), min, max);
             }
         }
 

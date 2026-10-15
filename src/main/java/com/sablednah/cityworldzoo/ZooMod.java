@@ -34,7 +34,9 @@ public class ZooMod {
 
     public ZooMod(IEventBus modEventBus, ModContainer modContainer) {
         LOGGER.info("CityWorld: Zoo {} initialising", BuildInfo.describe());
-        modContainer.registerConfig(ModConfig.Type.COMMON, ZooConfig.SPEC);
+        // 26.3: COMMON is LOCAL, whose default file would be cityworld_zoo-local.toml; the name is given so a
+        // server carrying its settings from 26.2 keeps them.
+        modContainer.registerConfig(ModConfig.Type.LOCAL, ZooConfig.SPEC, "cityworld_zoo-common.toml");
         ZooEntities.register(modEventBus);
         ZooSounds.register(modEventBus);
         ZooSpawns.register(modEventBus);
