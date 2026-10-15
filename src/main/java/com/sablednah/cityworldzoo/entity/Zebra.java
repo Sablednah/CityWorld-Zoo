@@ -12,13 +12,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  * The Last of Us Part II: the zebra in the snare. A horse-shaped animal that is not a horse: no saddle, no riding.
@@ -55,19 +54,19 @@ public class Zebra extends ZooAnimal {
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(CompoundTag output) {
         super.addAdditionalSaveData(output);
         output.putBoolean("Bitten", isBitten());
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(CompoundTag input) {
         super.readAdditionalSaveData(input);
-        setBitten(input.getBooleanOr("Bitten", false));
+        setBitten(input.getBoolean("Bitten"));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 25.0D)
                 .add(Attributes.FOLLOW_RANGE, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.28D)

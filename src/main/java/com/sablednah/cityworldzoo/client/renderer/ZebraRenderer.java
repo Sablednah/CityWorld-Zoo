@@ -4,26 +4,20 @@ import com.sablednah.cityworldzoo.client.model.ZebraModel;
 import com.sablednah.cityworldzoo.entity.Zebra;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /** The shared renderer, plus the skin choice: one zebra in a hundred wears Sable's bitten texture (a Madagascar nod). */
-public class ZebraRenderer extends ZooRenderer<Zebra, ZebraRenderState, ZebraModel> {
+public class ZebraRenderer extends ZooRenderer<Zebra, ZebraModel> {
 
-    private final Identifier bitten;
+    private final ResourceLocation bitten;
 
-    public ZebraRenderer(EntityRendererProvider.Context context, ZebraModel adult, ZebraModel baby, float shadow, Identifier texture, Identifier bitten) {
-        super(context, adult, baby, shadow, texture, texture, ZebraRenderState::new);
+    public ZebraRenderer(EntityRendererProvider.Context context, ZebraModel model, float shadow, ResourceLocation texture, ResourceLocation bitten) {
+        super(context, model, shadow, texture, ZebraModel.SCALE);
         this.bitten = bitten;
     }
 
     @Override
-    public Identifier getTextureLocation(ZebraRenderState state) {
-        return state.bitten ? bitten : super.getTextureLocation(state);
-    }
-
-    @Override
-    public void extractRenderState(Zebra entity, ZebraRenderState state, float partialTicks) {
-        super.extractRenderState(entity, state, partialTicks);
-        state.bitten = entity.isBitten();
+    public ResourceLocation getTextureLocation(Zebra entity) {
+        return entity.isBitten() ? bitten : super.getTextureLocation(entity);
     }
 }

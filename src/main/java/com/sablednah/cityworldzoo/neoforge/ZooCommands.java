@@ -30,10 +30,10 @@ public final class ZooCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("zoo")
                 .then(Commands.literal("status")
-                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(src -> src.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .executes(ZooCommands::status))
                 .then(Commands.literal("count")
-                        .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .requires(src -> src.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .executes(ctx -> count(ctx, 64))
                         .then(Commands.argument("radius", IntegerArgumentType.integer(1, 512))
                                 .executes(ctx -> count(ctx, IntegerArgumentType.getInteger(ctx, "radius"))))));

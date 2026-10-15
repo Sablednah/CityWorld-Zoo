@@ -9,7 +9,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Standing on leaves, a monkey that sees more canopy two to four blocks away across a gap leaps for it: a
@@ -74,7 +74,7 @@ public class CanopyLeapGoal extends Goal {
         double dist = Math.max(1.0, to.horizontalDistance());
         Vec3 push = new Vec3(to.x / dist, 0, to.z / dist).scale(0.16 + 0.075 * dist).add(0, 0.45 + Math.max(0, to.y) * 0.12, 0);
         mob.setDeltaMovement(push);
-        mob.needsSync = true;   // 26.2: hasImpulse became needsSync
+        mob.hasImpulse = true;
         mob.getLookControl().setLookAt(target);
     }
 

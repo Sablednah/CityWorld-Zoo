@@ -9,14 +9,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -63,7 +63,7 @@ public class Giraffe extends ZooAnimal {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.FOLLOW_RANGE, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.22D)
@@ -92,10 +92,10 @@ public class Giraffe extends ZooAnimal {
         return 600;
     }
 
-    /** Chewing leaves, when fed (vanilla's {@code playEatingSound} is the hook on 26.2). */
+    /** Chewing leaves, when fed (vanilla's {@code getEatingSound} is the hook on 1.21.1). */
     @Override
-    protected void playEatingSound() {
-        this.makeSound(ZooSounds.GIRAFFE_EAT.get());
+    public SoundEvent getEatingSound(ItemStack stack) {
+        return ZooSounds.GIRAFFE_EAT.get();
     }
 
     @Override

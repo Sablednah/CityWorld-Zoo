@@ -3,9 +3,8 @@ package com.sablednah.cityworldzoo.entity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -55,14 +54,13 @@ public abstract class ZooAnimal extends Animal {
     protected abstract Stride stride();
 
     /**
-     * Vanilla's walk clock with this species' cadence as the position scale (a baby's halved legs double it,
-     * a bull elephant's scale slows it: {@code getScale} carries both), so legs swing a modest angle and the
-     * feet still do not slide. See {@link Stride}.
+     * Vanilla's walk position times this species' cadence (a bull elephant's scale slows it: {@code getScale}
+     * carries it), so legs swing a modest angle and the feet still do not slide. See {@link Stride}. On 26.2
+     * the entity sets this as the walk clock's position scale; 1.21.1's {@code WalkAnimationState.update} has
+     * no such scale, so the model multiplies the position it is handed by this instead.
      */
-    @Override
-    protected void updateWalkAnimation(float distance) {
-        float target = Math.min(distance * 4.0F, 1.0F);
-        this.walkAnimation.update(target, 0.4F, stride().cadence() / this.getScale());
+    public float walkPosition(float limbSwing) {
+        return limbSwing * stride().cadence() / this.getScale();
     }
 
     /** The call when it turns on something (played once, as the target is first taken); null for none. */
@@ -102,6 +100,6 @@ public abstract class ZooAnimal extends Animal {
 
     @Override
     public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob partner) {
-        return (AgeableMob) this.getType().create(level, EntitySpawnReason.BREEDING);
+        return (AgeableMob) this.getType().create(level);
     }
 }

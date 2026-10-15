@@ -10,11 +10,11 @@ import com.sablednah.cityworldzoo.entity.ai.ProtectYoungGoal;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -26,7 +26,7 @@ public class Lion extends ZooAnimal {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.FOLLOW_RANGE, 24.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
@@ -38,7 +38,7 @@ public class Lion extends ZooAnimal {
     private static Set<EntityType<?>> prey;
 
     private static Set<EntityType<?>> prey() {
-        if (prey == null) prey = PREY_IDS.stream().map(id -> BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(id))).collect(Collectors.toSet());
+        if (prey == null) prey = PREY_IDS.stream().map(id -> BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(id))).collect(Collectors.toSet());
         return prey;
     }
 

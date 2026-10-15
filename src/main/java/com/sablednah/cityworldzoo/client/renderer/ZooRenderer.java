@@ -1,53 +1,40 @@
 package com.sablednah.cityworldzoo.client.renderer;
 
-import java.util.function.Supplier;
-
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.sablednah.cityworldzoo.entity.ZooAnimal;
 
-import net.minecraft.client.model.AdultAndBabyModelPair;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.resources.ResourceLocation;
 
 /**
- * One renderer for every species: an adult model, a baby model, a texture, and a baby texture only where the
- * baby mesh lays its boxes out differently (the zebra foal). Everywhere else the baby is the adult mesh
- * through a {@code BabyModelTransform}, so one texture covers both.
+ * One renderer for every species: a model, a texture, and the model's drawing scale. On 1.21.1 there are no
+ * render states and no mesh transformers (both 1.21.2+): the model reads the entity in {@code setupAnim}, the
+ * species' mesh scale is applied here (as vanilla's polar bear renderer does), and a baby is the whole mesh at
+ * half size, which is what 26.2's {@code BabyModelTransform(Set.of())} drew. The scale goes on before the
+ * renderer's {@code -1.501} translate, so the feet stay on the ground.
  */
-public class ZooRenderer<T extends Mob, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends MobRenderer<T, S, M> {
+public class ZooRenderer<T extends ZooAnimal, M extends EntityModel<T>> extends MobRenderer<T, M> {
 
-    private final AdultAndBabyModelPair<M> models;
-    private final Identifier texture;
-    private final Identifier babyTexture;
-    private final Supplier<S> states;
+    private final ResourceLocation texture;
+    private final float meshScale;
 
-    public ZooRenderer(EntityRendererProvider.Context context, M adult, M baby, float shadow, Identifier texture,
-            Identifier babyTexture, Supplier<S> states) {
-        super(context, adult, shadow);
-        this.models = new AdultAndBabyModelPair<>(adult, baby);
+    public ZooRenderer(EntityRendererProvider.Context context, M model, float shadow, ResourceLocation texture, float meshScale) {
+        super(context, model, shadow);
         this.texture = texture;
-        this.babyTexture = babyTexture;
-        this.states = states;
+        this.meshScale = meshScale;
     }
 
     @Override
-    public Identifier getTextureLocation(S state) {
-        return state.isBaby ? babyTexture : texture;
+    public ResourceLocation getTextureLocation(T entity) {
+        return texture;
     }
 
     @Override
-    public S createRenderState() {
-        return states.get();
-    }
-
-    @Override
-    public void submit(S state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        this.model = models.getModel(state.isBaby);
-        super.submit(state, poseStack, collector, camera);
+    protected void scale(T entity, PoseStack poseStack, float partialTicks) {
+        float s = meshScale * (entity.isBaby() ? 0.5F : 1.0F);
+        poseStack.scale(s, s, s);
+        super.scale(entity, poseStack, partialTicks);
     }
 }

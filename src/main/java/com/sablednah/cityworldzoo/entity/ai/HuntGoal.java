@@ -19,7 +19,7 @@ public class HuntGoal extends NearestAttackableTargetGoal<LivingEntity> {
     private final ZooAnimal hunter;
 
     public HuntGoal(ZooAnimal hunter, Set<EntityType<?>> prey) {
-        super(hunter, LivingEntity.class, 10, true, false, (target, level) -> prey.contains(target.getType()));
+        super(hunter, LivingEntity.class, 10, true, false, target -> prey.contains(target.getType()));
         this.hunter = hunter;
     }
 

@@ -12,13 +12,12 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  * Resident Evil Outbreak: the zoo's elephant, before and after. Slow, heavy, shoves back when hurt.
@@ -41,7 +40,7 @@ public class Elephant extends ZooAnimal {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 60.0D)
                 .add(Attributes.FOLLOW_RANGE, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D)
@@ -69,15 +68,15 @@ public class Elephant extends ZooAnimal {
     }
 
     @Override
-    protected void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(CompoundTag output) {
         super.addAdditionalSaveData(output);
         output.putBoolean("Tusked", isTusked());
     }
 
     @Override
-    protected void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(CompoundTag input) {
         super.readAdditionalSaveData(input);
-        setTusked(input.getBooleanOr("Tusked", false));
+        setTusked(input.getBoolean("Tusked"));
     }
 
     @Override

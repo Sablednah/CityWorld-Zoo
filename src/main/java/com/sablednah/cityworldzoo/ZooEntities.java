@@ -14,7 +14,7 @@ import com.sablednah.cityworldzoo.entity.Zebra;
 import com.sablednah.cityworldzoo.entity.ZooAnimal;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -23,7 +23,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SpawnEggItem;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -47,7 +47,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  */
 public final class ZooEntities {
 
-    private static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(ZooMod.MODID);
+    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, ZooMod.MODID);
     private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ZooMod.MODID);
 
     public static final TagKey<EntityType<?>> ZOO_ANIMALS = TagKey.create(Registries.ENTITY_TYPE, id("zoo_animals"));
@@ -56,15 +56,16 @@ public final class ZooEntities {
     public record Species<T extends ZooAnimal>(String id, DeferredHolder<EntityType<?>, EntityType<T>> type,
             DeferredItem<Item> egg, Supplier<AttributeSupplier.Builder> attributes) {
         public EntityType<T> entityType() { return type.get(); }
-        public Identifier identifier() { return ZooEntities.id(id); }
+        public ResourceLocation identifier() { return ZooEntities.id(id); }
     }
 
     private static <T extends ZooAnimal> Species<T> species(String id, EntityType.EntityFactory<T> factory,
             float width, float height, float eyeHeight, Supplier<AttributeSupplier.Builder> attributes) {
-        DeferredHolder<EntityType<?>, EntityType<T>> type = ENTITIES.registerEntityType(id, factory, MobCategory.CREATURE,
-                b -> b.sized(width, height).eyeHeight(eyeHeight).clientTrackingRange(10));
-        // Entity types register before items (vanilla's registry order), so the type is real here.
-        DeferredItem<Item> egg = ITEMS.registerItem(id + "_spawn_egg", SpawnEggItem::new, p -> p.spawnEgg(type.get()));
+        DeferredHolder<EntityType<?>, EntityType<T>> type = ENTITIES.register(id, () -> EntityType.Builder.of(factory, MobCategory.CREATURE)
+                .sized(width, height).eyeHeight(eyeHeight).clientTrackingRange(10).build(id));
+        // 1.21.1 has no per-mob egg texture (26.2's Item.Properties.spawnEgg): the egg is NeoForge's deferred spawn
+        // egg, whose two tint colours are white so the painted 32x32 egg in models/item shows as drawn.
+        DeferredItem<Item> egg = ITEMS.registerItem(id + "_spawn_egg", p -> new DeferredSpawnEggItem(type, 0xFFFFFF, 0xFFFFFF, p));
         return new Species<>(id, type, egg, attributes);
     }
 
@@ -85,8 +86,8 @@ public final class ZooEntities {
         return type.builtInRegistryHolder().is(ZOO_ANIMALS);
     }
 
-    public static Identifier id(String path) {
-        return Identifier.fromNamespaceAndPath(ZooMod.MODID, path);
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(ZooMod.MODID, path);
     }
 
     public static void register(IEventBus modBus) {

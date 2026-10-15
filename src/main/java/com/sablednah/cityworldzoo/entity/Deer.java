@@ -10,7 +10,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,7 +30,7 @@ public class Deer extends ZooAnimal {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 14.0D)
                 .add(Attributes.FOLLOW_RANGE, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
@@ -47,7 +47,7 @@ public class Deer extends ZooAnimal {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Player.class, p -> !p.isSteppingCarefully(), 10.0F, 1.3D, 1.8D,
-                net.minecraft.world.entity.EntitySelector.NO_CREATIVE_OR_SPECTATOR));
+                net.minecraft.world.entity.EntitySelector.NO_CREATIVE_OR_SPECTATOR::test));
     }
 
     @Override

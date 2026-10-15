@@ -18,12 +18,13 @@ import com.sablednah.cityworldzoo.entity.ZooAnimal;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -50,7 +51,7 @@ public final class SelfTest {
         passed = 0;
         ZooMod.LOGGER.info("=== CityWorld: Zoo SelfTest === {}", BuildInfo.describe());
         ServerLevel level = server.overworld();
-        var spawn = level.getRespawnData().globalPos().pos();
+        var spawn = level.getSharedSpawnPos();
         // A fresh 26.2 server loads no spawn chunks without a player; force the one we use.
         level.setChunkForced(spawn.getX() >> 4, spawn.getZ() >> 4, true);
         level.getChunk(spawn.getX() >> 4, spawn.getZ() >> 4);
@@ -62,19 +63,18 @@ public final class SelfTest {
 
         // Elephants: a bull is a cow times the scale attribute, and the flag survives a save.
         {
-            var e = ZooEntities.ELEPHANT.entityType().create(level, EntitySpawnReason.COMMAND);
+            var e = ZooEntities.ELEPHANT.entityType().create(level);
             if (e instanceof com.sablednah.cityworldzoo.entity.Elephant el) {
                 el.setTusked(false);
                 float cow = el.getBbHeight();
                 el.setTusked(true);
                 check("elephant: a bull stands 3.5 blocks to a cow's 3", Math.abs(el.getBbHeight() / cow - com.sablednah.cityworldzoo.entity.Elephant.BULL_SCALE) < 1e-3
                         && Math.abs(cow - 3.0F) < 1e-3);
-                var out = net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess());
-                el.saveWithoutId(out);
-                var copy = ZooEntities.ELEPHANT.entityType().create(level, EntitySpawnReason.COMMAND);
+                CompoundTag out = el.saveWithoutId(new CompoundTag());
+                var copy = ZooEntities.ELEPHANT.entityType().create(level);
                 if (copy instanceof com.sablednah.cityworldzoo.entity.Elephant el2) {
                     el2.setTusked(false);
-                    el2.load(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), out.buildResult()));
+                    el2.load(out);
                     check("elephant: Tusked survives a save and reload, scale with it", el2.isTusked() && Math.abs(el2.getBbHeight() - el.getBbHeight()) < 1e-3);
                     el2.discard();
                 }
@@ -86,15 +86,14 @@ public final class SelfTest {
 
         // Zebras: the bitten skin is one in a hundred and survives a save.
         {
-            var e = ZooEntities.ZEBRA.entityType().create(level, EntitySpawnReason.COMMAND);
+            var e = ZooEntities.ZEBRA.entityType().create(level);
             if (e instanceof com.sablednah.cityworldzoo.entity.Zebra z) {
                 z.setBitten(true);
-                var out = net.minecraft.world.level.storage.TagValueOutput.createWithContext(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess());
-                z.saveWithoutId(out);
-                var copy = ZooEntities.ZEBRA.entityType().create(level, EntitySpawnReason.COMMAND);
+                CompoundTag out = z.saveWithoutId(new CompoundTag());
+                var copy = ZooEntities.ZEBRA.entityType().create(level);
                 if (copy instanceof com.sablednah.cityworldzoo.entity.Zebra z2) {
                     z2.setBitten(false);
-                    z2.load(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, level.registryAccess(), out.buildResult()));
+                    z2.load(out);
                     check("zebra: Bitten survives a save and reload", z2.isBitten());
                     z2.discard();
                 }
@@ -117,7 +116,7 @@ public final class SelfTest {
                         JsonObject t = take.isJsonObject() ? take.getAsJsonObject() : null;   // a bare string is a file
                         String name = t != null ? t.get("name").getAsString() : take.getAsString();
                         if (t != null && t.has("type") && "event".equals(t.get("type").getAsString())) {
-                            check("sound " + path + " borrows a real vanilla event: " + name, BuiltInRegistries.SOUND_EVENT.containsKey(Identifier.parse(name)));
+                            check("sound " + path + " borrows a real vanilla event: " + name, BuiltInRegistries.SOUND_EVENT.containsKey(ResourceLocation.parse(name)));
                         } else {
                             check("sound " + path + " take exists in the jar: " + name, resource("/assets/cityworld_zoo/sounds/" + name.substring(name.indexOf(':') + 1) + ".ogg"));
                         }
@@ -139,19 +138,19 @@ public final class SelfTest {
                 boolean anyBiome = false;
                 for (String b : c.biomes().get()) {
                     if (b.startsWith("#")) {
-                        var tag = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BIOME, Identifier.parse(b.substring(1)));
-                        anyBiome |= server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME).get(tag).isPresent();
+                        var tag = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BIOME, ResourceLocation.parse(b.substring(1)));
+                        anyBiome |= server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME).getTag(tag).isPresent();
                     } else {
-                        anyBiome |= server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME).containsKey(Identifier.parse(b));
+                        anyBiome |= server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME).containsKey(ResourceLocation.parse(b));
                     }
                 }
                 check(s.id() + "'s default biomes exist: " + c.biomes().get(), anyBiome);
             }
         }
-        check("the savanna takes a giraffe", server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME)
-                .get(net.minecraft.world.level.biome.Biomes.SAVANNA).map(h -> com.sablednah.cityworldzoo.neoforge.ZooSpawns.matches(h, java.util.List.of("#minecraft:is_savanna"))).orElse(false));
-        check("the jungle does not", !server.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.BIOME)
-                .get(net.minecraft.world.level.biome.Biomes.JUNGLE).map(h -> com.sablednah.cityworldzoo.neoforge.ZooSpawns.matches(h, java.util.List.of("#minecraft:is_savanna"))).orElse(true));
+        check("the savanna takes a giraffe", server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME)
+                .getHolder(net.minecraft.world.level.biome.Biomes.SAVANNA).map(h -> com.sablednah.cityworldzoo.neoforge.ZooSpawns.matches(h, java.util.List.of("#minecraft:is_savanna"))).orElse(false));
+        check("the jungle does not", !server.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.BIOME)
+                .getHolder(net.minecraft.world.level.biome.Biomes.JUNGLE).map(h -> com.sablednah.cityworldzoo.neoforge.ZooSpawns.matches(h, java.util.List.of("#minecraft:is_savanna"))).orElse(true));
 
         // The worldgen-thread rule, as a guard: no species and not the base may override finalizeSpawn.
         List<Class<?>> classes = new ArrayList<>();
@@ -160,7 +159,7 @@ public final class SelfTest {
         for (Class<?> c : classes) {
             boolean overrides;
             try {
-                c.getDeclaredMethod("finalizeSpawn", ServerLevelAccessor.class, DifficultyInstance.class, EntitySpawnReason.class, SpawnGroupData.class);
+                c.getDeclaredMethod("finalizeSpawn", ServerLevelAccessor.class, DifficultyInstance.class, MobSpawnType.class, SpawnGroupData.class);
                 overrides = true;
             } catch (NoSuchMethodException e) {
                 overrides = false;
@@ -202,7 +201,7 @@ public final class SelfTest {
         EntityType<T> type = s.entityType();
         check(id + " is registered under its id", BuiltInRegistries.ENTITY_TYPE.getKey(type).toString().equals(id));
         check(id + " is in #cityworld_zoo:zoo_animals", ZooEntities.isZooAnimal(type));
-        Entity e = type.create(level, EntitySpawnReason.COMMAND);
+        Entity e = type.create(level);
         check(id + " creates as an Animal", e instanceof Animal);
         if (e instanceof Mob mob) {
             check(id + " has ATTACK_DAMAGE (ZombieMod's melee goals need it)", mob.getAttribute(Attributes.ATTACK_DAMAGE) != null && mob.getAttributeValue(Attributes.ATTACK_DAMAGE) > 0);
@@ -210,7 +209,7 @@ public final class SelfTest {
             check(id + " has health", mob.getMaxHealth() > 0);
             if (e instanceof Animal animal) {
                 // Breeding: the young is the same type, and it eats something.
-                mob.snapTo(spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0, 0);
+                mob.moveTo(spawn.getX() + 0.5, spawn.getY(), spawn.getZ() + 0.5, 0, 0);
                 var young = animal.getBreedOffspring(level, animal);
                 check(id + " breeds its own kind", young != null && young.getType() == type);
                 if (young != null) young.discard();
@@ -220,7 +219,7 @@ public final class SelfTest {
             e.discard();
         }
         ItemStack egg = new ItemStack(s.egg().get());
-        check(id + " spawn egg is a spawn egg for this type", egg.getItem() instanceof SpawnEggItem && SpawnEggItem.getType(egg) == type);
+        check(id + " spawn egg is a spawn egg for this type", egg.getItem() instanceof SpawnEggItem se && se.getType(egg) == type);
         check(id + " and its egg have English names", lang(type.getDescriptionId()) && lang(s.egg().get().getDescriptionId()));
         check(id + " has a loot table in the jar", json("/data/cityworld_zoo/loot_table/entities/" + s.id() + ".json") != null);
         JsonObject zoo = json("/data/cityworld_zoo/cityworld/zoo/animal/" + s.id() + ".json");

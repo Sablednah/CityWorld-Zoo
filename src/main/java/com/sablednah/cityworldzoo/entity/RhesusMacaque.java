@@ -19,7 +19,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -102,12 +102,12 @@ public class RhesusMacaque extends ZooAnimal {
     }
 
     @Override
-    public boolean causeFallDamage(double fallDistance, float damageModifier, net.minecraft.world.damagesource.DamageSource source) {
+    public boolean causeFallDamage(float fallDistance, float damageModifier, net.minecraft.world.damagesource.DamageSource source) {
         return false;   // a monkey lands on its feet from any tree
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Animal.createAnimalAttributes()
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 8.0D)
                 .add(Attributes.FOLLOW_RANGE, 16.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
